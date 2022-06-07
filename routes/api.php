@@ -41,5 +41,7 @@ Route::put('/student_update/{id}', 'StudentController@apiUpdateAcademyStudents')
 
 Route::delete('/student_destroy/{id}', 'StudentController@apiDestroyStudent')->name('api_destroy_student');
 
+Route::get('/getStudent/{id}','StudentController@apiShowStudent');
+
 
 
