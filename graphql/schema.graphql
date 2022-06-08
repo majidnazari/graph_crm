@@ -91,23 +91,24 @@ scalar DateTime @scalar(class: "Nuwave\\Lighthouse\\Schema\\Types\\Scalars\\Date
 type Student @key(fields: "id") {
         id:ID 
         phone:String  
-        first_name:String,
-        last_name:String,
-        level:Int,
-        egucation_level:Int,
-        parents_job_title:String,
-        home_phone:String,
-        father_phone:String,
-        mother_phone:String,
-        school:String,
-        average:Float,
-        major:String,
-        introducing:String,
-        student_phone:String,
-        cities_id:Int,
-        sources_id:Int,
-        supporters_id:Int,
+        first_name:String
+        last_name:String
+        level:Int
+        egucation_level:Int
+        parents_job_title:String
+        home_phone:String
+        father_phone:String
+        mother_phone:String
+        school:String
+        average:Float
+        major:String
+        introducing:String
+        student_phone:String
+        cities_id:Int
+        sources_id:Int
+        supporters_id:Int
         archived:String
+        description:String
 }
 # type Course @key(fields: "id") @extends{
 #       id:ID @external  
