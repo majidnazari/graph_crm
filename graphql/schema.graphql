@@ -64,7 +64,25 @@ scalar DateTime @scalar(class: "Nuwave\\Lighthouse\\Schema\\Types\\Scalars\\Date
     #   name: String @where(operator: "like")
     # ): [User!]! @paginate(defaultCount: 10)
     GetStudent(id:ID!): Student @field(resolver: "App\\GraphQL\\Queries\\Student\\GetStudent@resolveStudentAttribute")
-    GetStudents: [Student] @paginate(builder: "App\\GraphQL\\Queries\\Student\\GetStudents@resolveStudentsAttribute")
+    GetStudents(
+      first_name: String @like (template : "%{}%")
+      last_name: String @like (template : "%{}%")
+      phone: String @like (template : "%{}%") @where(operator: "like" clause: "orWhere", key: "mother_phone") @where(operator: "like" clause: "orWhere", key: "father_phone")
+      egucation_level: String @like (template : "%{}%")
+      
+#       active: Boolean @eq
+      orderBy:[OrderByClause!] @orderBy
+    ): [Student] @paginate(builder: "App\\GraphQL\\Queries\\Student\\GetStudents@resolveStudentsAttribute")
+}
+
+input OrderByClause{
+    field: String!
+    order: SortOrder!
+}
+
+enum SortOrder {
+    ASC
+    DESC
 }
 
 "Account of a person who utilizes this application."
