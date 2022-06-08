@@ -136,6 +136,7 @@ return [
 
     'providers' => [
 
+        \Nuwave\Lighthouse\Federation\FederationServiceProvider::class,
         /*
          * Laravel Framework Service Providers...
          */

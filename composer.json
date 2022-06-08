@@ -16,7 +16,7 @@
         "laravel/ui": "^3.0",
         "mll-lab/laravel-graphql-playground": "^2.6",
         "morilog/jalali": "3.*",
-        "nuwave/lighthouse": "^5.51"
+        "nuwave/lighthouse": "^5.52"
     },
     "require-dev": {
         "spatie/laravel-ignition": "^1.0",
