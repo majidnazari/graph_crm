@@ -131,3 +131,37 @@ type Student @key(fields: "id") {
 # type Course @key(fields: "id") @extends{
 #       id:ID @external  
 # }
+ input CreateStudentInput{
+      first_name: String!
+      last_name: String!
+      phone:String!
+      egucation_level:String!
+      parents_job_title:String!
+      home_phone:String!
+      father_phone:String!
+      mother_phone:String!
+      major:String!
+      description: String! 
+    } 
+     input UpdateStudentInput{
+      id:Int!
+      first_name: String
+      last_name: String
+      phone:String
+      egucation_level:String
+      parents_job_title:String
+      home_phone:String
+      father_phone:String
+      mother_phone:String
+      major:String
+      description: String
+    } 
+type Mutation {
+
+  #region student
+    createStudent(input: CreateStudentInput! @spread): Student!  @field(resolver: "App\\GraphQL\\Mutations\\Student\\CreateStudent@resolver")
+    updateStudent(input: UpdateStudentInput! @spread): Student!  @field(resolver: "App\\GraphQL\\Mutations\\Student\\UpdateStudent@resolver")
+    deleteStudent(id:ID!):Student @delete
+  #end student
+
+}
