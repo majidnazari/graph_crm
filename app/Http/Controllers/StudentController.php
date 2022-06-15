@@ -1893,11 +1893,31 @@ class StudentController extends Controller
     }
 
 
-    public function apiIndexStudents()
+    public function apiIndexStudents(Request $requests)
     { 
-            
-        $students=Student::where('is_deleted',0)->orderBy('id','desc')->get();//->paginate(env('MAX_PAGINATION_ACADEMY'));
-        return $students;
+        $req= $requests->all(); 
+       
+        $query = Student::query();
+        foreach($req as $key=>$value)
+        {           
+            if(isset($value))
+                $query=$query->where($key,'like', "%$value%");
+             
+        }
+       $result= $query->where('is_deleted',0)   
+        ->where('first_name', 'like', '%majid%')   
+        ->orderBy('id','desc')
+        ->get();
+        
+       // $result=$result->paginate(10);
+
+        //Log::info($result);
+        //->get();
+        // $students=Student::where('is_deleted',0)
+        // ->where('first_name', 'like', '%' . $requests->first_name . '%')
+        // ->orderBy('id','desc')
+        // ->get();//->paginate(env('MAX_PAGINATION_ACADEMY'));
+        return  $result;
     }
     public function apiShowStudent($id)
     {             
