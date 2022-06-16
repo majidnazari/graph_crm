@@ -63,8 +63,8 @@ scalar DateTime @scalar(class: "Nuwave\\Lighthouse\\Schema\\Types\\Scalars\\Date
     #   "Filters by name. Accepts SQL LIKE wildcards `%` and `_`."
     #   name: String @where(operator: "like")
     # ): [User!]! @paginate(defaultCount: 10)
-    GetStudent(id:ID!): Student @field(resolver: "App\\GraphQL\\Queries\\Student\\GetStudent@resolveStudentAttribute")
-    GetStudents(
+    getStudent(id:ID!): Student @field(resolver: "App\\GraphQL\\Queries\\Student\\GetStudent@resolveStudentAttribute")
+    getStudents(
       first_name: String @like (template : "%{}%")
       last_name: String @like (template : "%{}%")     
       level: String @like (template : "%{}%")
