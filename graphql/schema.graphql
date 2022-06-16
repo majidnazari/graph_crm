@@ -76,7 +76,7 @@ scalar DateTime @scalar(class: "Nuwave\\Lighthouse\\Schema\\Types\\Scalars\\Date
       major: String @like (template : "%{}%")
       description: String @like (template : "%{}%")
       phone: String @like (template : "%{}%") @where(operator: "like" clause: "orWhere", key: "mother_phone") @where(operator: "like" clause: "orWhere", key: "father_phone")
-      egucation_level: String @like (template : "%{}%")
+      egucation_level: String   @like (template : "%{}%")
       
 #       active: Boolean @eq
       orderBy:[OrderByClause!] @orderBy
@@ -158,12 +158,12 @@ type Student @key(fields: "id") {
       major:String
       description:String
     } 
-type Mutation {
+type Mutation  {
 
   #region student
     createStudent(input: CreateStudentInput! @spread): Student!  @field(resolver: "App\\GraphQL\\Mutations\\Student\\CreateStudent@resolver")
-    updateStudent(input: UpdateStudentInput! @spread): Student!  @field(resolver: "App\\GraphQL\\Mutations\\Student\\UpdateStudent@resolver")
-    deleteStudent(id:ID!):Student @field(resolver: "App\\GraphQL\\Mutations\\Student\\DeleteStudent@resolver")
+    updateStudent(input: UpdateStudentInput! @spread): Student!   @field(resolver: "App\\GraphQL\\Mutations\\Student\\UpdateStudent@resolver")
+    deleteStudent(id:ID!):Student  @field(resolver: "App\\GraphQL\\Mutations\\Student\\DeleteStudent@resolver")
   #end student
 
 }
