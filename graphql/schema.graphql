@@ -67,7 +67,7 @@ scalar DateTime @scalar(class: "Nuwave\\Lighthouse\\Schema\\Types\\Scalars\\Date
     getStudents(
       first_name: String @like (template : "%{}%")
       last_name: String @like (template : "%{}%")     
-      level: String @like (template : "%{}%")
+      # level: String @like (template : "%{}%")
       egucation_level: String @like (template : "%{}%")
       parents_job_title: String @like (template : "%{}%")
       home_phone: String @like (template : "%{}%")
@@ -117,6 +117,7 @@ enum SortOrder {
 type Student @key(fields: "id") {
         id:ID 
         phone:String 
+        home_phone:String 
         first_name:String 
         last_name:String 
         egucation_level:Int 
