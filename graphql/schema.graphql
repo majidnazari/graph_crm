@@ -133,37 +133,37 @@ type Student @key(fields: "id") {
 #       id:ID @external  
 # }
  input CreateStudentInput{
-      phone:String! # @rules(apply: ["size:11","unique:students,phone"]),
-        first_name:String!
-        last_name:String!
-        level:String!
-        egucation_level:String!
-        parents_job_title:String!
-        home_phone:String!
-        father_phone:String!
-        mother_phone:String!       
-        major:String!
-        description:String!
+      phone:String # @rules(apply: ["size:11","unique:students,phone"]),
+        first_name:String
+        last_name:String
+        level:String
+        egucation_level:String
+        parents_job_title:String
+        home_phone:String
+        father_phone:String
+        mother_phone:String      
+        major:String
+        description:String
     } 
      input UpdateStudentInput{
-      id:Int!
-      phone:String # @rules(apply: ["size:11","unique:students,phone"]),
-      first_name:String
-      last_name:String
-      level:String
-      egucation_level:String
-      parents_job_title:String
-      home_phone:String
-      father_phone:String
-      mother_phone:String        
-      major:String
-      description:String
+      id:Int
+      phone:String! # @rules(apply: ["size:11","unique:students,phone"]),
+      first_name:String!
+      last_name:String!
+      level:String!
+      egucation_level:String!
+      parents_job_title:String!
+      home_phone:String!
+      father_phone:String!
+      mother_phone:String!        
+      major:String!
+      description:String!
     } 
 type Mutation  {
 
   #region student
-    createStudent(input: CreateStudentInput! @spread): Student!  @field(resolver: "App\\GraphQL\\Mutations\\Student\\CreateStudent@resolver")
-    updateStudent(input: UpdateStudentInput! @spread): Student!   @field(resolver: "App\\GraphQL\\Mutations\\Student\\UpdateStudent@resolver")
+    createStudent(input: CreateStudentInput @spread): Student!  @field(resolver: "App\\GraphQL\\Mutations\\Student\\CreateStudent@resolver")
+    updateStudent(input: UpdateStudentInput @spread): Student!   @field(resolver: "App\\GraphQL\\Mutations\\Student\\UpdateStudent@resolver")
     deleteStudent(id:ID!):Student  @field(resolver: "App\\GraphQL\\Mutations\\Student\\DeleteStudent@resolver")
   #end student
 
