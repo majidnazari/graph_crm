@@ -75,7 +75,7 @@ scalar DateTime @scalar(class: "Nuwave\\Lighthouse\\Schema\\Types\\Scalars\\Date
       mother_phone: String @like (template : "%{}%")
       major: String @like (template : "%{}%")
       description: String @like (template : "%{}%")
-      phone: String @like (template : "%{}%") @where(operator: "like" clause: "orWhere", key: "mother_phone") @where(operator: "like" clause: "orWhere", key: "father_phone")
+      phone: String @like (template : "%{}%") #@where(operator: "like" clause: "orWhere", key: "mother_phone") @where(operator: "like" clause: "orWhere", key: "father_phone")
       egucation_level: String   @like (template : "%{}%")
       
 #       active: Boolean @eq
