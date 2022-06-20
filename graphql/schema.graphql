@@ -115,7 +115,7 @@ enum SortOrder {
 # }
 
 type Student @key(fields: "id") {
-        id:ID 
+        id:Int 
         phone:String 
         home_phone:String 
         first_name:String 
