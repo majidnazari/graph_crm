@@ -120,7 +120,7 @@ type Student @key(fields: "id") {
         home_phone:String 
         first_name:String 
         last_name:String 
-        egucation_level:Int 
+        egucation_level:String 
         level:String
         parents_job_title:String 
         father_phone:String 
