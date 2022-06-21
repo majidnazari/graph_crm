@@ -37,7 +37,7 @@ final class CreateStudent
             'mother_phone'=> $args['mother_phone'],
             //'school'=> $args['school'],
             //'average'=> $args['average'],
-            'major'=> $args['major'],
+            'major'=> isset($args['major']) ? $args['major'] : "other",
             //'introducing'=> $args['introducing'],
             //'student_phone'=> $args['student_phone'],
             //'citys_id'=> $args['citys_id'],
@@ -47,6 +47,8 @@ final class CreateStudent
             'description' => $args['description']          
             
         ];
+        if($existed_student=Student::where('phone',$args['phone'])->first())
+                return $existed_student;
         $student_result=Student::create($student);
         return $student_result;
     }
