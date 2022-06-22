@@ -14,6 +14,7 @@ use Carbon\Carbon;
 use Morilog\Jalali\CalendarUtils;
 use App\Http\Traits\AllTypeCallsTrait;
 use App\Purchase;
+use App\Sanad;
 
 class DashboardController extends Controller
 {
@@ -140,11 +141,21 @@ class DashboardController extends Controller
             $last_day_of_this_month = jdate()->format('Y-n-t');
             $gregorian_first_day_of_this_month = $this->jalaliToGregorian($first_day_of_this_month);
             $gregorian_last_day_of_this_month = $this->jalaliToGregorian($last_day_of_this_month);
-            $purchases = Purchase::where('is_deleted',false)->where('supporters_id',Auth::user()->id)->where('created_at','>=',$gregorian_first_day_of_this_month)->where('created_at','<=',$gregorian_last_day_of_this_month);
-            $thePurchases = Purchase::where('is_deleted',false)->where('supporters_id',Auth::user()->id)->where('created_at','>=',$gregorian_first_day_of_this_month)->where('created_at','<=',$gregorian_last_day_of_this_month)->get();
+            // $purchases = Purchase::where('is_deleted',false)->where('supporters_id',Auth::user()->id)->where('created_at','>=',$gregorian_first_day_of_this_month)->where('created_at','<=',$gregorian_last_day_of_this_month);
+            // $thePurchases = Purchase::where('is_deleted',false)->where('supporters_id',Auth::user()->id)->where('created_at','>=',$gregorian_first_day_of_this_month)->where('created_at','<=',$gregorian_last_day_of_this_month)->get();
+            $supporterSanads = Sanad::where('supporter_id', Auth::user()->id)
+                ->where('status', 'created')
+                ->where('created_at', '>=', $gregorian_first_day_of_this_month)
+                ->where('created_at', '<=', $gregorian_last_day_of_this_month)
+                ->get();
             $user = User::where('is_deleted',false)->where('id',Auth::user()->id)->first();
-            $out = CommissionPurchaseRelation::computeMonthIncome($purchases,$thePurchases);
-            $sum = $out[0];
+            // $out = CommissionPurchaseRelation::computeMonthIncome($purchases,$thePurchases);
+            // $sum = $out[0];
+            $sum = 0;
+            for ($indx = 0; $indx < count($supporterSanads); $indx++) {
+                if($supporterSanads[$indx]->type>0)
+                    $sum += ceil($supporterSanads[$indx]->total) ;//* $supporterSanads[$indx]->supporter_percent / 100) * $supporterSanads[$indx]->type;
+            }
             $sum = $this->toPersianNum(number_format($sum));
             return view('dashboard.support', [
                 'sum' => $sum,

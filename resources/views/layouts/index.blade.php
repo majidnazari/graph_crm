@@ -597,7 +597,15 @@
                                 <p>لیست تماس پشتیبان ها</p>
                             </a>
                         </li>
-
+                        <li class="nav-item">
+                            @if(strpos(\Request::route()->getName(), 'sanad')===0)
+                            <a href="{{ route('sanads') }}" class="nav-link active">
+                            @else
+                            <a href="{{ route('sanads') }}" class="nav-link">
+                            @endif
+                                <p>لیست سندها</p>
+                            </a>
+                        </li>
                         @endif
                         @if (Gate::allows('sale_suggestions'))
                         <!--
