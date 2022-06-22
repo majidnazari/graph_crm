@@ -65,30 +65,26 @@ class SanadController extends Controller
         $total_debtor=0;
         $total_creditor=0;
         $data = [];
-        $first_day_of_this_month = jdate()->format('Y').'-'.jdate(strtotime('2021-07-20'))->format('n').'-01';//it shows full first  date like 1401-03-01 
-        $last_day_of_this_month = jdate()->format('Y-n-t'); //it shows full  end of date like 1401-03-31 
-        $first_day=explode('-',$first_day_of_this_month);
-        $last_day=explode('-' , $last_day_of_this_month);
-        if($request->input('flag')!="")
-        {
+        // if($request->input('flag')!="")
+        // {
             
-            $sanad_year= $request->input('year');
-            $sanad_month=$request->input('month') < 10 ? '0'.$request->input('month') : $request->input('month'); 
-            $sanad_date_from=$sanad_year.'-'.$sanad_month.'-'.$first_day[2] ;
-            $sanad_date_to=$sanad_year.'-'.$sanad_month.'-'.$last_day[2] ;
-            //$sanad_date_from=Jalalian::fromFormat('Y-m-d',$sanad_date_from)->toCarbon();
-            //$sanad_date_to=Jalalian::fromFormat('Y-m-d',$sanad_date_to)->toCarbon();
-           //$tmp=Jalalian::fromFormat('Y-m-d',$first_lim)->toCarbon();
-            return      $sanad_date_to ;
-        }
+        //     $sanad_year= $request->input('year');
+        //     $sanad_month=$request->input('month') < 10 ? '0'.$request->input('month') : $request->input('month'); 
+        //     $sanad_date_from=$sanad_year.'-'.$sanad_month.'-'.$first_day[2] ;
+        //     $sanad_date_to=$sanad_year.'-'.$sanad_month.'-'.$last_day[2] ;
+        //     //$sanad_date_from=Jalalian::fromFormat('Y-m-d',$sanad_date_from)->toCarbon();
+        //     //$sanad_date_to=Jalalian::fromFormat('Y-m-d',$sanad_date_to)->toCarbon();
+        //    //$tmp=Jalalian::fromFormat('Y-m-d',$first_lim)->toCarbon();
+        //     return      $sanad_date_to ;
+        // }
        // $date_tmp=$georgianCarbonDate=Jalalian::fromFormat('Y-m-d', '1401-03-28')->toCarbon();       
         // $sanad_month=[1,2,3,4,5,6,7,8,9,10,11,12];
         // $sanad_year=[];
         // $year =(int)jdate()->format("Y");//Carbon::now()->format("Y");
         // $sanad_year= range($year-5, $year+5);
         //$sanads =  Sanad::all();
-        $sanads = Sanad::where('id','>',  1);
-        //$count=count($sanads);
+        $count = Sanad::count();
+        $sanads = Sanad::where('id','>',  0);
         if ($request->input('supporter_id') != 0)
         {
             //Log::info("add to log");              
@@ -97,6 +93,10 @@ class SanadController extends Controller
         }   
         if ($request->input('month') != 0  && $request->input('year') != 0)
         {
+            $first_day_of_this_month = jdate()->format('Y').'-'.jdate(strtotime('2021-07-20'))->format('n').'-01';//it shows full first  date like 1401-03-01 
+            $last_day_of_this_month = jdate()->format('Y-n-t'); //it shows full  end of date like 1401-03-31 
+            $first_day=explode('-',$first_day_of_this_month);
+            $last_day=explode('-' , $last_day_of_this_month);
             $sanad_year= $request->input('year');
             $sanad_month=$request->input('month') < 10 ? '0'.$request->input('month') : $request->input('month'); 
             $sanad_date_from=$sanad_year.'-'.$sanad_month.'-'.$first_day[2] ;
@@ -118,6 +118,7 @@ class SanadController extends Controller
         ->skip($req['start'])
         ->take($req['length'])
         ->get();
+        $countFilter=count($sanads);
         $supports = User::where('is_deleted', false)->where('groups_id', 2)->get();      
 
         $total_get_price=0;
@@ -155,11 +156,11 @@ class SanadController extends Controller
             ];
         }
         $result = [
-            //"draw" => $req['draw'],
+            "draw" => $req['draw'],
             "data" => $data,
             "request" => $request->all(),
-            //  "recordsTotal" => $count,
-            //  "recordsFiltered" => 80
+             "recordsTotal" => $count,
+             "recordsFiltered" => $countFilter,
         ];
 
         return $result;
