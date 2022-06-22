@@ -1893,10 +1893,31 @@ class StudentController extends Controller
     }
 
 
-    public function apiIndexStudents()
-    {       
-        $students=Student::where('is_deleted',0)->orderBy('id','desc')->get();//->paginate(env('MAX_PAGINATION_ACADEMY'));
-        return $students;
+    public function apiIndexStudents(Request $requests)
+    { 
+        $req= $requests->all(); 
+       
+        $query = Student::query();
+        foreach($req as $key=>$value)
+        {           
+            if(isset($value))
+                $query=$query->where($key,'like', "%$value%");
+             
+        }
+       $result= $query->where('is_deleted',0)   
+        ->where('first_name', 'like', '%majid%')   
+        ->orderBy('id','desc')
+        ->get();
+        
+       // $result=$result->paginate(10);
+
+        //Log::info($result);
+        //->get();
+        // $students=Student::where('is_deleted',0)
+        // ->where('first_name', 'like', '%' . $requests->first_name . '%')
+        // ->orderBy('id','desc')
+        // ->get();//->paginate(env('MAX_PAGINATION_ACADEMY'));
+        return  $result;
     }
     public function apiShowStudent($id)
     {             
@@ -1906,25 +1927,28 @@ class StudentController extends Controller
     public function apiStoreStudents(Request $request)
     {      
         //return($request->all());
-        $student=new Student;
-        $student->phone = $request->phone;    
-        $student->first_name = $request->first_name;
-        $student->last_name = $request->last_name;
-        $student->level = $request->level;
-        $student->egucation_level = $request->egucation_level;    
-        $student->parents_job_title = $request->parents_job_title;    
-        $student->home_phone = $request->home_phone;    
-        $student->father_phone = $request->father_phone;    
-        $student->mother_phone = $request->mother_phone;    
-        $student->school = $request->school;    
-        $student->average = $request->average;    
-        $student->introducing = $request->introducing;
-        $student->student_phone = $request->student_phone;
-        $student->cities_id = $request->cities_id;
-        $student->sources_id = $request->sources_id;
-        $student->supporters_id = $request->supporters_id;
-        $student->archived = $request->archived;
+        // $student=new Student;
+        // $student->phone = $request->phone;    
+        // $student->first_name = $request->first_name;
+        // $student->last_name = $request->last_name;
+        // $student->level = $request->level;
+        // $student->egucation_level = $request->egucation_level;    
+        // $student->parents_job_title = $request->parents_job_title;    
+        // $student->home_phone = $request->home_phone;    
+        // $student->father_phone = $request->father_phone;    
+        // $student->mother_phone = $request->mother_phone;    
+        // $student->major = $request->major;    
+        // $student->description = $request->description;    
+       // $student->school = $request->school;    
+        //$student->average = $request->average;    
+        //$student->introducing = $request->introducing;
+       // $student->student_phone = $request->student_phone;
+       // $student->cities_id = $request->cities_id;
+        //$student->sources_id = $request->sources_id;
+        //$student->supporters_id = $request->supporters_id;
+        //$student->archived = $request->archived;
        
+        //return Student::create($student);
         return Student::create($request->all());
         // if($student)
         // {
@@ -1942,24 +1966,24 @@ class StudentController extends Controller
             return $selection;
         }  
         
-        $student=new Student;
-        $student->phone = $request->phone;    
-        $student->first_name = $request->first_name;
-        $student->last_name = $request->last_name;
-        $student->level = $request->level;
-        $student->egucation_level = $request->egucation_level;    
-        $student->parents_job_title = $request->parents_job_title;    
-        $student->home_phone = $request->home_phone;    
-        $student->father_phone = $request->father_phone;    
-        $student->mother_phone = $request->mother_phone;    
-        $student->school = $request->school;    
-        $student->average = $request->average;    
-        $student->introducing = $request->introducing;
-        $student->student_phone = $request->student_phone;
-        $student->cities_id = $request->cities_id;
-        $student->sources_id = $request->sources_id;
-        $student->supporters_id = $request->supporters_id;
-        $student->archived = $request->archived;
+        // $student=new Student;
+        // $student->phone = $request->phone;    
+        // $student->first_name = $request->first_name;
+        // $student->last_name = $request->last_name;
+        // $student->level = $request->level;
+        // $student->egucation_level = $request->egucation_level;    
+        // $student->parents_job_title = $request->parents_job_title;    
+        // $student->home_phone = $request->home_phone;    
+        // $student->father_phone = $request->father_phone;    
+        // $student->mother_phone = $request->mother_phone;    
+        // $student->school = $request->school;    
+        // $student->average = $request->average;    
+        // $student->introducing = $request->introducing;
+        // $student->student_phone = $request->student_phone;
+        // $student->cities_id = $request->cities_id;
+        // $student->sources_id = $request->sources_id;
+        // $student->supporters_id = $request->supporters_id;
+        // $student->archived = $request->archived;
        
         $student_result= $selection->fill($request->all());
         $selection->save();

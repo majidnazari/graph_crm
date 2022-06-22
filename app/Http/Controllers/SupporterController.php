@@ -37,6 +37,7 @@ use App\Utils\CommissionPurchaseRelation;
 use App\Http\Traits\AllTypeCallsTrait;
 use App\MergeStudents as AppMergeStudents;
 use App\SaleSuggestion;
+use App\Sanad;
 use App\Utils\SearchStudent;
 use Exception;
 use Log;
@@ -1294,6 +1295,23 @@ class SupporterController extends Controller
 
             return $result;
         }
+    }
+    public function showSanads($id = null, $level, $view, $route)
+    {
+       $user_id=Auth::user()->id; 
+       if($user_id==$id)
+       {
+            $sanads= Sanad::where('supporter_id',$id)->get();
+            return view($view,[
+                'sanads' => $sanads
+            ]);
+       }
+       return redirect('/login');
+       
+    }
+    public function sanad($id = null)
+    {       
+        return $this->showSanads($id, 'all', "supporters.sanad", "supporters_sanad");
     }
     public function student($id = null)
     {

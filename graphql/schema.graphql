@@ -63,8 +63,34 @@ scalar DateTime @scalar(class: "Nuwave\\Lighthouse\\Schema\\Types\\Scalars\\Date
     #   "Filters by name. Accepts SQL LIKE wildcards `%` and `_`."
     #   name: String @where(operator: "like")
     # ): [User!]! @paginate(defaultCount: 10)
-    GetStudent(id:ID!): Student @field(resolver: "App\\GraphQL\\Queries\\Student\\GetStudent@resolveStudentAttribute")
-    GetStudents: [Student] @paginate(builder: "App\\GraphQL\\Queries\\Student\\GetStudents@resolveStudentsAttribute")
+    getStudent(id:ID!): Student @field(resolver: "App\\GraphQL\\Queries\\Student\\GetStudent@resolveStudentAttribute")
+    getStudents(
+      first_name: String @like (template : "%{}%")
+      last_name: String @like (template : "%{}%")     
+      # level: String @like (template : "%{}%")
+      egucation_level: String @like (template : "%{}%")
+      parents_job_title: String @like (template : "%{}%")
+      home_phone: String @like (template : "%{}%")
+      father_phone: String @like (template : "%{}%")
+      mother_phone: String @like (template : "%{}%")
+      major: String @like (template : "%{}%")
+      description: String @like (template : "%{}%")
+      phone: String @like (template : "%{}%") #@where(operator: "like" clause: "orWhere", key: "mother_phone") @where(operator: "like" clause: "orWhere", key: "father_phone")
+      egucation_level: String   @like (template : "%{}%")
+      
+#       active: Boolean @eq
+      orderBy:[OrderByClause!] @orderBy
+    ): [Student] @paginate(builder: "App\\GraphQL\\Queries\\Student\\GetStudents@resolveStudentsAttribute")
+}
+
+input OrderByClause{
+    field: String!
+    order: SortOrder!
+}
+
+enum SortOrder {
+    ASC
+    DESC
 }
 
 "Account of a person who utilizes this application."
@@ -89,26 +115,56 @@ scalar DateTime @scalar(class: "Nuwave\\Lighthouse\\Schema\\Types\\Scalars\\Date
 # }
 
 type Student @key(fields: "id") {
-        id:ID 
-        phone:String  
-        first_name:String,
-        last_name:String,
-        level:Int,
-        egucation_level:Int,
-        parents_job_title:String,
-        home_phone:String,
-        father_phone:String,
-        mother_phone:String,
-        school:String,
-        average:Float,
-        major:String,
-        introducing:String,
-        student_phone:String,
-        cities_id:Int,
-        sources_id:Int,
-        supporters_id:Int,
-        archived:String
+        id:Int 
+        phone:String 
+        home_phone:String 
+        first_name:String 
+        last_name:String 
+        egucation_level:String 
+        level:String
+        parents_job_title:String 
+        father_phone:String 
+        mother_phone:String 
+        major:String 
+        description:String 
+        
 }
 # type Course @key(fields: "id") @extends{
 #       id:ID @external  
 # }
+ input CreateStudentInput{
+        phone:String! # @rules(apply: ["size:11","unique:students,phone"]),
+        first_name:String!
+        last_name:String!
+        level:String
+        egucation_level:String!
+        parents_job_title:String
+        home_phone:String
+        father_phone:String
+        mother_phone:String      
+        major:String
+        description:String
+    } 
+     input UpdateStudentInput{
+      id:Int!
+      phone:String! # @rules(apply: ["size:11","unique:students,phone"]),
+      first_name:String!
+      last_name:String!
+      level:String
+      egucation_level:String!
+      parents_job_title:String
+      home_phone:String
+      father_phone:String
+      mother_phone:String       
+      major:String
+      description:String
+    } 
+type Mutation  {
+
+  #region student
+    createStudent(input: CreateStudentInput @spread): Student!  @field(resolver: "App\\GraphQL\\Mutations\\Student\\CreateStudent@resolver")
+    updateStudent(input: UpdateStudentInput @spread): Student!   @field(resolver: "App\\GraphQL\\Mutations\\Student\\UpdateStudent@resolver")
+    deleteStudent(id:ID!):Student  @field(resolver: "App\\GraphQL\\Mutations\\Student\\DeleteStudent@resolver")
+  #end student
+
+}

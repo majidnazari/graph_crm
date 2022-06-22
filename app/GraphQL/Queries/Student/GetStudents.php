@@ -7,6 +7,7 @@ use GraphQL\Type\Definition\ResolveInfo;
 use Nuwave\Lighthouse\Support\Contracts\GraphQLContext;
 use Nuwave\Lighthouse\Execution\ErrorHandler;
 use App\Exceptions\CustomException;
+use Log;
 
 final class GetStudents
 {
@@ -20,6 +21,7 @@ final class GetStudents
     }
     public function resolveStudentsAttribute($root, array $args, GraphQLContext $context, ResolveInfo $resolveInfo)
     {
+       // Log::info(json_encode($context->request()));
         $Student=Student::where('is_deleted', 0);
         return $Student;
         

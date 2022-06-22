@@ -12,9 +12,10 @@
                <div class="small-box bg-success">
                    <div class="inner p-0">
                      <p class="text-center">
-                        <span class="text-light btn">
-                            درآمد {{ jdate()->format('F') }} ماه من
+                       <a href="{{route('supporter_sanads', Auth::user()->id)}}"> <span class="text-light btn" >
+                            فروش {{ jdate()->format('F') }} ماه من
                         <span class="badge badge-light right">{{ $sum }} تومان</span>
+                        </a>
                         </span>
                      </p>
                    </div>
