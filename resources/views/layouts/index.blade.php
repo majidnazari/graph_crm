@@ -513,7 +513,6 @@
                             </a>
                         </li>
                         @endif
-                        @if(!Gate::allows('supervisor'))
                         <li class="nav-item">
                             @if(strpos(\Request::route()->getName(), 'student_supporter_histories')===0)
                             <a href="{{ route('student_supporter_histories') }}" class="nav-link active">
@@ -524,7 +523,6 @@
                                 <p>تاریخچه پشتیبان ها</p>
                             </a>
                         </li>
-                        @endif
                         <li class="nav-item">
                             @if(strpos(\Request::route()->getName(), 'student_all')===0)
                             <a href="{{ route('student_all') }}" class="nav-link active">

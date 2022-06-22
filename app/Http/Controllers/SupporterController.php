@@ -2022,7 +2022,7 @@ class SupporterController extends Controller
         ]);
     }
     public function supporterHistories()
-    {
+    {        
         $supportGroupId = Group::getSupport();
         if ($supportGroupId) {
             $supportGroupId = $supportGroupId->id;
