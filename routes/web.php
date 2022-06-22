@@ -214,8 +214,8 @@ Route::group(['middleware' => ['auth', 'message','changeCharactersAllToBePersian
         Route::post('/change_pass', 'SupporterController@changePass')->name('user_supporter_changepass');
         Route::any('/delete_a_call/{user_id}/{id}','SupporterController@newDeleteCall')->name('user_supporter_delete_call');
         Route::post('/calls-post','SupporterController@callIndexPost')->name('user_supporter_calls_post');
-        Route::get('/supporter-histories','SupporterController@supporterHistories')->name('student_supporter_histories')->middleware('limit-access');
-        Route::post('/supporter-histories-post','SupporterController@supporterHistoriesPost')->name('student_supporter_histories_post')->middleware('limit-access');
+        Route::get('/supporter-histories','SupporterController@supporterHistories')->name('student_supporter_histories')->middleware('admin-or-supervisor');
+        Route::post('/supporter-histories-post','SupporterController@supporterHistoriesPost')->name('student_supporter_histories_post')->middleware('admin-or-supervisor');
     });
 
     Route::group(['prefix' => '/schools','middleware' => 'limit-access'], function () {
