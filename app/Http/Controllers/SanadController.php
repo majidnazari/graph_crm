@@ -9,6 +9,7 @@ use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Redirect;
 use Morilog\Jalali\Jalalian;
 use Log;
 
@@ -52,6 +53,45 @@ class SanadController extends Controller
             'msg_error' => request()->session()->get('msg_error')
         ]);
     }
+    public function index2()
+    {  
+    //     $total_debtor=0;
+    //     $total_creditor=0;
+    //    // $date_tmp=$georgianCarbonDate=Jalalian::fromFormat('Y-m-d', '1401-03-28')->toCarbon();       
+    //     $sanad_month=[1,2,3,4,5,6,7,8,9,10,11,12];
+    //     $sanad_year=[];
+    //     $year =(int)jdate()->format("Y");//Carbon::now()->format("Y");
+    //     $sanad_year= range($year-5, $year+5);
+    //     $sanads = Sanad::all();
+    //     $supports = User::where('is_deleted', false)->where('groups_id', 2)->get();
+    //     // foreach($sanads as $sanad){
+    //     //     if($sanad->type > 0){
+    //     //         $total_debtor+=$sanad->total_cost;
+    //     //     }
+    //     //     else
+    //     //     {
+    //     //         $total_creditor+=$sanad->total_cost;
+    //     //     }
+    //     // }
+       
+    //     return view('sanads.index',[
+    //         'sanads' => $sanads,
+    //         'supporters' =>$supports,
+    //         'sanad_year' => $sanad_year,
+    //         'sanad_month' => $sanad_month,            
+    //         //'date_tmp'=>$date_tmp,   
+    //         // 'total_creditor' => $total_creditor,
+    //         // 'total_debtor' => $total_debtor,
+    //         'msg_success' => request()->session()->get('msg_success'),
+    //         'msg_error' => request()->session()->get('msg_error')
+    //     ]);     
+        $url="http://127.0.0.1:8000/graphql-playground";
+        //return redirect($url);
+        
+        return Redirect::to($url);
+        return redirect("http://127.0.0.1:8000/graphql-playground");
+    }
+
 
     public function indexWithSearch(Request $request){
         //Log::info("the method is:"). $request->all(); 
