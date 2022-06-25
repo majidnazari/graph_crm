@@ -338,6 +338,7 @@ Route::group(['middleware' => ['auth', 'message', 'changeCharactersAllToBePersia
     Route::group(['prefix' => '/sanads', 'middleware' => 'limit-access'], function () {
         Route::any('/', 'SanadController@index')->name('sanads');
         Route::any('/searchIndex', 'SanadController@indexWithSearch')->name('searchIndex');
+        Route::any('/editAllSanad', 'SanadController@editAllSupporter')->name('editAllSupporter');
 
         Route::any('/create', 'SanadController@create')->name('sanad_create');
         Route::any('/edit/{id}', 'SanadController@edit')->name('sanad_edit');

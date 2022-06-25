@@ -112,7 +112,7 @@
                     <th>قیمت دریافتی</th>
                     
                    
-                    <th>سهم پشتیبان(درصد)</th>
+                    <th>سهم پشتیبان</th>
                     <th>پرداختی موسسه</th>
                    <!-- <th>نوع</th> -->
                     <th>ویرایش</th>
@@ -168,6 +168,34 @@
                         
                       </tr>
                 </table>
+                <form method="post">
+                        @csrf
+                        <div class="row">
+                                      <div class="col-3">
+                                        <label for="supporter_amount_edit">ویرایش سهم پشتیبان</label>
+                                          <input type="text"  id="supporter_amount_edit" name="supporter_amount_edit" class="form-control select2" value="">
+                                      </div>  
+                                      <div class="col-3">
+                                       
+                                          <input type="text"  id="supporter_id_edit" name="supporter_id_edit" class="form-control select2" value="">
+                                      </div> 
+                                      <div class="col-3">
+                                       
+                                          <input type="text"  id="year_id_edit" name="year_id_edit" class="form-control select2" value="">
+                                      </div> 
+                                      <div class="col-3">
+                                       
+                                          <input type="text"  id="month_id_edit" name="month_id_edit" class="form-control select2" value="">
+                                      </div>   
+                        </div>
+                        <div class="col-3">
+                                  <div class="form-group">
+                                      <label for="to_date">&nbsp;</label>
+                                      <a href="#" class="btn btn-success form-control" onclick="theEditAll()" >اعمال تغییرات</a>
+                                      <img id="loading" src="/dist/img/loading.gif" style="height: 20px;display: none;" />
+                                  </div>
+                               </div> 
+              </form>
               </div>
               <!-- /.card-body -->
             </div>
@@ -187,7 +215,13 @@
 <!-- page script -->
 <script>
  let table = "";
- 
+
+    function theEditAll(){     
+        // $(myself).prop('disabled',true);
+         $('#loading').css('display','inline');        
+         table.ajax.reload();
+        return false;
+    }
     function theSearch(){
      
       // $.post("{{ route('searchIndex') }}",{flag:1,year:$("#year").val(),month:$("#month").val()},function(res){
