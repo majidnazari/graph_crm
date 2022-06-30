@@ -112,7 +112,7 @@
                     <th>قیمت دریافتی</th>
                     
                    
-                    <th>سهم پشتیبان(درصد)</th>
+                    <th>سهم پشتیبان</th>
                     <th>پرداختی موسسه</th>
                    <!-- <th>نوع</th> -->
                     <th>ویرایش</th>
@@ -168,6 +168,31 @@
                         
                       </tr>
                 </table>
+                <form method="post">
+                        @csrf
+                        <div class="row">
+                                      <div class="col-3">
+                                        <label for="supporter_amount_edit">ویرایش سهم پشتیبان</label>
+                                          <input type="text"  id="supporter_amount_edit" name="supporter_amount_edit" class="form-control select2" value="">
+                                      </div> 
+                                      
+                                      <!-- <div class="col-3">
+                                       
+                                          <input type="text"  id="year_id_edit" name="year_id_edit" class="form-control select2" value="{{$sanad_from}}">
+                                      </div> 
+                                      <div class="col-3">
+                                       
+                                          <input type="text"  id="month_id_edit" name="month_id_edit" class="form-control select2" value="{{$sanad_to}}">
+                                      </div>    -->
+                    
+                              <div class="col-3">
+                                  <div class="form-group">
+                                      <label for="to_date">&nbsp;</label>
+                                      <a href="#" class="btn btn-success form-control" onclick="theEditAll()" >اعمال تغییرات</a>                                     
+                                  </div>
+                               </div>
+                        </div>        
+              </form>
               </div>
               <!-- /.card-body -->
             </div>
@@ -187,14 +212,57 @@
 <!-- page script -->
 <script>
  let table = "";
- 
+
+    function theEditAll(){  
+         let supporter_id=0;
+         let month=0;
+         let year=0;
+         let supporter_amount_edit=0;
+     
+      supporter_id=$("#supporter_id").val()>0 ? $("#supporter_id").val() : 0 ;
+      month=$("#month").val()>0 ? $("#month").val() : 0 ;
+      year=$("#year").val()>0 ? $("#year").val() : 0 ;
+      if(supporter_id==0 || month==0  || year==0 ){
+           
+            alert("لطفا پشتیبان و ماه و سال را وارد نمایید.");
+            return false;
+      }     
+      else{
+                if($("#supporter_amount_edit").val().trim()!=""){
+                supporter_amount_edit=$("#supporter_amount_edit").val();
+                
+              }
+              else{
+                alert("لطفا مقدار سهم پشتیبان را وارد نمایید.");
+                return false;
+              }
+          }   
+     
+
+       var data={
+        "supporter_id" : supporter_id,
+        "month" : month,
+        "year" : year,
+        "supporter_amount_edit" : supporter_amount_edit
+       };
+     
+      $.post("{{ route('editAllSupporter') }}",data,function(res){
+       // console.log("the res is:"+ res);
+        if(res){
+            alert("ویرایش با موفقیت انجام شد.");
+            location.reload();
+        }
+       });  
+       
+        return false;
+    }
     function theSearch(){
      
       // $.post("{{ route('searchIndex') }}",{flag:1,year:$("#year").val(),month:$("#month").val()},function(res){
       //   console.log("the res is:"+ res);
       // });
      // alert($("#name").val());
-        //$(myself).prop('disabled',true);
+        $(myself).prop('disabled',true);
          $('#loading').css('display','inline');
          table.ajax.reload();
         return false;
@@ -250,13 +318,15 @@
                     data['supporter_id'] = $("#supporter_id").val();
                     data['month'] = $("#month").val();
                     data['year'] = $("#year").val();
+                    
                     //data['sanad_year'] = $('#sanad_year').val();
                     return JSON.stringify(data);
                 },
                 "complete": function(response) {
-                    $('#loading').css('display','none');
+                    $('#loading').css('display','none');                    
                     //$('#theBtn').prop('disabled',false);
-                    //console.log("res" + data['name']);
+                  //   var obj = JSON.parse( response );
+                  //  console.log("result is: " + obj.sanad_from);
                 }
             },
             columns: [                
