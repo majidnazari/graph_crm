@@ -1919,7 +1919,7 @@ class StudentController extends Controller
         // ->get();//->paginate(env('MAX_PAGINATION_ACADEMY'));
         return  $result;
     }
-    public function apiShowStudent($id)
+    public function apiShowStudent($id) 
     {             
         $student=Student::where('id',$id)->where('is_deleted',0)->orderBy('id','desc')->first();//->paginate(env('MAX_PAGINATION_ACADEMY'));
         return $student;
@@ -1949,6 +1949,10 @@ class StudentController extends Controller
         //$student->archived = $request->archived;
        
         //return Student::create($student);
+        //return "kkkk";//$request->role;
+        // if($request->role==="admin"){
+
+        // }
         return Student::create($request->all());
         // if($student)
         // {

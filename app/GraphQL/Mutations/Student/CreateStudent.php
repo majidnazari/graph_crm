@@ -17,7 +17,8 @@ final class CreateStudent
         // TODO implement the resolver
     }
     public function resolver($rootValue, array $args, GraphQLContext $context = null, ResolveInfo $resolveInfo)
-    {        
+    {     
+        //return auth()->guard('api')->user()->id;   
        // $user_id=auth()->guard('api')->user()->id;
         $student=[
             // 'user_id_creator' => 1,

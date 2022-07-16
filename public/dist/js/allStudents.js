@@ -724,7 +724,7 @@ $(function () {
         lengthChange: false,
         searching: false,
         ordering: true,
-        info: true,
+        info: true, 
         autoWidth: false,
         language: {
             paginate: {

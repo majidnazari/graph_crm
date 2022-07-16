@@ -20,7 +20,7 @@ class SanadController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index() 
     {
         $total_debtor = 0;
         $total_creditor = 0;
@@ -30,7 +30,7 @@ class SanadController extends Controller
         $year = (int)jdate()->format("Y"); //Carbon::now()->format("Y");
         $sanad_year = range($year - 5, $year + 5);
         $sanads = Sanad::all();
-        $supports = User::where('is_deleted', false)->where('groups_id', 2)->get();
+        $supports = User::where('is_deleted', false)->where('groups_id', env('USER_ROLE'))->get();
         // foreach($sanads as $sanad){
         //     if($sanad->type > 0){
         //         $total_debtor+=$sanad->total_cost;
@@ -99,12 +99,7 @@ class SanadController extends Controller
     {
         //Log::info("the method is:"). $request->all(); 
         //return $request->input('supporter_id');
-        $req =  request()->all();
-        if (!isset($req['start'])) {
-            $req['start'] = 0;
-            $req['length'] = 10;
-            $req['draw'] = 1;
-        }
+        
         $sanad_date_from_carbon = 0;
         $sanad_date_to_carbon = 0;
         $total_debtor = 0;
@@ -128,7 +123,7 @@ class SanadController extends Controller
         // $year =(int)jdate()->format("Y");//Carbon::now()->format("Y");
         // $sanad_year= range($year-5, $year+5);
         //$sanads =  Sanad::all();
-        $count = Sanad::count();
+       // $count = Sanad::count();
         $sanads = Sanad::where('id', '>',  0);
         if ($request->input('supporter_id') != 0) {
             //Log::info("add to log");              
@@ -169,15 +164,29 @@ class SanadController extends Controller
             //Log::info("the from date is:$milady_date_from, and to date is:$milady_date_to");     
 
         }
+        $Allsanads=$sanads->get();
+       
+        $req = request()->all();
+        if (!isset($req['start'])) {
+            $req['start'] = 0;
+            $req['length'] = 10;
+            $req['draw'] = 1;
+        }
+       
         $sanads = $sanads->with('supporter')
-            ->skip($req['start'])
-            ->take($req['length'])
-            ->get();
+        ->skip($req['start'])
+        ->take($req['length'])
+        ->get();
+          
+      
+        
+        
         $countFilter = count($sanads);
-        $supports = User::where('is_deleted', false)->where('groups_id', 2)->get();
+        $supports = User::where('is_deleted', false)->where('groups_id', env('USER_ROLE'))->get();
 
         $total_get_price = 0;
         $total_give_price = 0;
+        $total_supporter=0;
         foreach ($sanads as $index => $item) {
             $get_price = 0;
             $give_price = 0;
@@ -189,7 +198,7 @@ class SanadController extends Controller
                 $give_price = $item->total;
                 $total_give_price += $item->total;
             }
-
+            $total_supporter += $item->type > 0 ? ceil( $item->total * $item->supporter_percent / 100 ): 0 ;
             $btn = '<a class="btn btn-primary" href="' . route('sanad_edit', $item->id) . '"> ویرایش</a>';
             //  <a class="btn btn-danger" href="' . route('merge_students_delete', $item->id) . '"> حذف </a>';
             $data[] = [
@@ -211,12 +220,17 @@ class SanadController extends Controller
 
             ];
         }
+       
         $result = [
             "draw" => $req['draw'],
             "data" => $data,
-            "request" => $request->all(),
-            "recordsTotal" => $count,
-            "recordsFiltered" => $countFilter
+            "request" => $request->all(),            
+            "recordsTotal" =>  count($Allsanads),
+            "recordsFiltered" =>   count($Allsanads),
+            'total_get_price' => $total_get_price,
+            'total_give_price' => $total_give_price,
+            'total_supporter' => $total_supporter
+           
             //  "sanad_from_carbon" => $sanad_date_from_carbon,
             //  "sanad_to_carbon" => $sanad_date_from_carbon
         ];
@@ -276,7 +290,7 @@ class SanadController extends Controller
             ->take($req['length'])
             ->get();
         $countFilter = count($sanads);
-        $supports = User::where('is_deleted', false)->where('groups_id', 2)->get();
+        $supports = User::where('is_deleted', false)->where('groups_id', env('USER_ROLE'))->get();
 
         $total_get_price = 0;
         $total_give_price = 0;
