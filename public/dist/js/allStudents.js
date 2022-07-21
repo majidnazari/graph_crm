@@ -88,6 +88,7 @@ let filterParents = {
 function showMorePanel (index, tr) {
     var editRoute = route_edit;
     var purchaseRoute = route_purchase;
+    var supporterStudentAllCallRoute = route_call;
     var test = `<table style="width: 100%">
             <tr>
                 <td>
@@ -225,6 +226,13 @@ function showMorePanel (index, tr) {
                                     students[index].id
                                 )}">
                                     گزارش خریدهای قطعی دانش آموز
+                                </a>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col">
+                                <a target="_blank" href="${ supporterStudentAllCallRoute.replace('-1', students[index].id) }">
+                                    گزارش تماس ها
                                 </a>
                             </div>
                         </div>

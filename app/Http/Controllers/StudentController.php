@@ -1953,6 +1953,10 @@ class StudentController extends Controller
         // if($request->role==="admin"){
 
         // }
+        // $is_exist=Student::where($request->all())->first();
+        // if($is_exist){
+
+        // }
         return Student::create($request->all());
         // if($student)
         // {

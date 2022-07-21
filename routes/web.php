@@ -115,6 +115,8 @@ Route::group(['middleware' => ['auth', 'message', 'changeCharactersAllToBePersia
 
     Route::group(['prefix' => '/students'], function () {
         Route::any('/', 'StudentController@index')->name('students');
+        Route::any('/calls/{id}', 'SupporterController@calls')->name('student_allcall');
+        
         Route::any('/all', 'StudentController@indexAll')->name('student_all')->middleware('admin-or-supervisor');
         Route::get('/merged', 'StudentController@merge')->name('student_merged');
         Route::any('/banned', 'StudentController@banned')->name('student_banned')->middleware('admin-or-supervisor');
