@@ -376,7 +376,7 @@
 </div>
 <div class="modal" id="temperature_modal" tabindex="-1" role="dialog">
     <div class="modal-dialog" role="document">
-      <div class="modal-content">
+      <div class="modal-content"> 
         <div class="modal-header">
           <h5 class="modal-title">داغ/سرد</h5>
           <button type="button" class="close" data-dismiss="modal" aria-label="Close">
@@ -431,6 +431,7 @@
     let route_student_temperature = "{{ route('student_temperature') }}";
     let route_edit = "{{ route('student_edit', ['call_back'=>'student_all', 'id'=>-1]) }}";
     let route_purchase = "{{ route('student_purchases', -1) }}";
+    let route_call=`{{ route('supporter_student_allcall', -1) }}`;
     let levelRoute = "{{ route('change_level_ajax')}}";
 </script>
 <script type="text/javascript" src="/dist/js/allStudents.js"></script>

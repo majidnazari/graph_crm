@@ -96,7 +96,7 @@
               </div>
               <!-- /.card-header -->
               <div class="card-body">
-                <table id="sanadtbl" class="table table-bordered table-hover">
+                <table id="sanadtbl" class="table table-bordered table-hover"  >
                   <thead>
                   <tr>
                     <th>ردیف</th>
@@ -157,11 +157,11 @@
                                 جمع کل:
                         </td>
                         <!-- <td colspan='1'> {{number_format($sanads->sum('total_creditor'))}} </td> -->
-                        <td colspan='1'> {{number_format($sanads->sum('total_price'))}} </td>
+                        <td colspan='1' id='total_get_price' > {{number_format($sanads->sum('total_price'))}} </td>
                        
-                        <td colspan='1'> {{number_format($sanads->sum('total_supporter'))}} </td>
-                        <td colspan='1'> {{number_format($sanads->sum('total_debtor'))}} </td>
-                        <td colspan='1'> {{number_format($sanads->sum('total_supporter')-$sanads->sum('total_debtor'))}} </td>
+                        <td colspan='1' id='total_supporter'> {{number_format($sanads->sum('total_supporter'))}} </td>
+                        <td colspan='1' id='total_give_price' > {{number_format($sanads->sum('total_debtor'))}} </td>
+                        <td colspan='1' id='total_remain'  > {{number_format($sanads->sum('total_supporter')-$sanads->sum('total_debtor'))}} </td>
                         
                         
                         <!--<td colspan='2'> {{number_format($sanads->sum('total_total_cost'))}} </td> -->
@@ -286,14 +286,15 @@
         "ordering": true,
         "info": true,
         "autoWidth": false,
-        "language": {
-            "paginate": {
-                "previous": "قبل",
-                "next": "بعد"
+        language: {
+            paginate: {
+                previous: 'قبل',
+                next: 'بعد'
             },
-            "emptyTable":     "داده ای برای نمایش وجود ندارد",
-            "info":           "نمایش _START_ تا _END_ از _TOTAL_ داده",
-            "infoEmpty":      "نمایش 0 تا 0 از 0 داده",
+            emptyTable: 'داده ای برای نمایش وجود ندارد',
+            info: 'نمایش _START_ تا _END_ از _TOTAL_ داده',
+            infoEmpty: 'نمایش 0 تا 0 از 0 داده',
+            proccessing: 'در حال بروزرسانی'
         },
         "columnDefs": [   ////define column 1 and 5
         {
@@ -323,10 +324,17 @@
                     return JSON.stringify(data);
                 },
                 "complete": function(response) {
-                    $('#loading').css('display','none');                    
+                  let total_remain=response.responseJSON.total_give_price - response.responseJSON.total_supporter ;
+                    $('#loading').css('display','none');  
+                    $("#total_get_price").html(Number(response.responseJSON.total_get_price).toLocaleString());
+                    $("#total_give_price").html(Number(response.responseJSON.total_give_price).toLocaleString());
+                    $("#total_supporter").html(Number(response.responseJSON.total_supporter).toLocaleString());
+                    $("#total_remain").html(Number(total_remain).toLocaleString());
+                    
                     //$('#theBtn').prop('disabled',false);
-                  //   var obj = JSON.parse( response );
-                  //  console.log("result is: " + obj.sanad_from);
+                     //var obj = JSON.parse( response );
+                    //console.log("result is: " + JSON.stringify(response));
+                    //console.log("total_r1 is: " + response.responseJSON.total_r1);
                 }
             },
             columns: [                
@@ -355,7 +363,7 @@
       $(".btn-danger").click(function(e){
           if(!confirm('آیا مطمئنید؟')){
             e.preventDefault();
-          }
+          } 
       });
     });
     
