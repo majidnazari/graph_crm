@@ -21,6 +21,9 @@ final class GetStudent
     }
     public function resolveStudentAttribute($root, array $args, GraphQLContext $context, ResolveInfo $resolveInfo)
     {
+        // $t=Student::find(1);
+        // $user_role=auth()->guard('api')->user()->group->type; 
+        // return  $user_role;   
         //Log::info(json_encode($context->request()));
         $Student=Student::find($args['id']);
         return $Student;
