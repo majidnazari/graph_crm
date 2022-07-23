@@ -55,14 +55,16 @@ $persons = [
                 <table id="example2" class="table table-bordered table-hover">
                   <thead>
                   <tr>
-                    <th>ردیف</th>
+                    <th>ردیف  </th>
                     <th>کد</th>
                     <th>محصول</th>
                     <th>پاسخگو</th>
                     <th>نتیجه</th>
                     <th>یادآور</th>
                     <th>پاسخگو بعد</th>
+                   
                     <th>اطلاع رسانی</th>
+                    <th>تاریخ تماس</th>
                     <th>توضیحات</th>
                     <th>#</th>
                   </tr>
@@ -77,7 +79,9 @@ $persons = [
                         <td>{{ ($item->callresult)?$item->callresult->title:'-' }}</td>
                         <td>{{ ($item->next_call)?jdate($item->next_call)->format("Y/m/d"):'-' }}</td>
                         <td>{{ ($item->next_to_call)?$persons[$item->next_to_call]:'-' }}</td>
+                       
                         <td>{{($item->notices_id ? $item->notice->name : '-')}}</td>
+                        <td>{{ $item->created_at }}</td>
                         <td>{{ $item->description }}</td>
                         <td>
                             <a class="btn btn-danger" href="{{ route('supporter_student_deletecall', ["user_id"=>$item->users_id, "id"=>$item->id]) }}">
@@ -145,7 +149,7 @@ $persons = [
         { "type": "pstring", "targets": [2,3,4,6,7,8] }
 
         ],
-        "order": [[1, 'asc']], /// sort columns 2
+        "order": [[8, 'desc']], /// sort columns 8
       });
 
       $(".btn-danger").click(function(e){
