@@ -115,7 +115,7 @@ enum SortOrder {
 # }
 
 type Student @key(fields: "id") {
-        id:Int 
+        id:ID! 
         phone:String 
         home_phone:String 
         first_name:String 
@@ -167,4 +167,34 @@ type Mutation  {
     deleteStudent(id:ID!):Student  @field(resolver: "App\\GraphQL\\Mutations\\Student\\DeleteStudent@resolver")
   #end student
 
+}
+
+type CourseStudent @key(fields: "id") @extends {   
+  id: ID! @external
+  student_id:Int @external
+  student: Student @requires(fields: "student_id")
+}
+
+type StudentContact @key(fields: "id") @extends {   
+  id: ID! @external
+  student_id:Int @external
+  student: Student @requires(fields: "student_id")
+}
+
+type StudentFault @key(fields: "id") @extends {   
+  id: ID! @external
+  student_id:Int @external
+  student: Student @requires(fields: "student_id")
+}
+
+type AzmoonResult @key(fields: "id") @extends {   
+  id: ID! @external
+  student_id:Int @external
+  student: Student @requires(fields: "student_id")
+}
+
+type AbsencePresence @key(fields: "id") @extends {   
+  id: ID! @external
+  student_id:Int @external
+  student: Student @requires(fields: "student_id")
 }
