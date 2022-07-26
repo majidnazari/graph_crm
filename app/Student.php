@@ -73,7 +73,7 @@ class Student extends Model
         return $this->hasMany('App\StudentCollection', 'students_id', 'id')->where('is_deleted', false);
     }
 
-    public function calls()
+    public function calls() 
     {
         return $this->hasMany('App\Call', 'students_id', 'id')->where('is_deleted', false)->orderBy('created_at', 'desc');
     }

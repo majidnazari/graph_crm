@@ -104,6 +104,7 @@
                     <th>شماره سند </th>
                     <th> تاریخ  سند </th>
                     <th>شرح</th>
+                    <th>نام دانش آموز</th>
                    
                     <!-- <th>بستانکار</th> -->
                    <!-- <th>مانده</th> -->
@@ -126,6 +127,7 @@
                         <td>{{ $item->number}} </td>
                         <td>{{ jdate($item->updated_at)->format("Y/m/d") }}</td>
                         <td>{{ $item->description }}</td>
+                        <td>{{ $item->student_fullname }}</td>
                         <!-- <td>{{ $item->id }}</td> -->
                        
                         <!-- <td>{{ $item->type > 0 ? number_format($item->total) : '' }}</td>  -->
@@ -153,7 +155,7 @@
                      
                   </tbody>
                   <tr>
-                        <td colspan='6'>
+                        <td colspan='7'>
                                 جمع کل:
                         </td>
                         <!-- <td colspan='1'> {{number_format($sanads->sum('total_creditor'))}} </td> -->
@@ -343,6 +345,7 @@
                 { data: 'number' },
                 { data: 'updated_at' },
                 { data: 'description' },               
+                { data: 'student_fullname' },               
                 { data: 'total_cost' },
                 { data: 'total_get' },
                 { data: 'supporter_percent' },
