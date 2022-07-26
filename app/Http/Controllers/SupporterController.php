@@ -43,6 +43,7 @@ use Exception;
 use Log;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
+use App\MergeStudents;
 
 class SupporterController extends Controller
 {
@@ -1730,8 +1731,45 @@ class SupporterController extends Controller
 
     public function calls($id)
     {
-        $student = Student::where('id', $id)->where('banned', false)->with('calls.product')->with('calls.product.collection')->with('calls.callresult')->with('calls.notice')->first();
-        if ($student->calls)
+        $getAllStudentIds=MergeStudents::where('main_students_id',$id)
+        ->orWhere('auxilary_students_id',$id)
+        ->orWhere('second_auxilary_students_id',$id)
+        ->orWhere('third_auxilary_students_id',$id)
+        ->select('main_students_id','auxilary_students_id','second_auxilary_students_id','third_auxilary_students_id')
+        ->first()->toArray();
+        $other_ids[]=$getAllStudentIds['auxilary_students_id'];
+        $other_ids[]=$getAllStudentIds['second_auxilary_students_id'];
+        $other_ids[]=$getAllStudentIds['third_auxilary_students_id'];
+        $other_ids[]=$getAllStudentIds['main_students_id'];
+       //dd( $other_ids);
+        // $students=DB::table('students')
+        //  //->where('id', $id)
+        //  ->whereIn('id',['8286',$id])
+        // // ->where('banned', false)       
+        // // ->with('calls.product')
+        // // ->with('calls.product.collection')
+        // // ->with('calls.callresult')
+        // // ->with('calls.notice')
+        // ->toSql();
+        // return ($students);
+        $students = Student::where('id', $id)
+        ->orWhereIn('id',$other_ids)
+        ->where('banned', false)       
+        ->with('calls.product')
+        ->with('calls.product.collection')
+        ->with('calls.callresult')
+        ->with('calls.notice')
+        ->get();
+       // dd($students);
+        // ->where('mergethirdauxilarystudent',function($query){
+        //     $query->where()
+        // })
+        //->with('mergethirdauxilarystudent') 
+        
+        //return $student;
+        foreach($students as  $student)
+        {
+            if ($student->calls)
             foreach ($student->calls as $index => $call) {
                 if ($student->calls[$index]->product) {
                     $student->calls[$index]->product->parents = "-";
@@ -1742,8 +1780,10 @@ class SupporterController extends Controller
                     }
                 }
             }
+        }
+        //dd(json_decode($students));
         return view('supporters.call', [
-            "student" => $student
+            "students" => $students
         ]);
     }
 

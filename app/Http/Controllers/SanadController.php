@@ -207,6 +207,7 @@ class SanadController extends Controller
                 "supporter" => $item->supporter->first_name . ' ' . $item->supporter->last_name,
                 "number" => $item->number,
                 "description" => $item->description,
+                "student_fullname" => $item->student_fullname,
                 "updated_at" => jdate($item->updated_at)->format("Y/m/d"),
                 "total_cost" => $item->total_cost,
                 "total_get" => $item->type > 0 ? $item->total : 0,
@@ -364,6 +365,7 @@ class SanadController extends Controller
         $sanad->supporter_id = $request->input('supporter_id');
         $sanad->number = $request->input('number');
         $sanad->description = $request->input('description');
+        $sanad->student_fullname = ($request->input('student_fullname')!="") ? $request->input('student_fullname') : "";
         $sanad->total = (int)$request->input('total', 0);
         $sanad->total_cost = (int)$request->input('total_cost', 0);
         $sanad->supporter_percent = (int)$request->input('supporter_percent', 0);
