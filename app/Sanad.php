@@ -18,6 +18,7 @@ class Sanad extends Model
     protected $fillable=[
         "number",
         "description",
+        "student_fullname",
         "total",
         "total_cost",
         "supporter_percent" ,

@@ -273,7 +273,7 @@ class StudentController extends Controller
                 }
                 if (request()->input('phone') != null) {
                     $phone = (int)request()->input('phone');
-                    $students = $students->where('phone', $phone);
+                    $students = $students->where('phone', $phone)->orWhere('father_phone',$phone)->orWhere('mother_phone',$phone);
                 }
                 if (request()->input('cities_id') != null) {
                     $cities_id = (int)request()->input('cities_id');
@@ -1136,6 +1136,15 @@ class StudentController extends Controller
                 'msg_success' => request()->session()->get('msg_success'),
                 'msg_error' => request()->session()->get('msg_error')
             ]);
+        }
+        $is_exist=Student::where('phone',$request->input('phone'))
+        ->orWhere('father_phone',$request->input('phone'))
+        ->orWhere('mother_phone',$request->input('phone'))
+        ->first();
+        if($is_exist)
+        {
+            $request->session()->flash("msg_error", " شماره تکراریست و مربوط به دانش آموز یا ولی  " . $is_exist->first_name . " " . $is_exist->last_name );
+            return redirect()->route('student_create');
         }
 
         $student->users_id = Auth::user()->id;

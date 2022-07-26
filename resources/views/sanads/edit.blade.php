@@ -106,6 +106,16 @@
                   <input type="checkbox" class="form-control" id="type" name="type" onclick="checkType(this);" checked />
                   @endif
                 </div>
+                <div class="form-group">
+                  <label for="description">نام دانش آموز</label>
+                  @if (isset($sanad) && isset($sanad->id))
+                  <input type="text" class="form-control" id="student_fullname" name="student_fullname" placeholder="نام کامل دانش آموز" value="{{ $sanad->student_fullname }}" />
+                  @else
+                  <input type="text" class="form-control" id="student_fullname" name="student_fullname" placeholder="نام کامل دانش آموز" />
+                  @endif
+                </div>
+
+
               </div>
             </div>
             <div class="row">
