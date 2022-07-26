@@ -1736,7 +1736,12 @@ class SupporterController extends Controller
         ->orWhere('second_auxilary_students_id',$id)
         ->orWhere('third_auxilary_students_id',$id)
         ->select('main_students_id','auxilary_students_id','second_auxilary_students_id','third_auxilary_students_id')
-        ->first()->toArray();
+        ->first();
+        if(!$getAllStudentIds){
+            $getAllStudentIds = ['main_students_id' => $id, 'auxilary_students_id' => 0, 'second_auxilary_students_id' => 0, 'third_auxilary_students_id' => 0];
+        } else {
+            $getAllStudentIds=$getAllStudentIds->toArray();
+        }
         $other_ids[]=$getAllStudentIds['auxilary_students_id'];
         $other_ids[]=$getAllStudentIds['second_auxilary_students_id'];
         $other_ids[]=$getAllStudentIds['third_auxilary_students_id'];
