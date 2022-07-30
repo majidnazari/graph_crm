@@ -576,7 +576,7 @@ function preloadTagModal (mode) {
         $('div.morals').show()
     }
     $('input.tag-checkbox').prop('checked', false)
-    $('input.collection-checkbox').prop('checked', false)
+    $('input.needtag-checkbox').prop('checked', false)
     var studentsIndex = parseInt($('#students_index').val(), 10)
     console.log(studentsIndex, students[studentsIndex])
     if (!isNaN(studentsIndex)) {
@@ -631,7 +631,7 @@ function saveTags () {
     $('input.tag-checkbox:checked').each(function (id, field) {
         selectedTags.push(parseInt(field.value, 10))
     })
-    $('input.needtag-checkbox:checked').each(function (id, field) {
+    $('input.needtag-checkbox:checked').each(function (id, field) {        
         selectedColllections.push(parseInt(field.value, 10))
     })
     var studentsIndex = parseInt($('#students_index').val(), 10)
@@ -658,7 +658,9 @@ function saveTags () {
                 alert('خطای بروز رسانی')
             })
         }
+        
     }
+   
 }
 function saveTemperatures () {
     var selectedTemperatures = []
