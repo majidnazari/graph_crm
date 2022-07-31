@@ -11,6 +11,7 @@ let theColumns = [
     { data: 'first_name' },
     { data: 'last_name' },
     { data: 'users_id' },
+    { data: 'users_id_editor' },
     { data: 'sources_id' },
     { data: 'tags' },
     { data: 'temps' },
@@ -27,12 +28,12 @@ let theColumnDefs = [
     {
         searchable: false,
         orderable: false,
-        targets: 10
+        targets: 11
     },
     {
         searchable: false,
         orderable: false,
-        targets: 7
+        targets: 8
     }
 ]
 if(theRoute == "student_all"){
@@ -42,6 +43,7 @@ if(theRoute == "student_all"){
         { data: 'first_name' },
         { data: 'last_name' },
         { data: 'users_id' },
+        { data: 'users_id_editor' },
         { data: 'sources_id' },
         { data: 'tags' },
         { data: 'temps' },
@@ -59,12 +61,12 @@ if(theRoute == "student_all"){
         {
             searchable: false,
             orderable: false,
-            targets: 11
+            targets: 12
         },
         {
             searchable: false,
             orderable: false,
-            targets: 7
+            targets: 8
         }
     ]
 }

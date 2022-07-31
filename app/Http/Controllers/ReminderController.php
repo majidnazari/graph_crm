@@ -80,10 +80,17 @@ class ReminderController extends Controller
         }
 
         $data = [];
+        $del_btn="";
         if($theCalls){
             foreach ($theCalls as $index => $item) {
                 $route_of_reminder_delete = route('reminder_delete',['id' => $item->id]);
                 $route_of_supporters_students = route('supporter_students');
+                if( auth()->user()->group->type!=='support')
+                {
+                    $del_btn="<a class='btn btn-danger' href='$route_of_reminder_delete ' onclick='destroy(event)'>
+                                        حذف 
+                                          </a>";
+                }
                 $data[] = [
                     "row" => $index + 1,
                     "id" => $item->id,
@@ -94,10 +101,8 @@ class ReminderController extends Controller
                     "next_call" => ($item->next_call)?jdate($item->next_call)->format("Y/m/d"):'-' ,
                     "next_to_call" => ($item->next_to_call)?$persons[$item->next_to_call]:'-',
                     "description" => $item->description,
-                    "end" => "<a class='btn btn-danger' href='$route_of_reminder_delete' onclick='destroy(event)'>
-                                  حذف
-                             </a>
-                            <form method='get' action='$route_of_supporters_students' >
+                    "end" => $del_btn . 
+                            "<form method='get' action='$route_of_supporters_students' >
                             <input type='hidden' name='students_id' value='$item->students_id' />
                             <input type='hidden' name='calls_id' value='$item->id' />
                             <button class='btn btn-primary'>
