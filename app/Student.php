@@ -38,6 +38,10 @@ class Student extends Model
     {
         return $this->hasOne('App\User', 'id', 'users_id');
     }
+    public function user_editor()
+    {
+        return $this->hasOne('App\User', 'id', 'users_id_editor');
+    }
 
     public function source()
     {

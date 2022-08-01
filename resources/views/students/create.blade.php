@@ -202,21 +202,21 @@
                             @endif
                         </div>
 
-                        <div class="form-group">
+                        <!-- <div class="form-group">
                             <label for="sources_id">منبع</label>
                             <select  id="sources_id" name="sources_id" class="form-control">
                                 <option value="0"></option>
-                                @foreach ($sources as $item)
-                                    @if (isset($student) && isset($student->id) && $student->sources_id == $item->id)
-                                    <option value="{{ $item->id }}" selected>
-                                    @else
-                                    <option value="{{ $item->id }}" >
-                                    @endif
-                                    {{ $item->name }}
+                                foreach ($sources as $item)
+                                    if (isset($student) && isset($student->id) && $student->sources_id == $item->id)
+                                    //<option value=" $item->id " selected>
+                                    else
+                                    //<option value=" $item->id" >
+                                    endif
+                                 $item->name 
                                     </option>
-                                @endforeach
+                                endforeach
                             </select>
-                        </div>
+                        </div> -->
 
                         <div class="form-group">
                             <label for="cities_id">شهر</label>
@@ -351,7 +351,7 @@
                         <div class="form-group">
                             <label for="description">توضیحات</label>
                             @if (isset($student) && isset($student->description))
-                            <input type="text" class="form-control" id="description" name="description" placeholder="توضیحات" value="{{ $student->description }}" />
+                            <input type="text" class="form-control" id="description" name="description" placeholder="توضیحات" value="{{ $student->description }}"  {{ (in_array(auth()->user()->group->type,['support','marketer','consultant'])) ? "disabled" : '' }} "  />
                             @else
                             <input type="text" class="form-control" id="description" name="description" placeholder="توضیحات"  />
                             @endif
