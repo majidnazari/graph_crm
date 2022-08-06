@@ -809,6 +809,12 @@ class SupporterController extends Controller
         $students_id = $request->input('students_id');
         $level = $request->level;
         $student = Student::where('id', $students_id)->first();
+        if(($student->level==3 and $level==2) || ($student->level==2 and $level==1) ){
+            return [
+                "error" => "permission denied",
+                "data" => null
+            ];
+        }
         $student->level = $level;
         $student->save();
         return [

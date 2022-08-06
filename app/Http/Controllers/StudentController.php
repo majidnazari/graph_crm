@@ -1210,11 +1210,19 @@ class StudentController extends Controller
     {
 
         $i = 1;
-        $student = Student::where('is_deleted', false)->where('id', $id)->first();
+        $student = Student::where('is_deleted', false)->where('id', $id)->first();       
+        
         if ($student == null) {
             $request->session()->flash("msg_error", "دانش آموز مورد نظر پیدا نشد!");
             return redirect()->route('students');
         }
+
+        if(($student->level==3 and $request->input('level')==2) || ($student->level==2 and $request->input('level')==1) )
+        {
+            $request->session()->flash("msg_error", "تغییر سطح دانش آموز امکان پذیر نیست");
+            return redirect()->route($call_back);
+        }     
+
         $supportGroupId = Group::getSupport();
         if ($supportGroupId)
             $supportGroupId = $supportGroupId->id;
