@@ -209,7 +209,7 @@ class StudentController extends Controller
             
         }
        
-        if (request()->getMethod() == 'GET') {            
+        if (request()->getMethod() == 'GET') {             
          //dd($view);
           return view($view,compact([
               'route',

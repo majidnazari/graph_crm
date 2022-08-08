@@ -1586,6 +1586,106 @@ class SupporterController extends Controller
             'msg_error' => request()->session()->get('msg_error')
         ]);
     }
+
+    public function indexReminders() 
+    {
+        $supporter_id=2;
+        // $total_debtor = 0;
+        // $total_creditor = 0;
+        // // $date_tmp=$georgianCarbonDate=Jalalian::fromFormat('Y-m-d', '1401-03-28')->toCarbon();       
+        // $sanad_month = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
+        // $sanad_year = [];
+        // $year = (int)jdate()->format("Y"); //Carbon::now()->format("Y");
+        // $sanad_year = range($year - 5, $year + 5);
+        // $sanads = Sanad::all();
+        $reminders = Call::with('student')->with('student.supporter')->take(10)->orderBy('id','desc')->get();
+        $supports = User::where('is_deleted', false)->where('groups_id', $supporter_id)->get();
+        $products = Product::where('is_deleted', false)->where('is_private', false)->get();
+        // foreach($sanads as $sanad){
+        //     if($sanad->type > 0){
+        //         $total_debtor+=$sanad->total_cost;
+        //     }
+        //     else
+        //     {
+        //         $total_creditor+=$sanad->total_cost;
+        //     }
+        // }
+
+        return view('supporters.reminder', [
+            'reminders' => $reminders,
+            'supports' => $supports,
+            'products' => $products,
+            // 'sanad_year' => $sanad_year,
+            // 'sanad_month' => $sanad_month,
+            // "sanad_from" => 0,
+            // "sanad_to" => 0,
+            //'date_tmp'=>$date_tmp,   
+            // 'total_creditor' => $total_creditor,
+            // 'total_debtor' => $total_debtor,
+            'msg_success' => request()->session()->get('msg_success'),
+            'msg_error' => request()->session()->get('msg_error')
+        ]);
+    }
+   public function getReminders()
+   { 
+    $data = []; 
+    $now=Carbon::now();
+    $reminders=call::with('student')
+    ->with('student.supporter')
+    ->take(11)
+    ->orderBy('id','desc')
+    //where('next_call','>=',$now)
+    ->get();
+
+    $req = request()->all();
+    if (!isset($req['start'])) {
+        $req['start'] = 0;
+        $req['length'] = 10;
+        $req['draw'] = 1;
+    }
+    foreach ($reminders as $index => $item) {
+
+        $data[] = [
+            "row" => $index + 1,
+            "id" => $item->id,
+            "student" => $item->student->first_name . ' ' .$item->student->last_name ,
+            "supporter" => $item->student->supporter->first_name . ' ' . $item->student->supporter->last_name,
+            "created_at" => jdate($item->created_at)->format("Y/m/d"),
+            "next_call" => jdate($item->next_call)->format("Y/m/d"),
+            "description" =>$item->description
+           
+            //"id" => $item->id,
+           
+           
+            // "description" => $item->description,
+           
+            // "updated_at" => jdate($item->updated_at)->format("Y/m/d"),
+            // "total_cost" => $item->total_cost,
+            // "total_get" => $item->type > 0 ? $item->total : 0,
+            // "total_give" => $item->type < 0 ? $item->total : 0,
+            // "supporter_percent" =>  $item->type > 0 ?  number_format(ceil($item->total * $item->supporter_percent / 100)) : "", //// $item->supporter_percent,
+            // "end" => $btn
+
+           
+        ];
+
+    }
+
+    $result = [
+        "draw" => $req['draw'],
+        "data" => $data,
+        //"request" => $request->all(),
+        "recordsTotal" =>  count($reminders),
+        "recordsFiltered" =>   count($reminders),
+    ];
+
+    return $result;
+    // return view('supporters.reminder',[
+    //     'reminders'=>$reminders,
+    //     'msg_success' => request()->session()->get('msg_success'),
+    //     'msg_error' => request()->session()->get('msg_error')
+    // ]);
+   }
     public function postPurchases(Request $request)
     {
 

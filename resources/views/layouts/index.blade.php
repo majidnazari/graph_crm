@@ -652,6 +652,18 @@
 
                         @if(Gate::allows('parameters'))
                         <li class="nav-item">
+                            @if(strpos(\Request::route()->getName(), 'supporter_student_reminders_get')===0)
+                            <a href="{{ route('supporter_student_reminders_get') }}" class="nav-link active">
+                            @else
+                                <a href="{{ route('supporter_student_reminders_get') }}" class="nav-link">
+                            @endif
+                                    <p>گزارش یادآورها  </p>
+                                </a>
+                        </li>
+                        @endif
+                        
+                        @if(Gate::allows('parameters'))
+                        <li class="nav-item">
                             @if(strpos(\Request::route()->getName(), 'help')===0)
                             <a href="{{ route('helps') }}" class="nav-link active">
                             @else
