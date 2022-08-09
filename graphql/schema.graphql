@@ -179,6 +179,30 @@ type CourseStudentWithAbsencePresence @key(fields: "id") @extends {
   student_id:Int @external
   student: Student @requires(fields: "student_id")
 }
+type CourseStudentWithIllegalStudent @key(fields: "id") @extends {   
+  id: ID! @external
+  student_id:Int @external
+  student: Student @requires(fields: "student_id")
+}
+type Data {
+
+  id:Int
+  student_id:Int
+  financial_status:String
+  session_count: Int
+  name: String
+  course_id: String
+}
+type paginatorInfo{
+      count:Int
+      currentPage:Int
+      firstItem:Int
+      hasMorePages:Boolean
+      lastItem:Int
+      lastPage:Int
+      perPage:Int
+      total:Int
+}
 
 type StudentContact @key(fields: "id") @extends {   
   id: ID! @external

@@ -209,7 +209,7 @@ class StudentController extends Controller
             
         }
        
-        if (request()->getMethod() == 'GET') {            
+        if (request()->getMethod() == 'GET') {             
          //dd($view);
           return view($view,compact([
               'route',
@@ -1195,7 +1195,7 @@ class StudentController extends Controller
             $student->save();
         } catch (Exception $e) {
             // dd($e);
-            if ($e->getCode() == 23000)
+            if ($e->getCode() == 23000)            
                 $request->session()->flash("msg_error", "شماره دانش آموز تکراری است");
             else
                 $request->session()->flash("msg_error", "خطا در ثبت دانش آموز");
@@ -1210,11 +1210,19 @@ class StudentController extends Controller
     {
 
         $i = 1;
-        $student = Student::where('is_deleted', false)->where('id', $id)->first();
+        $student = Student::where('is_deleted', false)->where('id', $id)->first();       
+        
         if ($student == null) {
             $request->session()->flash("msg_error", "دانش آموز مورد نظر پیدا نشد!");
             return redirect()->route('students');
         }
+
+        if(($student->level==3 and $request->input('level')==2) || ($student->level==2 and $request->input('level')==1) )
+        {
+            $request->session()->flash("msg_error", "تغییر سطح دانش آموز امکان پذیر نیست");
+            return redirect()->route($call_back);
+        }     
+
         $supportGroupId = Group::getSupport();
         if ($supportGroupId)
             $supportGroupId = $supportGroupId->id;

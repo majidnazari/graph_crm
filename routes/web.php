@@ -266,6 +266,8 @@ Route::group(['middleware' => ['auth', 'message', 'changeCharactersAllToBePersia
         Route::any('/delete_call/{user_id}/{id}', 'SupporterController@deleteCall')->name('supporter_student_deletecall');
         Route::any('/create', 'SupporterController@studentCreate')->name('supporter_student_create');
         Route::get('/purchases', 'SupporterController@getPurchases')->name('supporter_student_purchases_get');
+        Route::get('/reminders', 'SupporterController@indexReminders')->name('supporter_student_reminders_get');
+        Route::any('/reminders', 'SupporterController@indexReminders')->name('supporter_students_reminders_get_with_AJAX');
         Route::post('/purchases', 'SupporterController@postPurchases')->name('supporter_student_purchases_post');
         Route::any('/all_missed_calls', 'SupporterController@allMissedCalls')->name('supporter_all_missed_calls');
         Route::any('/yesterday_missed_calls', 'SupporterController@yesterdayMissedCalls')->name('supporter_yesterday_missed_calls');
