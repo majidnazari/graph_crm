@@ -1937,7 +1937,7 @@ class SupporterController extends Controller
         $student->major = request()->input('major');
         $student->introducing = request()->input('introducing');
         $student->student_phone = request()->input('student_phone');
-        $student->sources_id = request()->input('sources_id');
+        $student->sources_id =request()->has('sources_id') ? request()->input('sources_id') : 0;
         $student->supporters_id = 0;
         $student->supporter_seen = false;
         try {
