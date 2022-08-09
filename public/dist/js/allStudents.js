@@ -251,7 +251,7 @@ function showMorePanel (index, tr) {
         row.child(test).show()
     }
 }
-    function changeLevel (studentsIndex, id) {
+    function changeLevel (studentsIndex, id) {       
     if (students[studentsIndex]) {
         var students_id = id;
         $('#loading-' + studentsIndex).show();

@@ -104,7 +104,7 @@ class SanadController extends Controller
         $sanad_date_to_carbon = 0;
         $total_debtor = 0;
         $total_creditor = 0;
-        $data = [];
+        $data = []; 
         // if($request->input('flag')!="")
         // {
 
