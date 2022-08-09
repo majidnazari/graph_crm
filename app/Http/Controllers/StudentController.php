@@ -1195,7 +1195,7 @@ class StudentController extends Controller
             $student->save();
         } catch (Exception $e) {
             // dd($e);
-            if ($e->getCode() == 23000)
+            if ($e->getCode() == 23000)            
                 $request->session()->flash("msg_error", "شماره دانش آموز تکراری است");
             else
                 $request->session()->flash("msg_error", "خطا در ثبت دانش آموز");
