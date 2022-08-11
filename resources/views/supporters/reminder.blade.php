@@ -56,8 +56,14 @@
                         
                         <div class="col">
                             <div class="form-group">
-                                <label for="name">نام و نام خانوادگی</label>
-                                <input type="text" class="form-control" id="name" name="name" placeholder="نام و نام خانوادگی" value="{{ isset($name)?$name:'' }}" onkeypress="handle(event)" />
+                                <label for="first_name">نام </label>
+                                <input type="text" class="form-control" id="first_name" name="first_name" placeholder=" نام " value="{{ isset($first_name)?$first_name:'' }}" onkeypress="handle(event)" />
+                            </div>
+                        </div>
+                        <div class="col">
+                            <div class="form-group">
+                                <label for="last_name"> نام خانوادگی</label>
+                                <input type="text" class="form-control" id="last_name" name="last_name" placeholder=" نام خانوادگی" value="{{ isset($last_name)?$last_name:'' }}" onkeypress="handle(event)" />
                             </div>
                         </div>
                         <div class="col">
@@ -136,6 +142,8 @@
                   <tr>
                     <th>ردیف</th>
                     <th> دانش آموز </th>
+                    <th> محصول  </th>
+                    <th> تلفن  </th>
                     <th>پشتیبان</th>
                     
                     <th> تاریخ  یادآور </th>
@@ -148,6 +156,8 @@
                       <tr>
                         <td>{{ $index + 1 }}</td>
                         <td>{{ $item->student->first_name. '  ' .$item->student->last_name }}</td>
+                        <td>{{ $item->product }}</td>
+                        <td>{{ $item->student->phone }}</td>
                         <td>{{ $item->student->supporter->first_name. '  ' .$item->student->supporter->last_name }}</td>
                         <td>{{ jdate($item->created_at)->format("Y/m/d") }}</td>
                         <td>{{ jdate($item->next_call)->format("Y/m/d") }}</td>
@@ -188,7 +198,7 @@
       //   console.log("the res is:"+ res);
       // });
      // alert($("#name").val());
-        $(myself).prop('disabled',true);
+       // $(myself).prop('disabled',true);
          $('#loading').css('display','inline');
          table.ajax.reload();
         return false;
@@ -234,12 +244,12 @@
         {
             "searchable": false,
             "orderable": false,
-            "targets": [0,5]
+            "targets": [0,7]
         },
         //{ "type": "pstring", "targets": [2,3,4] }
         ],
 
-        "order": [[1, 'asc']], /// sort columns 2
+        "order": [[3, 'desc']], /// sort columns 2
         serverSide: true,
             processing: true,
             ajax: {
@@ -249,8 +259,13 @@
                 "contentType": 'application/json; charset=utf-8',
 
                 "data": function (data) {
-                   // data['name'] = "fFF";//$("#name").val();
-                   // data['supporter_id'] = $("#supporter_id").val();
+                    data['first_name'] = $("#first_name").val();
+                    data['last_name'] = $("#last_name").val();
+                    data['supporters_id'] = $("#supporters_id").val();
+                    data['phone'] = $("#phone").val();
+                    data['products_id'] = $("#products_id").val();
+                    data['from_date_persian'] = $("#from_date_persian").val();
+                    data['to_date_persian'] = $("#to_date_persian").val();
                    // data['month'] = $("#month").val();
                    // data['year'] = $("#year").val();
                     
@@ -272,12 +287,15 @@
                 }
             },
             columns: [                
-                { data: 'row'},
+                { data: 'row'},               
                 { data: 'student' },                   
+                { data: 'product' },                   
+                { data: 'phone' },                   
                 { data: 'supporter' },
                 { data: 'created_at' },
                 { data: 'next_call' },
-                { data: 'description' }              
+                { data: 'description' } ,             
+                //{ data: 'end' } ,             
                 // { data: 'student_fullname' },               
                 // { data: 'total_cost' },
                 // { data: 'total_get' },
