@@ -1599,7 +1599,7 @@ class SupporterController extends Controller
         // $sanad_year = range($year - 5, $year + 5);
         // $sanads = Sanad::all();
         $reminders = Call::with('student')->with('student.supporter')->take(10)->orderBy('id','desc')->get();
-        $supports = User::where('is_deleted', false)->where('groups_id', $supporter_id)->get();
+        $supports = User::where('is_deleted', false)->where('groups_id', env('USER_ROLE'))->get();
         $products = Product::where('is_deleted', false)->where('is_private', false)->get();
         // foreach($sanads as $sanad){
         //     if($sanad->type > 0){
@@ -1626,16 +1626,17 @@ class SupporterController extends Controller
             'msg_error' => request()->session()->get('msg_error')
         ]);
     }
-   public function getReminders()
+   public function getReminders(Request $request)
    { 
+
     $data = []; 
     $now=Carbon::now();
-    $reminders=call::with('student')
-    ->with('student.supporter')
-    ->take(11)
-    ->orderBy('id','desc')
+    $reminders=call::where('is_deleted',0)->orderBy('id','desc');
+    
+    //->take(10)
+    //->orderBy('id','desc')
     //where('next_call','>=',$now)
-    ->get();
+    //->get();
 
     $req = request()->all();
     if (!isset($req['start'])) {
@@ -1643,15 +1644,76 @@ class SupporterController extends Controller
         $req['length'] = 10;
         $req['draw'] = 1;
     }
+
+    
+    if(isset($req['from_date_persian'])){
+        //dd($this->jalaliToGregorian($req['from_date_persian']));
+        $reminders= $reminders->where('created_at','>=',$this->jalaliToGregorian($req['from_date_persian']));
+    }
+    if(isset($req['to_date_persian'])){
+        $reminders= $reminders->where('created_at','<=',$this->jalaliToGregorian($req['to_date_persian']));
+    }
+    $reminders=$reminders
+    ->whereHas('student' , function($query) use ($req){
+        if(isset($req['first_name'])){
+            //dd($req);
+
+            $query->where('first_name','Like','%'.$req['first_name']. '%');
+        }
+        if(isset($req['last_name'])){
+          
+            $query->where('last_name','Like','%'.$req['last_name']. '%');
+        }
+        if(isset($req['phone'])){           
+
+            $query->where('phone','Like','%'.$req['phone']. '%');
+        }
+        //return true;
+        
+    })->with('student')
+    ->whereHas('student.supporter' , function($query) use ($req){
+        if(isset($req['supporters_id'])){           
+
+            $query->where('id',$req['supporters_id']);
+        }
+
+    })
+    ->with('student.supporter') 
+    ->whereHas('product' , function($query) use ($req){
+        if(isset($req['products_id'])){          
+
+            $query->where('id',$req['products_id']);
+        }
+
+    })
+    ->with('product') ;
+
+    $countOfReminder=$reminders->count();
+    $reminders=$reminders
+    ->offset($req['start'])
+    ->limit($req['length'])
+    // ->skip($req['start'])
+    // ->take($req['length'])
+    ->get();
+    //=> function($query) use($request){
+    //    if($request->has('supporters_id'))
+    //    {
+    //     $query->where('id',$request->input('supporters_id'));
+    //    }
+    
+    //->orderBy('id','desc')    
+    
     foreach ($reminders as $index => $item) {
 
         $data[] = [
-            "row" => $index + 1,
-            "id" => $item->id,
+            "row" =>  $req['start'] + $index + 1 ,
+            "id" => $item->id ,
             "student" => $item->student->first_name . ' ' .$item->student->last_name ,
+            "phone" => $item->student->phone  ,
+            "product" => $item->product->name  ,
             "supporter" => $item->student->supporter->first_name . ' ' . $item->student->supporter->last_name,
-            "created_at" => jdate($item->created_at)->format("Y/m/d"),
-            "next_call" => jdate($item->next_call)->format("Y/m/d"),
+            "created_at" => jdate($item->created_at)->format("Y-m-d"),
+            "next_call" => jdate($item->next_call)->format("Y-m-d"),
             "description" =>$item->description
            
             //"id" => $item->id,
@@ -1674,9 +1736,9 @@ class SupporterController extends Controller
     $result = [
         "draw" => $req['draw'],
         "data" => $data,
-        //"request" => $request->all(),
-        "recordsTotal" =>  count($reminders),
-        "recordsFiltered" =>   count($reminders),
+        "request" => $req,
+        "recordsTotal" =>   $countOfReminder,
+        "recordsFiltered" =>    $countOfReminder,
     ];
 
     return $result;

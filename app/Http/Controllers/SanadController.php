@@ -41,7 +41,7 @@ class SanadController extends Controller
         //     }
         // }
 
-        return view('sanads.index', [
+        return view('sanads.index', [ 
             'sanads' => $sanads,
             'supporters' => $supports,
             'sanad_year' => $sanad_year,
@@ -202,8 +202,8 @@ class SanadController extends Controller
             $btn = '<a class="btn btn-primary" href="' . route('sanad_edit', $item->id) . '"> ویرایش</a>';
             //  <a class="btn btn-danger" href="' . route('merge_students_delete', $item->id) . '"> حذف </a>';
             $data[] = [
-                "row" => $index + 1,
-                "id" => $item->id,
+                "row" =>  $req['start'] + $index + 1,
+                "id" => $item->id ,
                 "supporter" => $item->supporter->first_name . ' ' . $item->supporter->last_name,
                 "number" => $item->number,
                 "description" => $item->description,
