@@ -8,9 +8,13 @@ use Illuminate\Notifications\Notifiable;
 use App\MergeStudents as AppMergeStudents;
 use Laravel\Passport\HasApiTokens;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use OwenIt\Auditing\Contracts\Auditable;
 
-class User extends Authenticatable
-{   
+
+class User extends Authenticatable implements Auditable
+{ 
+    use \OwenIt\Auditing\Auditable;
+
     use HasApiTokens, HasFactory, Notifiable;   
 
     /**

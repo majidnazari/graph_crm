@@ -3,9 +3,13 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use OwenIt\Auditing\Contracts\Auditable;
 
-class MergeStudents extends Model
+
+class MergeStudents extends Model  implements Auditable
 {
+    use \OwenIt\Auditing\Auditable;
+
     protected $table = 'middle_table_for_merged_students';
     protected $fillable = [
        'main_students_id',

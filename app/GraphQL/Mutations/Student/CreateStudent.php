@@ -30,6 +30,7 @@ final class CreateStudent
             'phone' => $args['phone'],
             'first_name' => $args['first_name'],
             'last_name'=> $args['last_name'],
+            'nationality_code'=> $args['nationality_code'],
             //'level'=> $args['level'],
             'egucation_level'=> $args['egucation_level'],
             'parents_job_title'=> $args['parents_job_title'],
