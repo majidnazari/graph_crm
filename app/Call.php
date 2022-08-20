@@ -3,9 +3,11 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use OwenIt\Auditing\Contracts\Auditable;
 
-class Call extends Model
+class Call extends Model implements Auditable
 {
+    use \OwenIt\Auditing\Auditable;
     public function product(){
         return $this->hasOne('App\Product', 'id', 'products_id');
     }

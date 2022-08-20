@@ -3,9 +3,13 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use OwenIt\Auditing\Contracts\Auditable;
 
-class Collection extends Model
+
+class Collection extends Model implements Auditable
 {
+    use \OwenIt\Auditing\Auditable;
+
     public function parent(){
         return $this->hasOne('App\Collection', 'id', 'parent_id');
     }

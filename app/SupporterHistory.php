@@ -3,9 +3,13 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use OwenIt\Auditing\Contracts\Auditable;
 
-class SupporterHistory extends Model
+
+class SupporterHistory extends Model implements Auditable
 {
+    use \OwenIt\Auditing\Auditable;
+
     public function user(){
         return $this->hasOne('App\User', 'id', 'users_id');
     }

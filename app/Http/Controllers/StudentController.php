@@ -400,6 +400,7 @@ class StudentController extends Controller
                         "id" => $item->id,
                         "first_name" => $item->first_name,
                         "last_name" => $item->last_name,
+                        "nationality_code" => $item->nationality_code,                        
                         "users_id" => $registerer,
                         "users_id_editor" => $user_editor,
                         "sources_id" => ($item->source) ? $item->source->name : '-',
@@ -436,6 +437,7 @@ class StudentController extends Controller
                         "id" => $item->id,
                         "first_name" => $item->first_name,
                         "last_name" => $item->last_name,
+                        "nationality_code" => $item->nationality_code,
                         "users_id" => $registerer,
                         "users_id_editor" => $user_editor,
                         "sources_id" => ($item->source) ? $item->source->name : '-',
@@ -1173,6 +1175,7 @@ class StudentController extends Controller
         $student->users_id = Auth::user()->id;
         $student->first_name = $request->input('first_name');
         $student->last_name = $request->input('last_name');
+        $student->nationality_code = $request->input('national_no');
         $student->last_year_grade = (int)$request->input('last_year_grade');
         $student->consultants_id = $request->input('consultants_id');
         $student->parents_job_title = $request->input('parents_job_title');
@@ -1249,6 +1252,7 @@ class StudentController extends Controller
         $student->users_id_editor = Auth::user()->id;
         $student->first_name = $request->input('first_name');
         $student->last_name = $request->input('last_name');
+        $student->nationality_code = $request->input('national_no');
         $student->last_year_grade = (int)$request->input('last_year_grade');
         $student->consultants_id = $request->input('consultants_id');
         $student->parents_job_title = $request->input('parents_job_title');

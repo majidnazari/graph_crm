@@ -67,6 +67,7 @@ scalar DateTime @scalar(class: "Nuwave\\Lighthouse\\Schema\\Types\\Scalars\\Date
     getStudents(
       first_name: String @like (template : "%{}%")
       last_name: String @like (template : "%{}%")     
+      nationality_code: String @like (template : "%{}%")     
       # level: String @like (template : "%{}%")
       egucation_level: String @like (template : "%{}%")
       parents_job_title: String @like (template : "%{}%")
@@ -120,6 +121,7 @@ type Student @key(fields: "id") {
         home_phone:String 
         first_name:String 
         last_name:String 
+        nationality_code:String
         egucation_level:String 
         level:String
         parents_job_title:String 
@@ -136,6 +138,7 @@ type Student @key(fields: "id") {
         phone:String! # @rules(apply: ["size:11","unique:students,phone"]),
         first_name:String!
         last_name:String!
+        nationality_code:String!
         level:String
         egucation_level:String!
         parents_job_title:String
@@ -150,6 +153,7 @@ type Student @key(fields: "id") {
       phone:String! # @rules(apply: ["size:11","unique:students,phone"]),
       first_name:String!
       last_name:String!
+      nationality_code:String!
       level:String
       egucation_level:String!
       parents_job_title:String

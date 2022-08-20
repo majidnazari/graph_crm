@@ -3,9 +3,13 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use OwenIt\Auditing\Contracts\Auditable;
 
-class Tag extends Model
+
+class Tag extends Model implements Auditable
 {
+    use \OwenIt\Auditing\Auditable;
+
     public function parent(){
         return $this->hasOne('App\Tag', 'id', 'parent_id');
     }
