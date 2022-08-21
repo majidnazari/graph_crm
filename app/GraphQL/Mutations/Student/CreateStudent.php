@@ -5,6 +5,7 @@ namespace App\GraphQL\Mutations\Student;
 use App\Student;
 use GraphQL\Type\Definition\ResolveInfo;
 use Nuwave\Lighthouse\Support\Contracts\GraphQLContext;
+use GraphQL\Error\Error;
 
 final class CreateStudent
 {
@@ -50,7 +51,14 @@ final class CreateStudent
             
         ];
         if($existed_student=Student::where('phone',$args['phone'])->first())
-                return $existed_student;
+        {
+            return Error::createLocatedError("USER-CREATE-RECORD_IS_EXIST");
+        }
+        if($existed_student=Student::where('nationality_code',$args['nationality_code'])->first())
+        {
+            return Error::createLocatedError("USER-CREATE-NATIONAL_NO_IS_EXIST");
+        }
+               // return $existed_student;
         $student_result=Student::create($student);
         return $student_result;
     }

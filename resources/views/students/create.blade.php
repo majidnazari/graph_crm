@@ -238,9 +238,9 @@
                         <div class="form-group">
                             <label for="national_no">کد ملی </label>
                             @if (isset($student) && isset($student->nationality_code))
-                            <input required type="number" class="form-control" id="national_no" name="national_no" placeholder="کد ملی" value="{{ $student->nationality_code }}" />
+                            <input  type="number" class="form-control" id="national_no" name="national_no" placeholder="کد ملی" value="{{ $student->nationality_code }}" />
                             @else
-                            <input required type="number" class="form-control" id="national_no" name="national_no" placeholder="کد ملی"  />
+                            <input  type="number" class="form-control" id="national_no" name="national_no" placeholder="کد ملی"  />
                             @endif
                         </div>
 
