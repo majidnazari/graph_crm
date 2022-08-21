@@ -149,7 +149,7 @@ type Student @key(fields: "id") {
         description:String
     } 
      input UpdateStudentInput{
-      id:Int!
+      id:ID!
       phone:String! # @rules(apply: ["size:11","unique:students,phone"]),
       first_name:String!
       last_name:String!
