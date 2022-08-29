@@ -128,7 +128,7 @@ type Student @key(fields: "id") {
         father_phone:String 
         mother_phone:String 
         major:String 
-        description:String 
+        # description:String 
         
 }
 # type Course @key(fields: "id") @extends{
@@ -146,7 +146,7 @@ type Student @key(fields: "id") {
         father_phone:String
         mother_phone:String      
         major:String
-        description:String
+        # description:String
     } 
      input UpdateStudentInput @validator{
       id:ID!
@@ -161,7 +161,7 @@ type Student @key(fields: "id") {
       father_phone:String
       mother_phone:String       
       major:String
-      description:String
+      # description:String
     } 
 type Mutation  {
 
