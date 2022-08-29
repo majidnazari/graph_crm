@@ -40,7 +40,7 @@ final class CreateStudent
             'mother_phone'=> $args['mother_phone'],
             //'school'=> $args['school'],
             //'average'=> $args['average'],
-            'major'=> isset($args['major']) ? $args['major'] : "other",
+            'major'=> (!isset($args['major']) || ($args['major']=="")) ?  "other" : $args['major'] ,
             //'introducing'=> $args['introducing'],
             //'student_phone'=> $args['student_phone'],
             //'citys_id'=> $args['citys_id'],
