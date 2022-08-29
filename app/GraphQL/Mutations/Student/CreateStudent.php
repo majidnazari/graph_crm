@@ -47,7 +47,7 @@ final class CreateStudent
             //'sources_id'=> $args['sources_id'],
             //'supporters_id'=> $args['supporters_id'],
             //'archived'=> $args['archived'],
-            'description' => $args['description']          
+            //'description' => $args['description']          
             
         ];
         if($existed_student=Student::where('phone',$args['phone'])->first())
