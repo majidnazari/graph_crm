@@ -243,6 +243,14 @@
                             <input  type="number" class="form-control" id="national_no" name="national_no" placeholder="کد ملی"  />
                             @endif
                         </div>
+                        <div class="form-group">
+                            <label for="concours_year">سال کنکور </label>
+                            @if (isset($student) && isset($student->concours_year))
+                            <input  type="number" class="form-control" id="concours_year" name="concours_year" placeholder="سال کنکور" value="{{ $student->concours_year }}" />
+                            @else
+                            <input  type="number" class="form-control" id="concours_year" name="concours_year" placeholder="سال کنکور"  />
+                            @endif
+                        </div>
 
 
                     </div>
