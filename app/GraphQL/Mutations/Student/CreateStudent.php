@@ -32,7 +32,7 @@ final class CreateStudent
             'first_name' => $args['first_name'],
             'last_name'=> $args['last_name'],
             'nationality_code'=> $args['nationality_code'],
-            //'level'=> $args['level'],
+            'concours_year' => isset($args['concours_year']) ? $args['concours_year'] : null ,
             'egucation_level'=> $args['egucation_level'],
             'parents_job_title'=> $args['parents_job_title'],
             'home_phone'=> $args['home_phone'],

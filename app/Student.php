@@ -13,6 +13,7 @@ class Student extends Model implements Auditable
         'first_name',
         'last_name',
         'nationality_code',
+        'concours_year',
         'level',
         'egucation_level',
         'parents_job_title',
