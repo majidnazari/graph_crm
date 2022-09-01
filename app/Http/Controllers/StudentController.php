@@ -1176,6 +1176,7 @@ class StudentController extends Controller
         $student->first_name = $request->input('first_name');
         $student->last_name = $request->input('last_name');
         $student->nationality_code = $request->input('national_no');
+        $student->concours_year = $request->input('concours_year');
         $student->last_year_grade = (int)$request->input('last_year_grade');
         $student->consultants_id = $request->input('consultants_id');
         $student->parents_job_title = $request->input('parents_job_title');
@@ -1253,6 +1254,7 @@ class StudentController extends Controller
         $student->first_name = $request->input('first_name');
         $student->last_name = $request->input('last_name');
         $student->nationality_code = $request->input('national_no');
+        $student->concours_year = $request->input('concours_year');
         $student->last_year_grade = (int)$request->input('last_year_grade');
         $student->consultants_id = $request->input('consultants_id');
         $student->parents_job_title = $request->input('parents_job_title');
