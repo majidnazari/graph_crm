@@ -138,11 +138,11 @@ type Student @key(fields: "id") {
         phone:String! # @rules(apply: ["size:11","unique:students,phone"]),
         first_name:String!
         last_name:String!
-        nationality_code:String!
+        nationality_code:String
         concours_year:String
         
         level:String
-        egucation_level:String!
+        egucation_level:String
         parents_job_title:String
         home_phone:String
         father_phone:String
@@ -155,10 +155,10 @@ type Student @key(fields: "id") {
       phone:String! # @rules(apply: ["size:11","unique:students,phone"]),
       first_name:String!
       last_name:String!
-      nationality_code:String!
+      nationality_code:String
       concours_year:String
       level:String
-      egucation_level:String!      
+      egucation_level:String      
       parents_job_title:String
       home_phone:String
       father_phone:String
