@@ -122,6 +122,7 @@ type Student @key(fields: "id") {
         first_name:String 
         last_name:String 
         nationality_code:String
+        concours_year:String
         egucation_level:String 
         level:String
         parents_job_title:String 
