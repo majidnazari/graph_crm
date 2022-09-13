@@ -371,7 +371,7 @@
                         <div class="form-group">
                             <label for="description">توضیحات</label>
                             @if (isset($student) && isset($student->description))
-                            <input type="text" class="form-control" id="description" name="description" placeholder="توضیحات" value="{{ $student->description }}"  {{ (in_array(auth()->user()->group->type,['support','marketer','consultant'])) ? "disabled" : '' }} "  />
+                            <input type="text" class="form-control" id="description" name="description_exists" placeholder="توضیحات" value="{{ $student->description }}"  {{ (in_array(auth()->user()->group->type,['support','marketer','consultant'])) ? "readonly" : '' }} "  />
                             @else
                             <input type="text" class="form-control" id="description" name="description" placeholder="توضیحات"  />
                             @endif

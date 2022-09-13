@@ -1282,7 +1282,15 @@ class StudentController extends Controller
         $student->banned = ($request->input('banned') != null) ? true : false;
         $student->archived = ($request->input('archived') != null) ? true : false;
         $student->outside_consultants = $request->input('outside_consultants');
-        $student->description = $request->input('description');
+        Log:info("the group id edit is: " . Auth::user()->groups_id);
+        if($request->has('description')){
+            $student->description = $request->input('description');
+        }
+        if($request->input('description_exists') and Auth::user()->groups_id!=2){
+            $student->description = $request->input('description_exists');
+        }
+       
+        
         try {
             if ($student->banned || $student->archived) {
                 $student->supporters_id = 0;
