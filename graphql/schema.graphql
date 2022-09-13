@@ -192,6 +192,16 @@ type CourseStudentWithIllegalStudent @key(fields: "id") @extends {
   student_id:Int @external
   student: Student @requires(fields: "student_id")
 }
+type StudentWarningHistory @key(fields: "id") @extends {
+  id: ID! @external
+  student_id:Int @external
+  student:Student @requires(fields: "student_id")
+}
+type StudentWarning @key(fields: "id") @extends {
+  id: ID! @external
+  student_id:Int @external
+  student:Student @requires(fields: "student_id")
+}
 type Data {
 
   id:Int
