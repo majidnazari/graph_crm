@@ -67,7 +67,7 @@ return [
     |
     */
 
-    'timezone' => 'UTC',
+    'timezone' => 'Asia/Tehran',
 
     /*
     |--------------------------------------------------------------------------
@@ -136,6 +136,7 @@ return [
 
     'providers' => [
 
+        \Nuwave\Lighthouse\Federation\FederationServiceProvider::class,
         /*
          * Laravel Framework Service Providers...
          */
@@ -175,6 +176,9 @@ return [
         App\Providers\EventServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
 
+
+        OwenIt\Auditing\AuditingServiceProvider::class,
+       
     ],
 
     /*
@@ -226,7 +230,7 @@ return [
         'URL' => Illuminate\Support\Facades\URL::class,
         'Validator' => Illuminate\Support\Facades\Validator::class,
         'View' => Illuminate\Support\Facades\View::class,
-
+       
     ],
 
 ];

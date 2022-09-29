@@ -37,11 +37,13 @@ use App\Utils\CommissionPurchaseRelation;
 use App\Http\Traits\AllTypeCallsTrait;
 use App\MergeStudents as AppMergeStudents;
 use App\SaleSuggestion;
+use App\Sanad;
 use App\Utils\SearchStudent;
 use Exception;
 use Log;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
+use App\MergeStudents;
 
 class SupporterController extends Controller
 {
@@ -807,6 +809,12 @@ class SupporterController extends Controller
         $students_id = $request->input('students_id');
         $level = $request->level;
         $student = Student::where('id', $students_id)->first();
+        if(($student->level==3 and $level==2) || ($student->level==2 and $level==1) ){
+            return [
+                "error" => "permission denied",
+                "data" => null
+            ];
+        }
         $student->level = $level;
         $student->save();
         return [
@@ -1295,6 +1303,23 @@ class SupporterController extends Controller
             return $result;
         }
     }
+    public function showSanads($id = null, $level, $view, $route)
+    {
+       $user_id=Auth::user()->id; 
+       if($user_id==$id)
+       {
+            $sanads= Sanad::where('supporter_id',$id)->get();
+            return view($view,[
+                'sanads' => $sanads
+            ]);
+       }
+       return redirect('/login');
+       
+    }
+    public function sanad($id = null)
+    {       
+        return $this->showSanads($id, 'all', "supporters.sanad", "supporters_sanad");
+    }
     public function student($id = null)
     {
         return $this->showStudents($id, 'all', "supporters.student", "supporters_student");
@@ -1561,6 +1586,168 @@ class SupporterController extends Controller
             'msg_error' => request()->session()->get('msg_error')
         ]);
     }
+
+    public function indexReminders() 
+    {
+        $supporter_id=2;
+        // $total_debtor = 0;
+        // $total_creditor = 0;
+        // // $date_tmp=$georgianCarbonDate=Jalalian::fromFormat('Y-m-d', '1401-03-28')->toCarbon();       
+        // $sanad_month = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
+        // $sanad_year = [];
+        // $year = (int)jdate()->format("Y"); //Carbon::now()->format("Y");
+        // $sanad_year = range($year - 5, $year + 5);
+        // $sanads = Sanad::all();
+        $reminders = Call::with('student')->with('student.supporter')->take(10)->orderBy('id','desc')->get();
+        $supports = User::where('is_deleted', false)->where('groups_id', env('USER_ROLE'))->get();
+        $products = Product::where('is_deleted', false)->where('is_private', false)->get();
+        // foreach($sanads as $sanad){
+        //     if($sanad->type > 0){
+        //         $total_debtor+=$sanad->total_cost;
+        //     }
+        //     else
+        //     {
+        //         $total_creditor+=$sanad->total_cost;
+        //     }
+        // }
+
+        return view('supporters.reminder', [
+            'reminders' => $reminders,
+            'supports' => $supports,
+            'products' => $products,
+            // 'sanad_year' => $sanad_year,
+            // 'sanad_month' => $sanad_month,
+            // "sanad_from" => 0,
+            // "sanad_to" => 0,
+            //'date_tmp'=>$date_tmp,   
+            // 'total_creditor' => $total_creditor,
+            // 'total_debtor' => $total_debtor,
+            'msg_success' => request()->session()->get('msg_success'),
+            'msg_error' => request()->session()->get('msg_error')
+        ]);
+    }
+   public function getReminders(Request $request)
+   { 
+
+    $data = []; 
+    $now=Carbon::now();
+    $reminders=call::where('is_deleted',0)->orderBy('id','desc');
+    
+    //->take(10)
+    //->orderBy('id','desc')
+    //where('next_call','>=',$now)
+    //->get();
+
+    $req = request()->all();
+    if (!isset($req['start'])) {
+        $req['start'] = 0;
+        $req['length'] = 10;
+        $req['draw'] = 1;
+    }
+
+    
+    if(isset($req['from_date_persian'])){
+        //dd($this->jalaliToGregorian($req['from_date_persian']));
+        $reminders= $reminders->where('created_at','>=',$this->jalaliToGregorian($req['from_date_persian']));
+    }
+    if(isset($req['to_date_persian'])){
+        $reminders= $reminders->where('created_at','<=',$this->jalaliToGregorian($req['to_date_persian']));
+    }
+    $reminders=$reminders
+    ->whereHas('student' , function($query) use ($req){
+        if(isset($req['first_name'])){
+            //dd($req);
+
+            $query->where('first_name','Like','%'.$req['first_name']. '%');
+        }
+        if(isset($req['last_name'])){
+          
+            $query->where('last_name','Like','%'.$req['last_name']. '%');
+        }
+        if(isset($req['phone'])){           
+
+            $query->where('phone','Like','%'.$req['phone']. '%');
+        }
+        //return true;
+        
+    })->with('student')
+    ->whereHas('student.supporter' , function($query) use ($req){
+        if(isset($req['supporters_id'])){           
+
+            $query->where('id',$req['supporters_id']);
+        }
+
+    })
+    ->with('student.supporter') 
+    ->whereHas('product' , function($query) use ($req){
+        if(isset($req['products_id'])){          
+
+            $query->where('id',$req['products_id']);
+        }
+
+    })
+    ->with('product') ;
+
+    $countOfReminder=$reminders->count();
+    $reminders=$reminders
+    ->offset($req['start'])
+    ->limit($req['length'])
+    // ->skip($req['start'])
+    // ->take($req['length'])
+    ->get();
+    //=> function($query) use($request){
+    //    if($request->has('supporters_id'))
+    //    {
+    //     $query->where('id',$request->input('supporters_id'));
+    //    }
+    
+    //->orderBy('id','desc')    
+    
+    foreach ($reminders as $index => $item) {
+
+        $data[] = [
+            "row" =>  $req['start'] + $index + 1 ,
+            "id" => $item->id ,
+            "student" => $item->student->first_name . ' ' .$item->student->last_name ,
+            "phone" => $item->student->phone  ,
+            "product" => $item->product->name  ,
+            "supporter" => $item->student->supporter->first_name . ' ' . $item->student->supporter->last_name,
+            "created_at" => jdate($item->created_at)->format("Y-m-d"),
+            "next_call" => jdate($item->next_call)->format("Y-m-d"),
+            "description" =>$item->description
+           
+            //"id" => $item->id,
+           
+           
+            // "description" => $item->description,
+           
+            // "updated_at" => jdate($item->updated_at)->format("Y/m/d"),
+            // "total_cost" => $item->total_cost,
+            // "total_get" => $item->type > 0 ? $item->total : 0,
+            // "total_give" => $item->type < 0 ? $item->total : 0,
+            // "supporter_percent" =>  $item->type > 0 ?  number_format(ceil($item->total * $item->supporter_percent / 100)) : "", //// $item->supporter_percent,
+            // "end" => $btn
+
+           
+        ];
+
+    }
+
+    $result = [
+        "draw" => $req['draw'],
+        "data" => $data,
+        "request" => $req,
+        "recordsTotal" =>   $countOfReminder,
+        "recordsFiltered" =>    $countOfReminder,
+    ];
+
+    return $result;
+    // return view('supporters.reminder',[
+    //     'reminders'=>$reminders,
+    //     'msg_success' => request()->session()->get('msg_success'),
+    //     'msg_error' => request()->session()->get('msg_error')
+    // ]);
+   }
     public function postPurchases(Request $request)
     {
 
@@ -1712,8 +1899,50 @@ class SupporterController extends Controller
 
     public function calls($id)
     {
-        $student = Student::where('id', $id)->where('banned', false)->with('calls.product')->with('calls.product.collection')->with('calls.callresult')->with('calls.notice')->first();
-        if ($student->calls)
+        $getAllStudentIds=MergeStudents::where('main_students_id',$id)
+        ->orWhere('auxilary_students_id',$id)
+        ->orWhere('second_auxilary_students_id',$id)
+        ->orWhere('third_auxilary_students_id',$id)
+        ->select('main_students_id','auxilary_students_id','second_auxilary_students_id','third_auxilary_students_id')
+        ->first();
+        if(!$getAllStudentIds){
+            $getAllStudentIds = ['main_students_id' => $id, 'auxilary_students_id' => 0, 'second_auxilary_students_id' => 0, 'third_auxilary_students_id' => 0];
+        } else {
+            $getAllStudentIds=$getAllStudentIds->toArray();
+        }
+        $other_ids[]=$getAllStudentIds['auxilary_students_id'];
+        $other_ids[]=$getAllStudentIds['second_auxilary_students_id'];
+        $other_ids[]=$getAllStudentIds['third_auxilary_students_id'];
+        $other_ids[]=$getAllStudentIds['main_students_id'];
+       //dd( $other_ids);
+        // $students=DB::table('students')
+        //  //->where('id', $id)
+        //  ->whereIn('id',['8286',$id])
+        // // ->where('banned', false)       
+        // // ->with('calls.product')
+        // // ->with('calls.product.collection')
+        // // ->with('calls.callresult')
+        // // ->with('calls.notice')
+        // ->toSql();
+        // return ($students);
+        $students = Student::where('id', $id)
+        ->orWhereIn('id',$other_ids)
+        ->where('banned', false)       
+        ->with('calls.product')
+        ->with('calls.product.collection')
+        ->with('calls.callresult')
+        ->with('calls.notice')
+        ->get();
+       // dd($students);
+        // ->where('mergethirdauxilarystudent',function($query){
+        //     $query->where()
+        // })
+        //->with('mergethirdauxilarystudent') 
+        
+        //return $student;
+        foreach($students as  $student)
+        {
+            if ($student->calls)
             foreach ($student->calls as $index => $call) {
                 if ($student->calls[$index]->product) {
                     $student->calls[$index]->product->parents = "-";
@@ -1724,8 +1953,10 @@ class SupporterController extends Controller
                     }
                 }
             }
+        }
+        //dd(json_decode($students));
         return view('supporters.call', [
-            "student" => $student
+            "students" => $students
         ]);
     }
 
@@ -1768,7 +1999,7 @@ class SupporterController extends Controller
         $student->major = request()->input('major');
         $student->introducing = request()->input('introducing');
         $student->student_phone = request()->input('student_phone');
-        $student->sources_id = request()->input('sources_id');
+        $student->sources_id =request()->has('sources_id') ? request()->input('sources_id') : 0;
         $student->supporters_id = 0;
         $student->supporter_seen = false;
         try {
@@ -2004,7 +2235,7 @@ class SupporterController extends Controller
         ]);
     }
     public function supporterHistories()
-    {
+    {        
         $supportGroupId = Group::getSupport();
         if ($supportGroupId) {
             $supportGroupId = $supportGroupId->id;

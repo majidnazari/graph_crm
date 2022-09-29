@@ -21,6 +21,7 @@ class Kernel extends HttpKernel
         \Illuminate\Foundation\Http\Middleware\ValidatePostSize::class,
         \App\Http\Middleware\TrimStrings::class,
         \Illuminate\Foundation\Http\Middleware\ConvertEmptyStringsToNull::class,
+        'check-ip' => \App\Http\Middleware\CheckValidIp::class,
     ];
 
     /**
@@ -66,6 +67,7 @@ class Kernel extends HttpKernel
         'message' => \App\Http\Middleware\MessageMiddleware::class,
         'changeCharactersAllToBePersian' => \App\Http\Middleware\ChangeCharachtersAllToBePersion::class,
         'limit-access' => \App\Http\Middleware\LimitAccess::class,
-        'admin-or-supervisor' => \App\Http\Middleware\IsAdminOrSupervisor::class
+        'admin-or-supervisor' => \App\Http\Middleware\IsAdminOrSupervisor::class,
+        
     ];
 }

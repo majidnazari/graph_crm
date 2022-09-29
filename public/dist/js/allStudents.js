@@ -11,6 +11,7 @@ let theColumns = [
     { data: 'first_name' },
     { data: 'last_name' },
     { data: 'users_id' },
+    { data: 'users_id_editor' },
     { data: 'sources_id' },
     { data: 'tags' },
     { data: 'temps' },
@@ -27,12 +28,12 @@ let theColumnDefs = [
     {
         searchable: false,
         orderable: false,
-        targets: 10
+        targets: 11
     },
     {
         searchable: false,
         orderable: false,
-        targets: 7
+        targets: 8
     }
 ]
 if(theRoute == "student_all"){
@@ -42,6 +43,7 @@ if(theRoute == "student_all"){
         { data: 'first_name' },
         { data: 'last_name' },
         { data: 'users_id' },
+        { data: 'users_id_editor' },
         { data: 'sources_id' },
         { data: 'tags' },
         { data: 'temps' },
@@ -59,12 +61,12 @@ if(theRoute == "student_all"){
         {
             searchable: false,
             orderable: false,
-            targets: 11
+            targets: 12
         },
         {
             searchable: false,
             orderable: false,
-            targets: 7
+            targets: 8
         }
     ]
 }
@@ -88,6 +90,7 @@ let filterParents = {
 function showMorePanel (index, tr) {
     var editRoute = route_edit;
     var purchaseRoute = route_purchase;
+    var supporterStudentAllCallRoute = route_call;
     var test = `<table style="width: 100%">
             <tr>
                 <td>
@@ -228,6 +231,13 @@ function showMorePanel (index, tr) {
                                 </a>
                             </div>
                         </div>
+                        <div class="row">
+                            <div class="col">
+                                <a target="_blank" href="${ supporterStudentAllCallRoute.replace('-1', students[index].id) }">
+                                    گزارش تماس ها
+                                </a>
+                            </div>
+                        </div>
                     </div>
                 </td>
             </tr>
@@ -241,7 +251,7 @@ function showMorePanel (index, tr) {
         row.child(test).show()
     }
 }
-    function changeLevel (studentsIndex, id) {
+    function changeLevel (studentsIndex, id) {       
     if (students[studentsIndex]) {
         var students_id = id;
         $('#loading-' + studentsIndex).show();
@@ -568,7 +578,7 @@ function preloadTagModal (mode) {
         $('div.morals').show()
     }
     $('input.tag-checkbox').prop('checked', false)
-    $('input.collection-checkbox').prop('checked', false)
+    $('input.needtag-checkbox').prop('checked', false)
     var studentsIndex = parseInt($('#students_index').val(), 10)
     console.log(studentsIndex, students[studentsIndex])
     if (!isNaN(studentsIndex)) {
@@ -623,7 +633,7 @@ function saveTags () {
     $('input.tag-checkbox:checked').each(function (id, field) {
         selectedTags.push(parseInt(field.value, 10))
     })
-    $('input.needtag-checkbox:checked').each(function (id, field) {
+    $('input.needtag-checkbox:checked').each(function (id, field) {        
         selectedColllections.push(parseInt(field.value, 10))
     })
     var studentsIndex = parseInt($('#students_index').val(), 10)
@@ -650,7 +660,9 @@ function saveTags () {
                 alert('خطای بروز رسانی')
             })
         }
+        
     }
+   
 }
 function saveTemperatures () {
     var selectedTemperatures = []
@@ -724,7 +736,7 @@ $(function () {
         lengthChange: false,
         searching: false,
         ordering: true,
-        info: true,
+        info: true, 
         autoWidth: false,
         language: {
             paginate: {

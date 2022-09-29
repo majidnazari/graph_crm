@@ -3,9 +3,13 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use OwenIt\Auditing\Contracts\Auditable;
 
-class StudentClassRoom extends Model
+
+class StudentClassRoom extends Model implements Auditable
 {
+    use \OwenIt\Auditing\Auditable;
+
     public function student(){
         return $this->hasOne('App\Studnet', 'id', 'students_id');
     }

@@ -513,7 +513,6 @@
                             </a>
                         </li>
                         @endif
-                        @if(!Gate::allows('supervisor'))
                         <li class="nav-item">
                             @if(strpos(\Request::route()->getName(), 'student_supporter_histories')===0)
                             <a href="{{ route('student_supporter_histories') }}" class="nav-link active">
@@ -524,7 +523,6 @@
                                 <p>تاریخچه پشتیبان ها</p>
                             </a>
                         </li>
-                        @endif
                         <li class="nav-item">
                             @if(strpos(\Request::route()->getName(), 'student_all')===0)
                             <a href="{{ route('student_all') }}" class="nav-link active">
@@ -597,7 +595,15 @@
                                 <p>لیست تماس پشتیبان ها</p>
                             </a>
                         </li>
-
+                        <li class="nav-item">
+                            @if(strpos(\Request::route()->getName(), 'sanad')===0)
+                            <a href="{{ route('sanads') }}" class="nav-link active">
+                            @else
+                            <a href="{{ route('sanads') }}" class="nav-link">
+                            @endif
+                                <p>لیست سندها</p>
+                            </a>
+                        </li>
                         @endif
                         @if (Gate::allows('sale_suggestions'))
                         <!--
@@ -644,6 +650,18 @@
                         @endif
                         @endif
 
+                        @if(Gate::allows('parameters'))
+                        <li class="nav-item">
+                            @if(strpos(\Request::route()->getName(), 'supporter_student_reminders_get')===0)
+                            <a href="{{ route('supporter_student_reminders_get') }}" class="nav-link active">
+                            @else
+                                <a href="{{ route('supporter_student_reminders_get') }}" class="nav-link">
+                            @endif
+                                    <p>گزارش یادآورها  </p>
+                                </a>
+                        </li>
+                        @endif
+                        
                         @if(Gate::allows('parameters'))
                         <li class="nav-item">
                             @if(strpos(\Request::route()->getName(), 'help')===0)

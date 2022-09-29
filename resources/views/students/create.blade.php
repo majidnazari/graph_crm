@@ -202,21 +202,21 @@
                             @endif
                         </div>
 
-                        <div class="form-group">
+                        <!-- <div class="form-group">
                             <label for="sources_id">منبع</label>
                             <select  id="sources_id" name="sources_id" class="form-control">
                                 <option value="0"></option>
-                                @foreach ($sources as $item)
-                                    @if (isset($student) && isset($student->id) && $student->sources_id == $item->id)
-                                    <option value="{{ $item->id }}" selected>
-                                    @else
-                                    <option value="{{ $item->id }}" >
-                                    @endif
-                                    {{ $item->name }}
+                                foreach ($sources as $item)
+                                    if (isset($student) && isset($student->id) && $student->sources_id == $item->id)
+                                    //<option value=" $item->id " selected>
+                                    else
+                                    //<option value=" $item->id" >
+                                    endif
+                                 $item->name 
                                     </option>
-                                @endforeach
+                                endforeach
                             </select>
-                        </div>
+                        </div> -->
 
                         <div class="form-group">
                             <label for="cities_id">شهر</label>
@@ -233,6 +233,26 @@
                                 @endforeach
                             </select>
                         </div>
+
+
+                        <div class="form-group">
+                            <label for="national_no">کد ملی </label>
+                            @if (isset($student) && isset($student->nationality_code))
+                            <input  type="number" class="form-control" id="national_no" name="national_no" placeholder="کد ملی" value="{{ $student->nationality_code }}" />
+                            @else
+                            <input  type="number" class="form-control" id="national_no" name="national_no" placeholder="کد ملی"  />
+                            @endif
+                        </div>
+                        <div class="form-group">
+                            <label for="concours_year">سال کنکور </label>
+                            @if (isset($student) && isset($student->concours_year))
+                            <input  type="number" class="form-control" id="concours_year" name="concours_year" placeholder="سال کنکور" value="{{ $student->concours_year }}" />
+                            @else
+                            <input  type="number" class="form-control" id="concours_year" name="concours_year" placeholder="سال کنکور"  />
+                            @endif
+                        </div>
+
+
                     </div>
                     <div class="col">
                         <div class="form-group">
@@ -351,7 +371,7 @@
                         <div class="form-group">
                             <label for="description">توضیحات</label>
                             @if (isset($student) && isset($student->description))
-                            <input type="text" class="form-control" id="description" name="description" placeholder="توضیحات" value="{{ $student->description }}" />
+                            <input type="text" class="form-control" id="description" name="description_exists" placeholder="توضیحات" value="{{ $student->description }}"  {{ (in_array(auth()->user()->group->type,['support','marketer','consultant'])) ? "readonly" : '' }} "  />
                             @else
                             <input type="text" class="form-control" id="description" name="description" placeholder="توضیحات"  />
                             @endif
