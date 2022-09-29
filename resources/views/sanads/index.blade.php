@@ -149,7 +149,6 @@
                                 حذف
                             </a>
                         </td> -->
-                        
                       </tr>
                       @endforeach
                      
@@ -290,7 +289,7 @@
         "autoWidth": false,
         language: {
             paginate: {
-                previous: 'قبل',
+                previous: 'قبل', 
                 next: 'بعد'
             },
             emptyTable: 'داده ای برای نمایش وجود ندارد',

@@ -3,13 +3,17 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use OwenIt\Auditing\Contracts\Auditable;
 
-class Student extends Model
+class Student extends Model implements Auditable
 {
+    use \OwenIt\Auditing\Auditable;
     protected $fillable = [
         'phone',
         'first_name',
         'last_name',
+        'nationality_code',
+        'concours_year',
         'level',
         'egucation_level',
         'parents_job_title',
@@ -37,6 +41,10 @@ class Student extends Model
     public function user()
     {
         return $this->hasOne('App\User', 'id', 'users_id');
+    }
+    public function user_editor()
+    {
+        return $this->hasOne('App\User', 'id', 'users_id_editor');
     }
 
     public function source()

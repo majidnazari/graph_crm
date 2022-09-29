@@ -89,11 +89,16 @@ $persons = [
                             <td>{{($item->notices_id ? $item->notice->name : '-')}}</td>
                             <td>{{jdate( $item->created_at)->format("Y/m/d") }}</td>
                             <td>{{ $item->description }}</td>
+                            
+                            @if (auth()->user()->group->type!=='support')
                             <td>
-                                <a class="btn btn-danger" href="{{ route('supporter_student_deletecall', ["user_id"=>$item->users_id, "id"=>$item->id]) }}">
+                                <a class="btn btn-danger" href="{{ auth()->user()->group->type=='support' ? route('supporter_student_deletecall', ["user_id"=>$item->users_id, "id"=>$item->id]) : '' }}">
                                     حذف
                                 </a>
                             </td>
+                            @endif
+                            
+                          
                           </tr>
                           @php
                             $index++;

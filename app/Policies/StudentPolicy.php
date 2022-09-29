@@ -19,12 +19,12 @@ class StudentPolicy
      */
     public function viewAny(User $user)
     {
-        $t=Student::find(1);
-        $user_role=auth()->guard('api')->user()->group->type; 
-        return  $user_role;     
-        if(in_array($user_role,$this->group_access_absence_presence))
-            return $t;
-        return $t;
+        // $t=Student::find(1);
+        // $user_role=auth()->guard('api')->user()->group->type; 
+        // return  $user_role;     
+        // if(in_array($user_role,$this->group_access_absence_presence))
+        //     return $t;
+        // return $t;
     }
 
     /**

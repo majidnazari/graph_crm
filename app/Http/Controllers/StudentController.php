@@ -35,6 +35,7 @@ use App\City;
 use App\Http\Traits\ChangeSupporterTrait;
 use App\Utils\SearchStudent;
 use App\Exports\StudentsExport;
+use App\Exports\UsersExport;
 use Illuminate\Support\Facades\Gate;
 use App\MergeStudents as AppMergeStudents;
 use App\Purchase;
@@ -42,6 +43,9 @@ use App\SupporterHistory;
 use Illuminate\Support\Facades\Route;
 use Exception;
 use Log;
+
+use PhpOffice\PhpSpreadsheet\Spreadsheet;
+use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 
 class StudentController extends Controller
 {
@@ -209,7 +213,7 @@ class StudentController extends Controller
             
         }
        
-        if (request()->getMethod() == 'GET') {            
+        if (request()->getMethod() == 'GET') {             
          //dd($view);
           return view($view,compact([
               'route',
@@ -359,6 +363,9 @@ class StudentController extends Controller
                     }
                 }
                 $registerer = "-";
+                $user_editor = "-";
+                if ($item->user_editor)
+                    $user_editor =  $item->user_editor->first_name . ' ' . $item->user_editor->last_name;
                 if ($item->user)
                     $registerer =  $item->user->first_name . ' ' . $item->user->last_name;
                 elseif ($item->saloon)
@@ -397,7 +404,9 @@ class StudentController extends Controller
                         "id" => $item->id,
                         "first_name" => $item->first_name,
                         "last_name" => $item->last_name,
+                        "nationality_code" => $item->nationality_code,                        
                         "users_id" => $registerer,
+                        "users_id_editor" => $user_editor,
                         "sources_id" => ($item->source) ? $item->source->name : '-',
                         "tags" => $tags,
                         "temps" => $temps,
@@ -432,7 +441,9 @@ class StudentController extends Controller
                         "id" => $item->id,
                         "first_name" => $item->first_name,
                         "last_name" => $item->last_name,
+                        "nationality_code" => $item->nationality_code,
                         "users_id" => $registerer,
+                        "users_id_editor" => $user_editor,
                         "sources_id" => ($item->source) ? $item->source->name : '-',
                         "tags" => $tags,
                         "temps" => $temps,
@@ -639,6 +650,9 @@ class StudentController extends Controller
                         </span><br/>';
                     }
                 }
+                $user_editor = "-";
+                if ($item->user_editor)
+                    $user_editor =  $item->user_editor->first_name . ' ' . $item->user_editor->last_name;
                 $registerer = "-";
                 if ($item->user)
                     $registerer =  $item->user->first_name . ' ' . $item->user->last_name;
@@ -669,6 +683,7 @@ class StudentController extends Controller
                     "first_name" => $item->first_name,
                     "last_name" => $item->last_name,
                     "users_id" => $registerer,
+                    "users_id_editor" => $user_editor,
                     "sources_id" => ($item->source) ? $item->source->name : '-',
                     "tags" => $tags,
                     "temps" => $temps,
@@ -839,6 +854,9 @@ class StudentController extends Controller
                     }
                 }
                 $registerer = "-";
+                $user_editor = "-";
+                if ($item->user_editor)
+                    $user_editor =  $item->user_editor->first_name . ' ' . $item->user_editor->last_name;
                 if ($item->user)
                     $registerer =  $item->user->first_name . ' ' . $item->user->last_name;
                 elseif ($item->saloon)
@@ -861,6 +879,7 @@ class StudentController extends Controller
                     "first_name" => $item->first_name,
                     "last_name" => $item->last_name,
                     "users_id" => $registerer,
+                    "users_id_editor" => $user_editor,
                     "sources_id" => ($item->source) ? $item->source->name : '-',
                     "tags" => $tags,
                     "temps" => $temps,
@@ -1055,6 +1074,10 @@ class StudentController extends Controller
                     }
                 }
                 $registerer = "-";
+                $user_editor = "-";
+                if ($item->user_editor){
+                    $user_editor=$item->user_editor->first_name . ' ' . $item->user_editor->last_name;
+                }
                 if ($item->user)
                     $registerer =  $item->user->first_name . ' ' . $item->user->last_name;
                 elseif ($item->saloon)
@@ -1084,6 +1107,7 @@ class StudentController extends Controller
                     "first_name" => $item->first_name,
                     "last_name" => $item->last_name,
                     "users_id" => $registerer,
+                    "users_id_editor" => $user_editor,
                     "sources_id" => ($item->source) ? $item->source->name : '-',
                     "tags" => $tags,
                     "temps" => $temps,
@@ -1137,10 +1161,15 @@ class StudentController extends Controller
                 'msg_error' => request()->session()->get('msg_error')
             ]);
         }
-        $is_exist=Student::where('phone',$request->input('phone'))
-        ->orWhere('father_phone',$request->input('phone'))
-        ->orWhere('mother_phone',$request->input('phone'))
-        ->first();
+        $is_exist=Student::where(function($query) use($request)
+        {
+            $query->where('phone',$request->input('phone'))
+            ->orWhere('father_phone',$request->input('phone'))
+            ->orWhere('mother_phone',$request->input('phone'));
+        })->where(function($query) 
+        {
+            $query->where('is_deleted', 0);
+        })->first();
         if($is_exist)
         {
             $request->session()->flash("msg_error", " شماره تکراریست و مربوط به دانش آموز یا ولی  " . $is_exist->first_name . " " . $is_exist->last_name );
@@ -1150,6 +1179,8 @@ class StudentController extends Controller
         $student->users_id = Auth::user()->id;
         $student->first_name = $request->input('first_name');
         $student->last_name = $request->input('last_name');
+        $student->nationality_code = $request->input('national_no');
+        $student->concours_year = $request->input('concours_year');
         $student->last_year_grade = (int)$request->input('last_year_grade');
         $student->consultants_id = $request->input('consultants_id');
         $student->parents_job_title = $request->input('parents_job_title');
@@ -1163,7 +1194,7 @@ class StudentController extends Controller
         $student->major = $request->input('major');
         $student->introducing = $request->input('introducing');
         $student->student_phone = $request->input('student_phone');
-        $student->sources_id = $request->input('sources_id');
+        $student->sources_id = $request->has('sources_id') ? $request->input('sources_id') : 0;
         $student->supporters_id = $request->input('supporters_id');
         $student->cities_id = $request->input('cities_id');
         $student->outside_consultants = $request->input('outside_consultants');
@@ -1172,7 +1203,7 @@ class StudentController extends Controller
             $student->save();
         } catch (Exception $e) {
             // dd($e);
-            if ($e->getCode() == 23000)
+            if ($e->getCode() == 23000)            
                 $request->session()->flash("msg_error", "شماره دانش آموز تکراری است");
             else
                 $request->session()->flash("msg_error", "خطا در ثبت دانش آموز");
@@ -1187,11 +1218,19 @@ class StudentController extends Controller
     {
 
         $i = 1;
-        $student = Student::where('is_deleted', false)->where('id', $id)->first();
+        $student = Student::where('is_deleted', false)->where('id', $id)->first();       
+        
         if ($student == null) {
             $request->session()->flash("msg_error", "دانش آموز مورد نظر پیدا نشد!");
             return redirect()->route('students');
         }
+
+        if(($student->level==3 and $request->input('level')==2) || ($student->level==2 and $request->input('level')==1) )
+        {
+            $request->session()->flash("msg_error", "تغییر سطح دانش آموز امکان پذیر نیست");
+            return redirect()->route($call_back);
+        }     
+
         $supportGroupId = Group::getSupport();
         if ($supportGroupId)
             $supportGroupId = $supportGroupId->id;
@@ -1206,7 +1245,7 @@ class StudentController extends Controller
             return view('students.create', [
                 "supports" => $supports,
                 "consultants" => $consultants,
-                "sources" => $sources,
+               // "sources" => $sources,
                 "cities" => $cities,
                 "student" => $student,
                 'i' => $i,
@@ -1215,9 +1254,11 @@ class StudentController extends Controller
             ]);
         }
 
-        $student->users_id = Auth::user()->id;
+        $student->users_id_editor = Auth::user()->id;
         $student->first_name = $request->input('first_name');
         $student->last_name = $request->input('last_name');
+        $student->nationality_code = $request->input('national_no');
+        $student->concours_year = $request->input('concours_year');
         $student->last_year_grade = (int)$request->input('last_year_grade');
         $student->consultants_id = $request->input('consultants_id');
         $student->parents_job_title = $request->input('parents_job_title');
@@ -1231,7 +1272,7 @@ class StudentController extends Controller
         $student->major = $request->input('major');
         $student->introducing = $request->input('introducing');
         $student->student_phone = $request->input('student_phone');
-        $student->sources_id = $request->input('sources_id');
+        $student->sources_id = $request->has('sources_id') ? $request->input('sources_id') : 0;
         $student->cities_id = $request->input('cities_id');
         if ($student->supporters_id != $request->input('supporters_id') && $student->supporter_seen) {
             $student->supporter_seen = false;
@@ -1245,7 +1286,15 @@ class StudentController extends Controller
         $student->banned = ($request->input('banned') != null) ? true : false;
         $student->archived = ($request->input('archived') != null) ? true : false;
         $student->outside_consultants = $request->input('outside_consultants');
-        $student->description = $request->input('description');
+        Log:info("the group id edit is: " . Auth::user()->groups_id);
+        if($request->has('description')){
+            $student->description = $request->input('description');
+        }
+        if($request->input('description_exists') and Auth::user()->groups_id!=2){
+            $student->description = $request->input('description_exists');
+        }
+       
+        
         try {
             if ($student->banned || $student->archived) {
                 $student->supporters_id = 0;
@@ -1288,7 +1337,17 @@ class StudentController extends Controller
         return $educationLevel;
     }
     public function outputCsv(Request $request)
-    {
+    { 
+        //return Excel::download(new UsersExport,'users-data.xlsx');       
+        // $spreadsheet = new Spreadsheet();
+        // $sheet = $spreadsheet->getActiveSheet();
+        // $sheet->setCellValue('A1', 'Hello World sssss !');
+
+        // $writer = new Xlsx($spreadsheet);
+        // $writer->save('hello world1.xlsx');
+        // return Excel::download(new UsersExport, 'users.xlsx');
+       
+        // dd("ff");
         $from_date = null;
         $to_date = null;
         $majors = [
@@ -1333,7 +1392,8 @@ class StudentController extends Controller
     }
 
     public function csv(Request $request)
-    {
+    {     
+       
         $msg = null;
         $fails = [];
         $majors = [
@@ -1391,7 +1451,7 @@ class StudentController extends Controller
                 $line = explode(',', $line);
                 if ($index > 0 && count($line) >= 13) {
                     $student = new Student;
-                    $student->users_id = Auth::user()->id;
+                    $student->users_id_editor = Auth::user()->id;
                     $student->phone = ((strpos($this->perToEn($line[0]), '0') !== 0) ? '0' : '') . $this->perToEn($line[0]);
                     $student->first_name = $line[1] == "NULL" ? null : $line[1];
                     $student->last_name = $line[2];

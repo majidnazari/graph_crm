@@ -3,9 +3,13 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use OwenIt\Auditing\Contracts\Auditable;
 
-class Sanad extends Model
+
+class Sanad extends Model implements Auditable
 {
+    use \OwenIt\Auditing\Auditable;
+
     protected $table="sanads";
     protected $appends = [
         'total_price',

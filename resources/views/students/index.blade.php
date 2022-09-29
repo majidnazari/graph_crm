@@ -87,7 +87,7 @@
                                 </select>
                             </div>
                         </div>
-                        <div class="col">
+                        <!-- <div class="col">
                             <div class="form-group">
                                 <label for="sources_id">منبع</label>
                                 <select  id="sources_id" name="sources_id" class="form-control" onchange="theChange()">
@@ -103,7 +103,7 @@
                                     @endforeach
                                 </select>
                             </div>
-                        </div>
+                        </div> -->
                         @if($route == "student_all")
                         <div class="col">
                             <div class="form-group">
@@ -213,6 +213,7 @@
                     <th>نام</th>
                     <th>نام خانوادگی</th>
                     <th>کاربر ثبت کننده</th>
+                    <th>کاربر ویرایش کننده</th>
                     <th>منبع ورودی شماره</th>
                     <th>برچسب</th>
                     <th>داغ/سرد</th>
