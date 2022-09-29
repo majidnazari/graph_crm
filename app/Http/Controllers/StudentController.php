@@ -35,6 +35,7 @@ use App\City;
 use App\Http\Traits\ChangeSupporterTrait;
 use App\Utils\SearchStudent;
 use App\Exports\StudentsExport;
+use App\Exports\UsersExport;
 use Illuminate\Support\Facades\Gate;
 use App\MergeStudents as AppMergeStudents;
 use App\Purchase;
@@ -42,6 +43,9 @@ use App\SupporterHistory;
 use Illuminate\Support\Facades\Route;
 use Exception;
 use Log;
+
+use PhpOffice\PhpSpreadsheet\Spreadsheet;
+use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 
 class StudentController extends Controller
 {
@@ -1333,7 +1337,17 @@ class StudentController extends Controller
         return $educationLevel;
     }
     public function outputCsv(Request $request)
-    {
+    { 
+        //return Excel::download(new UsersExport,'users-data.xlsx');       
+        // $spreadsheet = new Spreadsheet();
+        // $sheet = $spreadsheet->getActiveSheet();
+        // $sheet->setCellValue('A1', 'Hello World sssss !');
+
+        // $writer = new Xlsx($spreadsheet);
+        // $writer->save('hello world1.xlsx');
+        // return Excel::download(new UsersExport, 'users.xlsx');
+       
+        // dd("ff");
         $from_date = null;
         $to_date = null;
         $majors = [
@@ -1378,7 +1392,8 @@ class StudentController extends Controller
     }
 
     public function csv(Request $request)
-    {
+    {     
+       
         $msg = null;
         $fails = [];
         $majors = [
