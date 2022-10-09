@@ -773,6 +773,8 @@ $(function () {
                 data['name'] = $('#name').val()
                 data['phone'] = $('#phone').val()
                 data['level'] = $('#level').val();
+                data['concours_year'] = $('#concours_year').val();
+                
                 return JSON.stringify(data)
             },
             complete: function (response) {

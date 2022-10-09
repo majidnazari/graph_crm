@@ -14,6 +14,8 @@ class StudentsImport implements ToModel, WithChunkReading, ShouldQueue
     use Importable;
     public $fails = [];
     public $source_id = null;
+    public $concours_year = null;
+    
 
     public function chunkSize(): int
     {
@@ -96,6 +98,10 @@ class StudentsImport implements ToModel, WithChunkReading, ShouldQueue
 
             if ($source_id) {
                 $st['sources_id'] = $source_id;
+            }
+
+            if ($this->concours_year) {
+                $st['concours_year'] = $this->concours_year;
             }
             return new Student($st);
         } else {

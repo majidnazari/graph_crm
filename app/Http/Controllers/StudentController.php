@@ -165,6 +165,7 @@ class StudentController extends Controller
         $phone = null;
         $cities_id = null;
         $egucation_level = null;
+        $concours_year=null;
         $school = null;
         $major = null;
         
@@ -238,6 +239,7 @@ class StudentController extends Controller
               'cities',
               'cities_id',
               'egucation_level',
+              'concours_year',
               'major',
               'needTagParentOnes',
               'needTagParentTwos',
@@ -286,6 +288,10 @@ class StudentController extends Controller
                 if (request()->input('egucation_level') != null) {
                     $egucation_level = request()->input('egucation_level');
                     $students = $students->where('egucation_level', $egucation_level);
+                }
+                if (request()->input('concours_year') != null) {
+                    $concours_year = request()->input('concours_year');
+                    $students = $students->where('concours_year', $concours_year);
                 }
                 if (request()->input('major') != null) {
                     $major = request()->input('major');
@@ -486,7 +492,7 @@ class StudentController extends Controller
     }
     public function archived(Request $request)
     {
-
+        
         $searchStudent = new SearchStudent;
         $students = Student::where('is_deleted', false)->where('archived', true);
         $supportGroupId = Group::getSupport();
@@ -937,6 +943,10 @@ class StudentController extends Controller
                 $egucation_level = request()->input('egucation_level');
                 $students = $students->where('egucation_level', $egucation_level);
             }
+            if (request()->input('concours_year') != null) {
+                $concours_year = request()->input('concours_year');
+                $students = $students->where('concours_year', $concours_year);
+            }
             if (request()->input('major') != null) {
                 $major = request()->input('major');
                 $students = $students->where('major', $major);
@@ -1350,6 +1360,7 @@ class StudentController extends Controller
         // dd("ff");
         $from_date = null;
         $to_date = null;
+        $concours_year=null;
         $majors = [
             "mathematics" => "ریاضی",
             "experimental" => "تجربی",
@@ -1374,7 +1385,7 @@ class StudentController extends Controller
             $supportGroupId = $supportGroupId->id;
         $supports = User::where('is_deleted', false)->where('groups_id', $supportGroupId)->get();
         if ($request->getMethod() == 'POST') {
-            $studentsExport = new StudentsExport($request->input('students_select'), (int)$request->input('supporters_id'), $request->input('major'), $request->input('egucation_level'), $request->input('from_date'), $request->input('to_date'));
+            $studentsExport = new StudentsExport($request->input('students_select'), (int)$request->input('supporters_id'), $request->input('major'), $request->input('egucation_level'),$request->input('concours_year'), $request->input('from_date'), $request->input('to_date'));
             if (!count($studentsExport->collection())) {
                 $request->session()->flash("msg_error", "دانش آموزی با این شرایط پیدا نشد!");
                 return redirect()->back();
@@ -1386,6 +1397,7 @@ class StudentController extends Controller
             'to_date' => $to_date,
             'majors' => $majors,
             'egucation_levels' => $education_levels,
+            'concours_year' => $concours_year,
             'supports' => $supports,
             'msg_error' => request()->session()->get('msg_error')
         ]);
@@ -1434,9 +1446,11 @@ class StudentController extends Controller
             $msg = 'بروز رسانی با موفقیت انجام شد';
             $csvPath = $request->file('attachment')->getPathname();
             $sources_id = $request->input('sources_id');
+            $concours_year = $request->input('concours_year');
             if ($request->file('attachment')->extension() == 'xlsx') {
                 $importer = new StudentsImport;
                 $importer->source_id = $sources_id;
+                $importer->concours_year = $concours_year;
                 $res = $importer->import($csvPath, null, \Maatwebsite\Excel\Excel::XLSX);
                 $fails = $importer->getFails();
                 return view('students.csv', [
@@ -1456,6 +1470,7 @@ class StudentController extends Controller
                     $student->first_name = $line[1] == "NULL" ? null : $line[1];
                     $student->last_name = $line[2];
                     $student->egucation_level = $this->education_level_null_for_csv($educationLevels, $educationLevelsInPersian, $line[3]);
+                    
                     $student->parents_job_title = $line[4] == "NULL" ? null : $line[4];
                     $student->home_phone = $line[5] == "NULL" ? null : $line[5];
                     $student->father_phone = $line[6] == "NULL" ? null : $line[6];

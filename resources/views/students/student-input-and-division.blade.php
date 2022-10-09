@@ -156,6 +156,12 @@
                         </div>
                         <div class="col">
                             <div class="form-group">
+                                <label for="concours_year">سال کنکور</label>
+                                <input type="number" class="form-control" id="concours_year" name="concours_year" placeholder="سال کنکور"  value="{{ isset($concours_year)?$concours_year:'' }}" onkeypress="handle(event)" />
+                            </div>
+                        </div>
+                        <div class="col">
+                            <div class="form-group">
                                 <label for="major">رشته</label>
                                 <select  id="major" name="major" class="form-control" onchange="theChange()">
                                     <option value="">همه</option>
@@ -977,6 +983,7 @@
                     data['sources_id'] = $("#sources_id").val();
                     data['cities_id'] = $("#cities_id").val();
                     data['egucation_level'] = $("#egucation_level").val();
+                    data['concours_year'] = $("#concours_year").val();
                     data['major'] = $("#major").val();
                     data['school'] = $("#school").val();
                     data['name'] = $("#name").val();

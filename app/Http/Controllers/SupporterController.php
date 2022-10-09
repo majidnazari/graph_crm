@@ -870,7 +870,7 @@ class SupporterController extends Controller
         $products_id = null;
         $notices_id = null;
         $call_results_id = null;
-        $next_to_call = null;
+        $next_to_call = null; 
         if (request()->input('students_id') != null) {
             $students_id = (int)request()->input('students_id');
             $calls_id = (int)request()->input('calls_id');
@@ -995,6 +995,10 @@ class SupporterController extends Controller
             if (request()->input('education_level') != null) {
                 $egucation_level = request()->input('education_level');
                 $students = $students->where('egucation_level', $egucation_level);
+            }
+            if (request()->input('concours_year') != null) {
+                $concours_year = request()->input('concours_year');
+                $students = $students->where('concours_year', $concours_year);
             }
             if (request()->input('major') != null) {
                 $major = request()->input('major');
@@ -1991,6 +1995,8 @@ class SupporterController extends Controller
         $student->parents_job_title = request()->input('parents_job_title');
         $student->home_phone = request()->input('home_phone');
         $student->egucation_level = request()->input('egucation_level');
+        $student->concours_year = request()->input('concours_year');
+        
         $student->father_phone = request()->input('father_phone');
         $student->mother_phone = request()->input('mother_phone');
         $student->phone  = request()->input('phone');
