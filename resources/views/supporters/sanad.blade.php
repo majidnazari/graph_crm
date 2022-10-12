@@ -40,6 +40,7 @@
                     <th>شماره سند </th>
                     <th> تاریخ  سند </th>
                     <th>شرح</th>
+                    <th>دانش آموز</th>
                    
                     <!-- <th>بستانکار</th> -->
                    <!-- <th>مانده</th> -->
@@ -61,6 +62,7 @@
                         <td>{{ $item->supporter->first_name. ' ' . $item->supporter->last_name }}</td>
                         <td>{{ $item->number}} </td>
                         <td>{{ jdate($item->updated_at)->format("Y/m/d") }}</td>
+                        <td>{{ $item->description }}</td>
                         <td>{{ $item->description }}</td>
                         <!-- <td>{{ $item->id }}</td> -->
                        
