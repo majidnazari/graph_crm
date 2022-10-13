@@ -63,7 +63,9 @@
                         <td>{{ $item->number}} </td>
                         <td>{{ jdate($item->updated_at)->format("Y/m/d") }}</td>
                         <td>{{ $item->description }}</td>
-                        <td>{{ $item->description }}</td>
+                        <td>{{ $item->student->first_name. ' ' . $item->student->last_name }}</td>
+
+                        
                         <!-- <td>{{ $item->id }}</td> -->
                        
                         <!-- <td>{{ $item->type > 0 ? number_format($item->total) : '' }}</td>  -->

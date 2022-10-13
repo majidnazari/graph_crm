@@ -33,7 +33,7 @@
         </div>
         <!-- /.card-header {{ url('/sanads/update/'.$sanad.'/'.$sanad->id) }}" -->
         <div class="card-body">
-          <form method="Post" enctype="multipart/form-data" action="{{ url('/sanads/update/'.$sanad->id) }}" >
+          <form method="Post" enctype="multipart/form-data" action="{{ url('/sanads/update/'.$sanad->id) }}" id="frm">
             @csrf
             
             <div class="row">            
@@ -77,7 +77,7 @@
               <div class="col">
                 <div class="form-group">
                   <label for="supporter_id">پشتیبان</label>
-                  <select id="supporter_id" name="supporter_id" class="form-control">
+                  <select id="supporter_id" name="supporter_id" class="form-control select2">
                     <option value="0"></option>
                     @foreach ($supports as $item)
                     @if (isset($sanad) && isset($sanad->id) && $sanad->supporter_id == $item->id)
@@ -106,13 +106,28 @@
                   <input type="checkbox" class="form-control" id="type" name="type" onclick="checkType(this);" checked />
                   @endif
                 </div>
-                <div class="form-group">
+                <!-- <div class="form-group">
                   <label for="description">نام دانش آموز</label>
                   @if (isset($sanad) && isset($sanad->id))
                   <input type="text" class="form-control" id="student_fullname" name="student_fullname" placeholder="نام کامل دانش آموز" value="{{ $sanad->student_fullname }}" />
                   @else
                   <input type="text" class="form-control" id="student_fullname" name="student_fullname" placeholder="نام کامل دانش آموز" />
                   @endif
+                </div> -->
+                <div class="form-group">
+                  <label for="student_id">دانش آموز</label>
+                  <select id="student_id" name="student_id" class="form-control select2">
+                    <option value="0"></option>
+                    @foreach ($students as $item)
+                    @if (isset($sanad) && isset($sanad->id) && $sanad->student_id == $item->id)
+                    <option value="{{ $item->id }}" selected>
+                      @else
+                    <option value="{{ $item->id }}">
+                      @endif
+                      {{ $item->first_name. ' ' . $item->last_name }}
+                    </option>
+                    @endforeach
+                  </select>
                 </div>
 
 
@@ -120,7 +135,7 @@
             </div>
             <div class="row">
               <div class="col">
-                <button class="btn btn-primary">
+                <button class="btn btn-primary" type="button" onclick="submitForm()">
                   ذخیره
                 </button>
               </div>
@@ -158,6 +173,45 @@
       x.style.display = "none";
       
     }
+  }
+  function submitForm() {
+    if (!validateForm()) {
+      return false;
+    }
+    else
+        $('#frm').submit();
+  }
+
+ function validateForm() {
+    if ($('#total_cost').val() === "") {
+      alert("مقدار مبلغ کل را وارد نمایید.");
+      return false;
+    }
+    if ($('#total').val() === "") {
+      alert("مقدار مبلغ دریافتی  را وارد نمایید.");
+      return false;
+    }
+    if ($('#supporter_percent').val() === "") {
+      alert(" سهم پشتیبان  را وارد نمایید.");
+      return false;
+    }
+    if ($('#number').val() === "") {
+      alert("  شماره سند  را وارد نمایید.");
+      return false;
+    }
+    if ($('#supporter_id').val() == 0) {
+      alert("   پشتیبان  را وارد نمایید.");
+      return false;
+    }
+    if ($('#student_id').val() == 0) {
+      alert("   دانش آموز  را وارد نمایید.");
+      return false;
+    }
+    if ($('#description').val() === "") {
+      alert(" توضیحات را وارد نمایید.");
+      return false;
+    }
+    return true;
   }
 </script>
 @endsection

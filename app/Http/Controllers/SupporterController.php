@@ -1310,11 +1310,13 @@ class SupporterController extends Controller
     public function showSanads($id = null, $level, $view, $route)
     {
        $user_id=Auth::user()->id; 
+       $allstudent=Student::all();
        if($user_id==$id)
        {
             $sanads= Sanad::where('supporter_id',$id)->get();
             return view($view,[
-                'sanads' => $sanads
+                'sanads' => $sanads,
+                'students' => $allstudent,
             ]);
        }
        return redirect('/login');
