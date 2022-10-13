@@ -2,6 +2,7 @@
 
 @section('css')
 <link href="/plugins/select2/css/select2.min.css" rel="stylesheet" />
+
 @endsection
 
 @section('content')
@@ -74,7 +75,7 @@
               <div class="col">
                 <div class="form-group">
                   <label for="supporter_id">پشتیبان</label>
-                  <select id="supporter_id" name="supporter_id" class="form-control">
+                  <select id="supporter_id" name="supporter_id" class="form-control select2">
                     <option value="0"></option>
                     @foreach ($supports as $item)
                     @if (isset($sanad) && isset($sanad->id) && $sanad->supporter_id == $item->id)
@@ -97,20 +98,36 @@
                 </div>
                 <div class="form-group">
                   <label for="number">بستانکار</label>
-                  @if (isset($sanad) && isset($sanad->id) && isset($sanad->type) && $sanad->type
-                  < 0) <input type="checkbox" class="form-control" id="type" name="type" onclick="checkType(this);" />
+                  @if (isset($sanad) && isset($sanad->id) && isset($sanad->type) && $sanad->type < 0)
+                   <input type="checkbox" class="form-control" id="type" name="type" onclick="checkType(this);" />
                   @else
                   <input type="checkbox" class="form-control" id="type" name="type" onclick="checkType(this);" checked />
                   @endif
                 </div>
 
-                <div class="form-group">
+                <!-- <div class="form-group">
                   <label for="description">نام دانش آموز</label>
                   @if (isset($sanad) && isset($sanad->id))
                   <input type="text" class="form-control" id="student_fullname" name="student_fullname" placeholder="نام کامل دانش آموز" value="{{ $sanad->student_fullname }}" />
                   @else
                   <input type="text" class="form-control" id="student_fullname" name="student_fullname" placeholder="نام کامل دانش آموز" />
                   @endif
+                </div> -->
+
+                <div class="form-group">
+                  <label for="student_id">دانش آموز</label>
+                  <select id="student_id" name="student_id" class="form-control select2">
+                    <option value="0"></option>
+                    @foreach ($students as $item)
+                    @if (isset($sanad) && isset($sanad->id) && $sanad->supporter_id == $item->id)
+                    <option value="{{ $item->id }}" selected>
+                      @else
+                    <option value="{{ $item->id }}">
+                      @endif
+                      {{ $item->first_name. ' ' . $item->last_name }}
+                    </option>
+                    @endforeach
+                  </select>
                 </div>
 
               </div>
@@ -136,6 +153,7 @@
 @endsection
 
 @section('js')
+<script src="/plugins/select2/js/select2.full.min.js"></script>
 <!-- Select2 -->
 <!-- <script src="/plugins/select2/js/select2.full.min.js"></script> -->
 <script>
@@ -184,6 +202,10 @@
     }
     if ($('#supporter_id').val() == 0) {
       alert("   پشتیبان  را وارد نمایید.");
+      return false;
+    }
+    if ($('#student_id').val() == 0) {
+      alert("   دانش آموز  را وارد نمایید.");
       return false;
     }
     if ($('#description').val() === "") {

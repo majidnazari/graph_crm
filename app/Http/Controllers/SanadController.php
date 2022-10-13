@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Sanad;
 use App\Group;
+use App\Student;
 use App\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -30,6 +31,8 @@ class SanadController extends Controller
         $year = (int)jdate()->format("Y"); //Carbon::now()->format("Y");
         $sanad_year = range($year - 5, $year + 5);
         $sanads = Sanad::all();
+        //$student_selected=Student::
+        $allstudent=Student::all();
         $supports = User::where('is_deleted', false)->where('groups_id', env('USER_ROLE'))->get();
         // foreach($sanads as $sanad){
         //     if($sanad->type > 0){
@@ -43,6 +46,7 @@ class SanadController extends Controller
 
         return view('sanads.index', [ 
             'sanads' => $sanads,
+            'students' => $allstudent,
             'supporters' => $supports,
             'sanad_year' => $sanad_year,
             'sanad_month' => $sanad_month,
@@ -96,7 +100,7 @@ class SanadController extends Controller
 
 
     public function indexWithSearch(Request $request)
-    {
+    {        
         //Log::info("the method is:"). $request->all(); 
         //return $request->input('supporter_id');
         
@@ -129,6 +133,11 @@ class SanadController extends Controller
             //Log::info("add to log");              
             $support_id = $request->input('supporter_id');
             $sanads = $sanads->where('supporter_id', $support_id);
+        }
+        if ($request->input('student_id') != 0) {
+            //Log::info("add to log");              
+            $student_id = $request->input('student_id');
+            $sanads = $sanads->where('student_id', $student_id);
         }
         if ($request->input('month') != 0  && $request->input('year') != 0) {
 
@@ -173,7 +182,7 @@ class SanadController extends Controller
             $req['draw'] = 1;
         }
        
-        $sanads = $sanads->with('supporter')
+        $sanads = $sanads->with('supporter')->with('student')
         ->skip($req['start'])
         ->take($req['length'])
         ->get();
@@ -182,6 +191,7 @@ class SanadController extends Controller
         
         
         $countFilter = count($sanads);
+        
         $supports = User::where('is_deleted', false)->where('groups_id', env('USER_ROLE'))->get();
 
         $total_get_price = 0;
@@ -205,6 +215,7 @@ class SanadController extends Controller
                 "row" =>  $req['start'] + $index + 1,
                 "id" => $item->id ,
                 "supporter" => $item->supporter->first_name . ' ' . $item->supporter->last_name,
+                "student" => $item->student->first_name . ' ' . $item->student->last_name,
                 "number" => $item->number,
                 "description" => $item->description,
                 "student_fullname" => $item->student_fullname,
@@ -230,7 +241,8 @@ class SanadController extends Controller
             "recordsFiltered" =>   count($Allsanads),
             'total_get_price' => $total_get_price,
             'total_give_price' => $total_give_price,
-            'total_supporter' => $total_supporter
+            'total_supporter' => $total_supporter,
+            
            
             //  "sanad_from_carbon" => $sanad_date_from_carbon,
             //  "sanad_to_carbon" => $sanad_date_from_carbon
@@ -268,6 +280,7 @@ class SanadController extends Controller
         $data = [];
         $count = Sanad::count();
         $sanads = Sanad::where('id', '>', 0);
+        //$studets = Student::all();
         if ($request->input('supporter_id') != 0) {
 
             $sanads = Sanad::where('supporter_id', $request->supporter_id);
@@ -286,7 +299,7 @@ class SanadController extends Controller
         
             $sanads_edited = $sanads->update(['supporter_percent' => $request->supporter_amount_edit]);
       
-        $sanads = $sanads->with('supporter')
+        $sanads = $sanads->with('supporter')->with('student')
             ->skip($req['start'])
             ->take($req['length'])
             ->get();
@@ -313,6 +326,7 @@ class SanadController extends Controller
                 "row" => $index + 1,
                 "id" => $item->id,
                 "supporter" => $item->supporter->first_name . ' ' . $item->supporter->last_name,
+                "student" => $item->student->first_name . ' ' . $item->student->last_name,
                 "number" => $item->number,
                 "description" => $item->description,
                 "updated_at" => jdate($item->updated_at)->format("Y/m/d"),
@@ -333,7 +347,8 @@ class SanadController extends Controller
             "data" => $data,
             "request" => $request->all(),
             "recordsTotal" => $count,
-            "recordsFiltered" => $countFilter
+            "recordsFiltered" => $countFilter,
+            //'students' =>$studets,
             //  "sanad_from_carbon" => $sanad_date_from_carbon,
             //  "sanad_to_carbon" => $sanad_date_from_carbon
         ];
@@ -349,8 +364,9 @@ class SanadController extends Controller
      */
     public function create(Request $request)
     {
+        //dd($request->input('student_id'));
         $sanad = new Sanad;
-
+        $students=Student::all();
         if ($request->getMethod() == 'GET') {
             $supportGroupId = Group::getSupport();
             if ($supportGroupId)
@@ -359,10 +375,12 @@ class SanadController extends Controller
             return view('sanads.create', [
                 "sanad" => $sanad,
                 "supports" => $supports,
+                "students" => $students,
             ]);
         }
 
         $sanad->supporter_id = $request->input('supporter_id');
+        $sanad->student_id = ($request->input('student_id') !="") ? $request->input('student_id') : 0;
         $sanad->number = $request->input('number');
         $sanad->description = $request->input('description');
         $sanad->student_fullname = ($request->input('student_fullname')!="") ? $request->input('student_fullname') : "";
@@ -409,6 +427,7 @@ class SanadController extends Controller
     {
 
         $sanad = Sanad::find($id);
+        $students= Student::all();
         $supportGroupId = Group::getSupport();
         if ($supportGroupId)
             $supportGroupId = $supportGroupId->id;
@@ -416,6 +435,7 @@ class SanadController extends Controller
         return view('sanads.edit', [
             "sanad" => $sanad,
             "supports" => $supports,
+            'students' => $students,
         ]);
     }
 

@@ -1,5 +1,15 @@
 @extends('layouts.index')
 
+@section('css')
+<link href="/plugins/select2/css/select2.min.css" rel="stylesheet" />
+<meta name="csrf-token" content="{{ csrf_token() }}">
+<style>
+    .morepanel{
+        display: none;
+    }
+</style>
+@endsection
+
 @section('content')
     <!-- Content Header (Page header) -->
     <section class="content-header">
@@ -45,9 +55,27 @@
                                   </select>
                                 
                               </div>
+
+                              <div class="col-3">
+                                 <label for="student_id">دانش آموز</label>
+                                  <select  id="student_id" name="student_id" class="form-control select2" onchange="theChange()">
+                                      <option value="0">همه</option>
+                                      @foreach ($students as $item)
+                                          @if(isset($student_id) && $student_id==$item->id)
+                                          <option value="{{ $item->id }}" selected >
+                                          @else
+                                          <option value="{{ $item->id }}" >
+                                          @endif
+                                          {{ $item->first_name }} {{ $item->last_name }}
+                                          </option>
+                                      @endforeach
+                                  </select>
+                                
+                              </div>
+
                              <div class="col-1">
                                 <label for="month">ماه</label>
-                                  <select  id="month" name="month" class="form-control select2" onchange="theChange()">
+                                  <select  id="month" name="month" class="form-control " onchange="theChange()">
                                   <option value="0">همه</option>
                                        @foreach ($sanad_month as $item)
                                           @if(isset($sanad_month) && $sanad_month==$item)
@@ -62,7 +90,7 @@
                                 </div>
                               <div class="col-1">
                               <label for="year">سال</label>
-                                  <select  id="year" name="year" class="form-control select2" onchange="theChange()">
+                                  <select  id="year" name="year" class="form-control " onchange="theChange()">
                                   <option value="0">همه</option>
                                       @foreach ($sanad_year as $item)
                                           @if(isset($sanad_year) && $sanad_year==$item)
@@ -75,7 +103,7 @@
                                       @endforeach 
                                   </select> 
                               </div>
-                              <div class="col-3">
+                              <div class="col-2">
                                   <div class="form-group">
                                       <label for="to_date">&nbsp;</label>
                                       <a href="#" class="btn btn-success form-control" onclick="theSearch()" >جستجو</a>
@@ -127,7 +155,11 @@
                         <td>{{ $item->number}} </td>
                         <td>{{ jdate($item->updated_at)->format("Y/m/d") }}</td>
                         <td>{{ $item->description }}</td>
-                        <td>{{ $item->student_fullname }}</td>
+                        @if(isset($item->student))
+                          <td>{{ $item->student->first_name . ' ' . $item->student->last_name }}</td>
+                        @else
+                            <td> </td> 
+                        @endif
                         <!-- <td>{{ $item->id }}</td> -->
                        
                         <!-- <td>{{ $item->type > 0 ? number_format($item->total) : '' }}</td>  -->
@@ -207,6 +239,7 @@
 @endsection
 
 @section('js')
+<script src="/plugins/select2/js/select2.full.min.js"></script>
 <!-- DataTables -->
 <script src="../../plugins/datatables/jquery.dataTables.js"></script>
 <script src="../../plugins/datatables-bs4/js/dataTables.bootstrap4.js"></script>
@@ -280,6 +313,7 @@
               'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
           }
       });
+      $('select.select2').select2()
       table = $('#sanadtbl').DataTable({
         "paging": true,
         "lengthChange": false,
@@ -318,6 +352,7 @@
                 "data": function (data) {
                    // data['name'] = "fFF";//$("#name").val();
                     data['supporter_id'] = $("#supporter_id").val();
+                    data['student_id'] = $("#student_id").val();
                     data['month'] = $("#month").val();
                     data['year'] = $("#year").val();
                     
@@ -344,7 +379,7 @@
                 { data: 'number' },
                 { data: 'updated_at' },
                 { data: 'description' },               
-                { data: 'student_fullname' },               
+                { data: 'student' },               
                 { data: 'total_cost' },
                 { data: 'total_get' },
                 { data: 'supporter_percent' },
