@@ -39,6 +39,7 @@
                     <th>پشتیبان</th>
                     <th>شماره سند </th>
                     <th> تاریخ  سند </th>
+                    <th> تاریخ  دریافت وجه </th>
                     <th>شرح</th>
                     <th>دانش آموز</th>
                    
@@ -61,7 +62,8 @@
                         <td>{{ $index + 1 }}</td>
                         <td>{{ $item->supporter->first_name. ' ' . $item->supporter->last_name }}</td>
                         <td>{{ $item->number}} </td>
-                        <td>{{ jdate($item->updated_at)->format("Y/m/d") }}</td>
+                        <td>{{ $item->updated_at }}</td>
+                        <td>{{ $item->receipt_date }}</td>
                         <td>{{ $item->description }}</td>
                         <td>{{ $item->student->first_name. ' ' . $item->student->last_name }}</td>
 
