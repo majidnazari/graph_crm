@@ -98,8 +98,8 @@
                 </div>
                 <div class="form-group">
                   <label for="number">بستانکار</label>
-                  @if (isset($sanad) && isset($sanad->id) && isset($sanad->type) && $sanad->type < 0)
-                   <input type="checkbox" class="form-control" id="type" name="type" onclick="checkType(this);" />
+                  @if (isset($sanad) && isset($sanad->id) && isset($sanad->type) && $sanad->type
+                  < 0) <input type="checkbox" class="form-control" id="type" name="type" onclick="checkType(this);" />
                   @else
                   <input type="checkbox" class="form-control" id="type" name="type" onclick="checkType(this);" checked />
                   @endif
@@ -130,8 +130,18 @@
                   </select>
                 </div>
 
+                <div class="col">
+                  <div class="form-group">
+                    <label for="from_date"> تاریخ دریافت پول </label>
+                    <input type="text" id="receipt_date" name="receipt_date" class="form-control pdate"
+                     value="" />
+                  </div>
+                </div>
+
               </div>
+
             </div>
+
             <div class="row">
               <div class="col">
                 <button class="btn btn-primary" type="button" onclick="submitForm()">
@@ -159,7 +169,30 @@
 <script>
   $(document).ready(function() {
 
-    $('select.select2').select2();
+    $("#supporter_id").select2();
+    $('#student_id').select2({
+      ajax: {
+        url: "{{ route('searchStudentForSanad') }}",
+        dataType: 'json',
+        delay: 250,
+        data: function(params) {
+          return {
+            q: params.term, // search term
+            //page: params.page
+          };
+        },
+        processResults: function(data) {
+          console.log("data" , data);
+          return {
+            results: data
+          };
+        },
+        cache: true
+      },
+      placeholder: 'حداقل باید ۳ کاراکتر وارد کنید',
+      minimumInputLength: 3,
+
+    });
   });
 
   function checkType(dobj) {
@@ -169,10 +202,10 @@
 
     } else {
       var x = document.getElementById("block_supporter");
-     // document.getElementById("supporter_percent").innerHTML = "100";
-     $("#supporter_percent").val('100');
+      // document.getElementById("supporter_percent").innerHTML = "100";
+      $("#supporter_percent").val('100');
       x.style.display = "none";
-      
+
     }
   }
 
@@ -183,7 +216,7 @@
     $('#frm').submit();
   }
 
- function validateForm() {
+  function validateForm() {
     if ($('#total_cost').val() === "") {
       alert("مقدار مبلغ کل را وارد نمایید.");
       return false;
@@ -212,6 +245,11 @@
       alert(" توضیحات را وارد نمایید.");
       return false;
     }
+    // if ($('#receipt_date').val() === "") {
+    //   alert(" تاریخ دریافت وجه را وارد نمایید.");
+    //   return false;
+    // }
+    
     return true;
   }
 </script>

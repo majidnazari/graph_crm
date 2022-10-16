@@ -24,6 +24,7 @@ class Sanad extends Model implements Auditable
         "description",
         "student_fullname",
         "total",
+        "receipt_date",
         "total_cost",
         "supporter_percent" ,
         "supporter_id",

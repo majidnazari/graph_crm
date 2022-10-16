@@ -170,8 +170,8 @@ type Student @key(fields: "id") {
 type Mutation  {
 
   #region student
-    createStudent(input: CreateStudentInput @spread): Student!  @field(resolver: "App\\GraphQL\\Mutations\\Student\\CreateStudent@resolver")
-    updateStudent(input: UpdateStudentInput @spread): Student!   @field(resolver: "App\\GraphQL\\Mutations\\Student\\UpdateStudent@resolver")
+    createStudent(input: CreateStudentInput @spread): Student  @field(resolver: "App\\GraphQL\\Mutations\\Student\\CreateStudent@resolver")
+    updateStudent(input: UpdateStudentInput @spread): Student   @field(resolver: "App\\GraphQL\\Mutations\\Student\\UpdateStudent@resolver")
     deleteStudent(id:ID!):Student  @field(resolver: "App\\GraphQL\\Mutations\\Student\\DeleteStudent@resolver")
   #end student
 

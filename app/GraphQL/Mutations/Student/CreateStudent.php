@@ -31,16 +31,16 @@ final class CreateStudent
             'phone' => $args['phone'],
             'first_name' => $args['first_name'],
             'last_name'=> $args['last_name'],
-            'nationality_code'=> $args['nationality_code'],
-            'concours_year' => isset($args['concours_year']) ? $args['concours_year'] : null ,
-            'egucation_level'=> $args['egucation_level'],
-            'parents_job_title'=> $args['parents_job_title'],
-            'home_phone'=> $args['home_phone'],
-            'father_phone'=> $args['father_phone'],
-            'mother_phone'=> $args['mother_phone'],
+            'nationality_code'=> (!isset($args['nationality_code']) || ($args['nationality_code']=="")) ?  null : $args['nationality_code'] ,
+            'concours_year' => (!isset($args['concours_year']) || ($args['concours_year']=="")) ?  null : $args['concours_year'] ,
+            'egucation_level'=> (!isset($args['egucation_level']) || ($args['egucation_level']=="")) ?  null : $args['egucation_level'] ,
+            'parents_job_title'=>(!isset($args['parents_job_title']) || ($args['parents_job_title']=="")) ?  "" : $args['parents_job_title'] ,
+            'home_phone'=> (!isset($args['home_phone']) || ($args['home_phone']=="")) ?  "" : $args['home_phone']  ,
+            'father_phone'=> (!isset($args['father_phone']) || ($args['father_phone']=="")) ?  "" : $args['father_phone'] ,
+            'mother_phone'=> (!isset($args['mother_phone']) || ($args['mother_phone']=="")) ?  "" : $args['mother_phone']  ,
             //'school'=> $args['school'],
             //'average'=> $args['average'],
-            'major'=> (!isset($args['major']) || ($args['major']=="")) ?  "other" : $args['major'] ,
+            'major'=> (!isset($args['major']) || ($args['major']=="")) ?  null : $args['major'] ,
             //'introducing'=> $args['introducing'],
             //'student_phone'=> $args['student_phone'],
             //'citys_id'=> $args['citys_id'],
@@ -54,10 +54,11 @@ final class CreateStudent
         {
             return Error::createLocatedError("USER-CREATE-RECORD_IS_EXIST");
         }
-        if($existed_student=Student::where('nationality_code',$args['nationality_code'])->first())
-        {
-            return Error::createLocatedError("USER-CREATE-NATIONAL_NO_IS_EXIST");
-        }
+
+        // if($existed_student=Student::where('nationality_code',$args['nationality_code'])->first())
+        // {
+        //     return Error::createLocatedError("USER-CREATE-NATIONAL_NO_IS_EXIST");
+        // }
                // return $existed_student;
         $student_result=Student::create($student);
         return $student_result;
