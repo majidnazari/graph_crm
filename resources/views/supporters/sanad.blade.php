@@ -60,7 +60,7 @@
                       @foreach ($sanads as $index => $item)                      
                       <tr>
                         <td>{{ $index + 1 }}</td>
-                        <td>{{ $item->supporter->first_name. ' ' . $item->supporter->last_name }}</td>
+                        <td>{{ isset($item->supporter->first_name) ?  $item->supporter->first_name : " " . ' ' . isset($item->supporter->last_name) ?  $item->supporter->last_name  : " "}}</td>
                         <td>{{ $item->number}} </td>
                         <td>{{ $item->updated_at }}</td>
                         <td>{{ $item->receipt_date }}</td>
