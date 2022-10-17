@@ -34,7 +34,7 @@ class SanadController extends Controller
         $sanad_year = range($year - 5, $year + 5);
         $sanads = Sanad::all();
         //$student_selected=Student::
-        $allstudent = Student::all();
+        //$allstudent = Student::all();
         $supports = User::where('is_deleted', false)->where('groups_id', env('USER_ROLE'))->get();
         // foreach($sanads as $sanad){
         //     if($sanad->type > 0){
@@ -48,7 +48,7 @@ class SanadController extends Controller
 
         return view('sanads.index', [
             'sanads' => $sanads,
-            'students' => $allstudent,
+            //'students' => $allstudent,
             'supporters' => $supports,
             'sanad_year' => $sanad_year,
             'sanad_month' => $sanad_month,
@@ -225,10 +225,10 @@ class SanadController extends Controller
                 "row" =>  $req['start'] + $index + 1,
                 "id" => $item->id,
                 "supporter" => $item->supporter->first_name . ' ' . $item->supporter->last_name,
-                "student" => $item->student->first_name . ' ' . $item->student->last_name,
+                "student" => (isset($item->student->first_name) ? $item->student->first_name : $item->student_fullname ). ' ' . (isset($item->student->last_name) ? $item->student->last_name : " "),
                 "number" => $item->number,
                 "description" => $item->description,
-                "student_fullname" => $item->student_fullname,
+                //"student_fullname" => $item->student_fullname,
                 "updated_at" => jdate($item->updated_at)->format("Y/m/d"),
                 "receipt_date" => ($item->receipt_date != null) ? jdate($item->receipt_date)->format("Y/m/d") : "",
                 "total_cost" => number_format($item->total_cost),
@@ -379,7 +379,7 @@ class SanadController extends Controller
         //Log::info("the dte is: " . $this->jalaliToGregorian($request->input('receipt_date')));
         //dd("don");
         $sanad = new Sanad;
-        $students = Student::all();
+        //$students = Student::all();
         if ($request->getMethod() == 'GET') {
             $supportGroupId = Group::getSupport();
             if ($supportGroupId)
@@ -388,13 +388,13 @@ class SanadController extends Controller
             return view('sanads.create', [
                 "sanad" => $sanad,
                 "supports" => $supports,
-                "students" => $students,
+                //"students" => $students,
             ]);
         }
         //$date_receipt=$this->jalaliToGregorian($request->input('receipt_date'));
 
         $sanad->supporter_id = $request->input('supporter_id');
-        $sanad->student_id = ($request->input('student_id') != "") ? $request->input('student_id') : 0;
+        $sanad->student_id = ($request->input('student_id') != "") ? $request->input('student_id') : null;
         $sanad->receipt_date = ($request->input('receipt_date') != "") ? $this->jalaliToGregorian($request->input('receipt_date')) : Carbon::now()->format("Y-m-d H:i:s");
         $sanad->number = $request->input('number');
         $sanad->description = $request->input('description');
@@ -442,11 +442,12 @@ class SanadController extends Controller
     {
 
         $sanad = Sanad::find($id);
-        $students = Student::all();
+        $students = Student::where('id',$sanad->student_id)->get();
         $supportGroupId = Group::getSupport();
         if ($supportGroupId)
             $supportGroupId = $supportGroupId->id;
         $supports = User::where('is_deleted', false)->where('groups_id', $supportGroupId)->get();
+        // dd($sanad);
         return view('sanads.edit', [
             "sanad" => $sanad,
             "supports" => $supports,

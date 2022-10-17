@@ -61,7 +61,7 @@
         <label for="student_id">دانش آموز</label>
         <select id="student_id" name="student_id" class="form-control select2" onchange="theChange()">
           <option value="0">همه</option>
-          @foreach ($students as $item)
+    
           @if(isset($student_id) && $student_id==$item->id)
           <option value="{{ $item->id }}" selected>
             @else
@@ -69,7 +69,7 @@
             @endif
             {{ $item->first_name }} {{ $item->last_name }}
           </option>
-          @endforeach
+          
         </select>
 
       </div>
@@ -179,11 +179,7 @@
                 <td>{{ jdate($item->updated_at)->format("Y/m/d") }}</td>
                 <td>{{ jdate($item->receipt_date)->format("Y/m/d") }}</td>
                 <td>{{ $item->description }}</td>
-                @if(isset($item->student))
-                <td>{{ $item->student->first_name . ' ' . $item->student->last_name }}</td>
-                @else
-                <td> </td>
-                @endif
+                
                 <!-- <td>{{ $item->id }}</td> -->
 
                 <!-- <td>{{ $item->type > 0 ? number_format($item->total) : '' }}</td>  -->
