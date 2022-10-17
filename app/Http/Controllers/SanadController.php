@@ -395,7 +395,7 @@ class SanadController extends Controller
 
         $sanad->supporter_id = $request->input('supporter_id');
         $sanad->student_id = ($request->input('student_id') != "") ? $request->input('student_id') : 0;
-        $sanad->receipt_date = ($request->input('receipt_date') != "") ? $this->jalaliToGregorian($request->input('receipt_date')) : null;
+        $sanad->receipt_date = ($request->input('receipt_date') != "") ? $this->jalaliToGregorian($request->input('receipt_date')) : Carbon::now()->format("Y-m-d H:i:s");
         $sanad->number = $request->input('number');
         $sanad->description = $request->input('description');
         $sanad->student_fullname = ($request->input('student_fullname') != "") ? $request->input('student_fullname') : "";
@@ -475,7 +475,7 @@ class SanadController extends Controller
         if ($sanad) {
             $sanad->fill($request->all());
             $sanad->type = $request->type && $request->type === "on" ? 1 : -1;
-            $sanad->receipt_date = $request->input('receipt_date') != "" ? $this->jalaliToGregorian($request->input('receipt_date')) : null;
+            $sanad->receipt_date = $request->input('receipt_date') != "" ? $this->jalaliToGregorian($request->input('receipt_date')) : Carbon::now()->format("Y-m-d H:i:s");
             $sanad->save();
         }
         $request->session()->flash("msg_success", "سند با موفقیت افزوده شد.");

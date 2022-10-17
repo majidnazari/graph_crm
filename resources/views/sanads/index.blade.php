@@ -246,7 +246,13 @@
                 <div class="form-group">
                   <label for="to_date">&nbsp;</label>
                   <a href="#" class="btn btn-success form-control" onclick="theEditAll()">اعمال تغییرات</a>
+                  
                 </div>
+              </div>
+              <div>
+              <span style="color:red"> ***
+                   ابتدا نام پشتیبان و ماه و سال انتخاب شود سپس در باکس سهم پشتیبان درصدی که می خواهید برای کلیه موارد سرچ شده اعمال شود برای پشتیبان را وارد نمایید.
+                   </span>
               </div>
             </div>
           </form>
@@ -351,7 +357,7 @@
           };
         },
         processResults: function(data) {
-          console.log("data" , data);
+          //console.log("data" , data);
           return {
             results: data
           };

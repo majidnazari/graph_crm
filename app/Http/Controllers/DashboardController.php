@@ -145,8 +145,8 @@ class DashboardController extends Controller
             // $thePurchases = Purchase::where('is_deleted',false)->where('supporters_id',Auth::user()->id)->where('created_at','>=',$gregorian_first_day_of_this_month)->where('created_at','<=',$gregorian_last_day_of_this_month)->get();
             $supporterSanads = Sanad::where('supporter_id', Auth::user()->id)
                 ->where('status', 'created')
-                ->where('created_at', '>=', $gregorian_first_day_of_this_month)
-                ->where('created_at', '<=', $gregorian_last_day_of_this_month)
+                ->where('receipt_date', '>=', $gregorian_first_day_of_this_month)
+                ->where('receipt_date', '<=', $gregorian_last_day_of_this_month)
                 ->get();
             $user = User::where('is_deleted',false)->where('id',Auth::user()->id)->first();
             // $out = CommissionPurchaseRelation::computeMonthIncome($purchases,$thePurchases);

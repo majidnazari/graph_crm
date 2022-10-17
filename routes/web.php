@@ -251,6 +251,7 @@ Route::group(['middleware' => ['auth', 'message', 'changeCharactersAllToBePersia
     Route::group(['prefix' => '/supporter_students'], function () {
         Route::any('/', 'SupporterController@student')->name('supporter_students');
         Route::any('/sanad/{id}', 'SupporterController@sanad')->name('supporter_sanads');
+        Route::any('/search_sanad', 'SupporterController@AllAJAXStudentForSupporter')->name('search_sanad_in_support_system');
         Route::post('/changeLevel', 'SupporterController@changeLevelAjax')->name('change_level_ajax');
         Route::any('/l1', 'SupporterController@levelOneStudents')->name('student_level_1');
         Route::any('/l2', 'SupporterController@levelTwoStudents')->name('student_level_2');
