@@ -34,7 +34,7 @@ class SanadController extends Controller
         $sanad_year = range($year - 5, $year + 5);
         $sanads = Sanad::all();
         //$student_selected=Student::
-        //$allstudent = Student::all();
+        $allstudent = [];//Student::all();
         $supports = User::where('is_deleted', false)->where('groups_id', env('USER_ROLE'))->get();
         // foreach($sanads as $sanad){
         //     if($sanad->type > 0){
@@ -48,7 +48,7 @@ class SanadController extends Controller
 
         return view('sanads.index', [
             'sanads' => $sanads,
-            //'students' => $allstudent,
+            'students' => $allstudent,
             'supporters' => $supports,
             'sanad_year' => $sanad_year,
             'sanad_month' => $sanad_month,

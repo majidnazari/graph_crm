@@ -61,7 +61,7 @@
         <label for="student_id">دانش آموز</label>
         <select id="student_id" name="student_id" class="form-control select2" onchange="theChange()">
           <option value="0">همه</option>
-    
+          @foreach ($students as $item)
           @if(isset($student_id) && $student_id==$item->id)
           <option value="{{ $item->id }}" selected>
             @else
@@ -69,7 +69,7 @@
             @endif
             {{ $item->first_name }} {{ $item->last_name }}
           </option>
-          
+          @endforeach
         </select>
 
       </div>
