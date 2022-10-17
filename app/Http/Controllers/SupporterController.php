@@ -1310,17 +1310,32 @@ class SupporterController extends Controller
     public function showSanads($id = null, $level, $view, $route)
     {
        $user_id=Auth::user()->id; 
-       $allstudent=Student::all();
+       //$allstudent=Student::all();
        if($user_id==$id)
        {
-            $sanads= Sanad::where('supporter_id',$id)->get();
+            $sanads= Sanad::where('supporter_id',$id)->with('student')->with('supporter')->get();
             return view($view,[
                 'sanads' => $sanads,
-                'students' => $allstudent,
+                //'students' => $allstudent,
             ]);
        }
        return redirect('/login');
        
+    }
+    public function AllAJAXStudentForSupporter(Request $request)
+    {       
+        $data=[];
+        //Log::info("ajax is:" . $request['q']);
+        $results = Student::select('id','first_name','last_name','phone')->where('last_name', 'like', '%' . $request['q'] . '%')
+            ->orWhere('last_name', 'like', '%' . $request['q'] . '%')->get();
+            foreach($results as $result){
+
+                $data[]=[
+                    "id" => $result->id,
+                    "text" => $result->first_name . ' ' .$result->last_name . ' ' .$result->phone,
+                ];
+            }
+        return $data;
     }
     public function sanad($id = null)
     {       
