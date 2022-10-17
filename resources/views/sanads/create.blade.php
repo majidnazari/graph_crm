@@ -118,7 +118,7 @@
                   <label for="student_id">دانش آموز</label>
                   <select id="student_id" name="student_id" class="form-control select2">
                     <option value="0"></option>
-                    @foreach ($students as $item)
+                   
                     @if (isset($sanad) && isset($sanad->id) && $sanad->supporter_id == $item->id)
                     <option value="{{ $item->id }}" selected>
                       @else
@@ -126,7 +126,7 @@
                       @endif
                       {{ $item->first_name. ' ' . $item->last_name }}
                     </option>
-                    @endforeach
+                    
                   </select>
                 </div>
 
