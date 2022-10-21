@@ -336,7 +336,7 @@ class SanadController extends Controller
                 "row" => $index + 1,
                 "id" => $item->id,
                 "supporter" => $item->supporter->first_name . ' ' . $item->supporter->last_name,
-                "student" => $item->student->first_name . ' ' . $item->student->last_name,
+                "student" => (isset($item->student->first_name) ? $item->student->first_name  : $item->student_fullname) . ' ' . (isset($item->student->last_name) ? $item->student->last_name : ""),
                 "number" => $item->number,
                 "description" => $item->description,
                 "updated_at" => jdate($item->updated_at)->format("Y/m/d"),

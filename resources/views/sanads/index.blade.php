@@ -289,6 +289,11 @@
     } else {
       if ($("#supporter_amount_edit").val().trim() != "") {
         supporter_amount_edit = $("#supporter_amount_edit").val();
+        if(supporter_amount_edit >= 100 || supporter_amount_edit <= 0)
+        {
+          alert("سهم پشتیبان باید مقدار مجاز بین ۱ تا ۹۹ تعریف شود.");
+          return false;
+        }
 
       } else {
         alert("لطفا مقدار سهم پشتیبان را وارد نمایید.");
@@ -308,7 +313,8 @@
       // console.log("the res is:"+ res);
       if (res) {
         alert("ویرایش با موفقیت انجام شد.");
-        location.reload();
+        theSearch();
+        //location.reload();
       }
     });
 
