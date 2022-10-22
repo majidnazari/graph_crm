@@ -35,7 +35,7 @@ class SanadController extends Controller
         $sanads = Sanad::all();
         //$student_selected=Student::
         $allstudent = [];//Student::all();
-        $supports = User::where('is_deleted', false)->where('groups_id', env('USER_ROLE'))->get();
+        $supports =[];// User::where('is_deleted', false)->where('groups_id', env('USER_ROLE'))->get();
         // foreach($sanads as $sanad){
         //     if($sanad->type > 0){
         //         $total_debtor+=$sanad->total_cost;
@@ -196,9 +196,6 @@ class SanadController extends Controller
             ->skip($req['start'])
             ->take($req['length'])
             ->get();
-
-
-
 
         $countFilter = count($sanads);
 
@@ -510,13 +507,35 @@ class SanadController extends Controller
     {
         $data=[];
         //Log::info("ajax is:" . $request['q']);
-        $results = Student::select('id','first_name','last_name','phone')->where('last_name', 'like', '%' . $request['q'] . '%')
+        $results = Student::select('id','first_name','last_name','phone')->where('first_name', 'like', '%' . $request['q'] . '%')
             ->orWhere('last_name', 'like', '%' . $request['q'] . '%')->get();
             foreach($results as $result){
 
                 $data[]=[
                     "id" => $result->id,
                     "text" => $result->first_name . ' ' .$result->last_name . ' ' .$result->phone,
+                ];
+            }
+        return $data;
+    }
+    public function AllAJAXSupporter(Request $request)
+    {
+        $data=[];
+        //Log::info("ajax is:" . $request['q']);
+        $results = User::select('id','first_name','last_name')
+        ->where('first_name', 'like', '%' . $request['q'] . '%')
+        ->orWhere('last_name', 'like', '%' . $request['q'] . '%')
+        ->where('is_deleted', false)
+        ->where('groups_id', env('USER_ROLE'))
+        ->get();
+        // ->where('is_deleted', false)->where('groups_id', env('USER_ROLE'))->get();
+        // Student::select('id','first_name','last_name','phone')->where('last_name', 'like', '%' . $request['q'] . '%')
+        //     ->orWhere('last_name', 'like', '%' . $request['q'] . '%')->get();
+            foreach($results as $result){
+
+                $data[]=[
+                    "id" => $result->id,
+                    "text" => $result->first_name . ' ' .$result->last_name ,
                 ];
             }
         return $data;

@@ -346,7 +346,28 @@
       }
     });
 
-    $("#supporter_id").select2();
+    $("#supporter_id").select2({
+      ajax: {
+        url: "{{ route('searchSupporterForSanad') }}",
+        dataType: 'json',
+        delay: 0,
+        data: function(params) {
+          return {
+            q: params.term, // search term
+            //page: params.page
+          };
+        },
+        processResults: function(data) {
+          //console.log("data" , data);
+          return {
+            results: data
+          };
+        },
+        cache: true
+      },
+      placeholder: 'حداقل باید ۲ کاراکتر وارد کنید',
+      minimumInputLength: 2,
+    });
     $('#student_id').select2({
       ajax: {
         url: "{{ route('searchStudentForSanad') }}",
