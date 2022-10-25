@@ -67,6 +67,9 @@ scalar DateTime @scalar(class: "Nuwave\\Lighthouse\\Schema\\Types\\Scalars\\Date
     getStudents(
       first_name: String @like (template : "%{}%")
       last_name: String @like (template : "%{}%")     
+      full_name: String  
+      # @where(operator: "like", key: "first_name1") 
+      # @where(operator: "like", clause: "orWhere", key: "last_name")     
       nationality_code: String @like (template : "%{}%")     
       # level: String @like (template : "%{}%")
       egucation_level: String @like (template : "%{}%")
