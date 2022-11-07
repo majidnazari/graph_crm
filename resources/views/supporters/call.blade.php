@@ -27,6 +27,9 @@ $persons = [
                   {{ isset($students[0]->first_name) ?  $students[0]->first_name : "" }}
                   {{  isset($students[0]->last_name) ?  $students[0]->last_name : ""}}
               </h1>
+              <h6>               
+                {{ isset($mainStudentName) ? "دانش آموزان مرج شده :" .  $mainStudentName : ""}}
+              </h6>
             </div>
             <div class="col-sm-6">
               <!--

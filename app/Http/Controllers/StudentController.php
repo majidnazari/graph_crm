@@ -209,13 +209,13 @@ class StudentController extends Controller
             ->limit($req['length'])
             ->get();
            
-        foreach ($Students as $index => $student) {
-            $Students[$index]->pcreated_at = jdate(strtotime($student->created_at))->format("Y/m/d");
-            
+        foreach ($Students as $index => $student_tmp) {
+            $Students[$index]->pcreated_at =jdate(strtotime($student_tmp->created_at))->format("Y/m/d");
+           // Log::info("the date is:". $Students[$index]->pcreated_at);
         }
        
         if (request()->getMethod() == 'GET') {             
-         //dd($view);
+         //dd($Students);
           return view($view,compact([
               'route',
               'Students' ,
@@ -472,7 +472,10 @@ class StudentController extends Controller
                     ];
                 }
             }
-           
+            foreach ($students as $index => $student_tmp) {
+                $students[$index]->pcreated_at =jdate(strtotime($student_tmp->created_at))->format("Y/m/d");
+               // Log::info("the date is:". $Students[$index]->pcreated_at);
+            }
             $result = [
                 "draw" => $req['draw'],
                 "data" => $data,
