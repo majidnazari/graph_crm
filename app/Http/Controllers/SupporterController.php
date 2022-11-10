@@ -246,6 +246,7 @@ class SupporterController extends Controller
 
     public function callIndex($theSupporters_id = null)
     {
+       
         $supporters_id = null;
         $supportersForSelectInView = null;
         if ($theSupporters_id == null) {
@@ -257,6 +258,7 @@ class SupporterController extends Controller
             $supportersForSelectInView = $supporters->get();
             $supporters = $supporters->with('students.purchases')->with('students.studenttags.tag')->orderBy('max_student', 'desc')->get();
         } else {
+            //Log::info("the supporter id is:" .$theSupporters_id );
             $supporters = User::where('id', $theSupporters_id)->get();
             $supportersForSelectInView = User::where('is_deleted', false)->get();
         }
@@ -508,6 +510,8 @@ class SupporterController extends Controller
             }
             $supporter->callCount = count($calls);
             $supporter->supporterCallResults = $supporterCallResults;
+
+            //Log::info("the supporter count:" . count($calls));
         }
         $from_date = ($from_date) ? $from_date : date("Y-m-d");
         $to_date = ($to_date) ? $to_date : date("Y-m-d");
@@ -515,6 +519,7 @@ class SupporterController extends Controller
         $notices_id = ($notices_id) ? $notices_id : '';
         $replier_id = ($replier_id) ? $replier_id : '';
         $sources_id = ($sources_id) ? $sources_id : '';
+        
         foreach ($supporters as $index => $item) {
             $countCall = '<form method="GET" action="' . route('user_supporter_acall', $item->id) . '" target="_blank" >
             <input type="hidden" name="from_date" value="' . $from_date . '" />
@@ -548,7 +553,7 @@ class SupporterController extends Controller
                 ], $lastTds);
             }
         }
-
+       
         $result = [
             "draw" => $req['draw'],
             "data" => $data,
@@ -1932,19 +1937,20 @@ class SupporterController extends Controller
         $other_ids[] = $getAllStudentIds['second_auxilary_students_id'];
         $other_ids[] = $getAllStudentIds['third_auxilary_students_id'];
         $other_ids[] = $getAllStudentIds['main_students_id'];
-        $allStudent = Student::whereIn('id', $getAllStudentIds)->get();
-        $mainStudent = Student::where('id', $id)->first();
-        $mainStudent = $mainStudent->first_name . " " .  $mainStudent->last_name;
+        $allStudents = Student::whereIn('id', $getAllStudentIds)->where('id','!=',$id)->get();//->pluck("id");
+        //Log::info("id is:" . $id . " all students are:" .$allStudents);
+        if($allStudents->count()>0){
+            $mainStudent = Student::where('id', $id)->first();
+            $mainStudent = $mainStudent->first_name . " " .  $mainStudent->last_name . ' ';
+        }
+        
+        // foreach($allStudents as $otherstudent){
+        //     $mainStudent .= $otherstudent->first_name . " " .  $otherstudent->last_name . '-';
+        // }
+        
         //dd($studentIds);
         //$allStudent=$allStudent->whereNotIn('id',$id)->get();
-
-        foreach ($allStudent as $student) {
-            if ($student->id == $id){               
-                continue;
-            }
-                
-            $getAllStudentName .= $student->first_name . "  " . $student->last_name . ",";
-        }
+        
         //dd( $other_ids);
         // $students=DB::table('students')
         //  //->where('id', $id)
@@ -1986,8 +1992,7 @@ class SupporterController extends Controller
         }
         //dd(json_decode($students));
         return view('supporters.call', [
-            "students" => $students,
-            "otherStudentName" => $getAllStudentName,
+            "students" => $students,            
             "mainStudentName" => $mainStudent,
         ]);
     }
