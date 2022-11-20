@@ -2,8 +2,10 @@
 
 namespace App;
 
+//use Attribute;
 use Illuminate\Database\Eloquent\Model;
 use OwenIt\Auditing\Contracts\Auditable;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 
 class Student extends Model implements Auditable
 {
@@ -116,4 +118,11 @@ class Student extends Model implements Auditable
     {
         return $this->hasOne('App\MergeStudents', 'third_auxilary_students_id', 'id')->where('is_deleted', false);
     }
+    
+    // protected function phone(): Attribute
+    // {
+    //     return Attribute::make(
+    //         get: fn ($value) => substr_replace($value,"****",4,4),
+    //     );
+    // }
 }
