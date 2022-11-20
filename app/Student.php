@@ -2,8 +2,10 @@
 
 namespace App;
 
+//use Attribute;
 use Illuminate\Database\Eloquent\Model;
 use OwenIt\Auditing\Contracts\Auditable;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 
 class Student extends Model implements Auditable
 {
@@ -29,7 +31,8 @@ class Student extends Model implements Auditable
         'sources_id',
         'supporters_id',
         'archived',
-        'description'
+        'description',
+       
     ];
     protected $columns = ['id', 'level', 'first_name', 'last_name','last_year_grade','consultants_id','parents_job_title','home_phone','mother_phone','father_phone','phone','school','created_at','updated_at','introducing','student_phone','sources_id','supporters_id','is_deleted','users_id','marketers_id','average','password','viewed','major','egucation_level','concours_year','provinces_id','is_from_site','description','supporter_seen','saloon','supporter_start_date','banned','cities_id','archived','own_purchases','other_purchases','today_purchases']; // add all columns from you table
 
@@ -115,4 +118,11 @@ class Student extends Model implements Auditable
     {
         return $this->hasOne('App\MergeStudents', 'third_auxilary_students_id', 'id')->where('is_deleted', false);
     }
+    
+    // protected function phone(): Attribute
+    // {
+    //     return Attribute::make(
+    //         get: fn ($value) => substr_replace($value,"****",4,4),
+    //     );
+    // }
 }

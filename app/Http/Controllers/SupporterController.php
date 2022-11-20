@@ -246,6 +246,7 @@ class SupporterController extends Controller
 
     public function callIndex($theSupporters_id = null)
     {
+       
         $supporters_id = null;
         $supportersForSelectInView = null;
         if ($theSupporters_id == null) {
@@ -257,6 +258,7 @@ class SupporterController extends Controller
             $supportersForSelectInView = $supporters->get();
             $supporters = $supporters->with('students.purchases')->with('students.studenttags.tag')->orderBy('max_student', 'desc')->get();
         } else {
+            //Log::info("the supporter id is:" .$theSupporters_id );
             $supporters = User::where('id', $theSupporters_id)->get();
             $supportersForSelectInView = User::where('is_deleted', false)->get();
         }
@@ -508,6 +510,8 @@ class SupporterController extends Controller
             }
             $supporter->callCount = count($calls);
             $supporter->supporterCallResults = $supporterCallResults;
+
+            //Log::info("the supporter count:" . count($calls));
         }
         $from_date = ($from_date) ? $from_date : date("Y-m-d");
         $to_date = ($to_date) ? $to_date : date("Y-m-d");
@@ -515,6 +519,7 @@ class SupporterController extends Controller
         $notices_id = ($notices_id) ? $notices_id : '';
         $replier_id = ($replier_id) ? $replier_id : '';
         $sources_id = ($sources_id) ? $sources_id : '';
+        
         foreach ($supporters as $index => $item) {
             $countCall = '<form method="GET" action="' . route('user_supporter_acall', $item->id) . '" target="_blank" >
             <input type="hidden" name="from_date" value="' . $from_date . '" />
@@ -548,7 +553,7 @@ class SupporterController extends Controller
                 ], $lastTds);
             }
         }
-
+       
         $result = [
             "draw" => $req['draw'],
             "data" => $data,
@@ -809,7 +814,7 @@ class SupporterController extends Controller
         $students_id = $request->input('students_id');
         $level = $request->level;
         $student = Student::where('id', $students_id)->first();
-        if(($student->level==3 and $level==2) || ($student->level==2 and $level==1) ){
+        if (($student->level == 3 and $level == 2) || ($student->level == 2 and $level == 1)) {
             return [
                 "error" => "permission denied",
                 "data" => null
@@ -870,7 +875,7 @@ class SupporterController extends Controller
         $products_id = null;
         $notices_id = null;
         $call_results_id = null;
-        $next_to_call = null; 
+        $next_to_call = null;
         if (request()->input('students_id') != null) {
             $students_id = (int)request()->input('students_id');
             $calls_id = (int)request()->input('calls_id');
@@ -1255,7 +1260,7 @@ class SupporterController extends Controller
                     $call->next_call =  $call->next_call ? jdate(strtotime($call->next_call))->format('Y/m/d') : '-';
                 }
                 $levelsToSelect = "";
-                $levels = [1,2,3,4];
+                $levels = [1, 2, 3, 4];
                 foreach ($levels as $l) {
                     $levelsToSelect .= '<option value="' . $l . '"';
                     if ($l == $item->level)
@@ -1272,9 +1277,9 @@ class SupporterController extends Controller
                         "sources_id" => ($item->source) ? $item->source->name : '-',
                         "tags" => $tags,
                         "temps" => $temps,
-                        "level" => '<select id="level_' . $index . '" class="form-control select2">'.
-                           $levelsToSelect
-                        .'</select>
+                        "level" => '<select id="level_' . $index . '" class="form-control select2">' .
+                            $levelsToSelect
+                            . '</select>
                         <a class="btn btn-success btn-sm" href="#" onclick="return changeLevel(' . $index . "," . $item->id . ');">
                             ذخیره
                         </a>
@@ -1309,36 +1314,34 @@ class SupporterController extends Controller
     }
     public function showSanads($id = null, $level, $view, $route)
     {
-       $user_id=Auth::user()->id; 
-       //$allstudent=Student::all();
-       if($user_id==$id)
-       {
-            $sanads= Sanad::where('supporter_id',$id)->with('student')->with('supporter')->get();
-            return view($view,[
+        $user_id = Auth::user()->id;
+        //$allstudent=Student::all();
+        if ($user_id == $id) {
+            $sanads = Sanad::where('supporter_id', $id)->with('student')->with('supporter')->get();
+            return view($view, [
                 'sanads' => $sanads,
                 //'students' => $allstudent,
             ]);
-       }
-       return redirect('/login');
-       
+        }
+        return redirect('/login');
     }
     public function AllAJAXStudentForSupporter(Request $request)
-    {       
-        $data=[];
+    {
+        $data = [];
         //Log::info("ajax is:" . $request['q']);
-        $results = Student::select('id','first_name','last_name','phone')->where('last_name', 'like', '%' . $request['q'] . '%')
+        $results = Student::select('id', 'first_name', 'last_name', 'phone')->where('last_name', 'like', '%' . $request['q'] . '%')
             ->orWhere('last_name', 'like', '%' . $request['q'] . '%')->get();
-            foreach($results as $result){
+        foreach ($results as $result) {
 
-                $data[]=[
-                    "id" => $result->id,
-                    "text" => $result->first_name . ' ' .$result->last_name . ' ' .$result->phone,
-                ];
-            }
+            $data[] = [
+                "id" => $result->id,
+                "text" => $result->first_name . ' ' . $result->last_name . ' ' . $result->phone,
+            ];
+        }
         return $data;
     }
     public function sanad($id = null)
-    {       
+    {
         return $this->showSanads($id, 'all', "supporters.sanad", "supporters_sanad");
     }
     public function student($id = null)
@@ -1608,9 +1611,9 @@ class SupporterController extends Controller
         ]);
     }
 
-    public function indexReminders() 
+    public function indexReminders()
     {
-        $supporter_id=2;
+        $supporter_id = 2;
         // $total_debtor = 0;
         // $total_creditor = 0;
         // // $date_tmp=$georgianCarbonDate=Jalalian::fromFormat('Y-m-d', '1401-03-28')->toCarbon();       
@@ -1619,7 +1622,7 @@ class SupporterController extends Controller
         // $year = (int)jdate()->format("Y"); //Carbon::now()->format("Y");
         // $sanad_year = range($year - 5, $year + 5);
         // $sanads = Sanad::all();
-        $reminders = Call::with('student')->with('student.supporter')->take(10)->orderBy('id','desc')->get();
+        $reminders = Call::with('student')->with('student.supporter')->take(10)->orderBy('id', 'desc')->get();
         $supports = User::where('is_deleted', false)->where('groups_id', env('USER_ROLE'))->get();
         $products = Product::where('is_deleted', false)->where('is_private', false)->get();
         // foreach($sanads as $sanad){
@@ -1647,128 +1650,125 @@ class SupporterController extends Controller
             'msg_error' => request()->session()->get('msg_error')
         ]);
     }
-   public function getReminders(Request $request)
-   { 
+    public function getReminders(Request $request)
+    {
 
-    $data = []; 
-    $now=Carbon::now();
-    $reminders=call::where('is_deleted',0)->orderBy('id','desc');
-    
-    //->take(10)
-    //->orderBy('id','desc')
-    //where('next_call','>=',$now)
-    //->get();
+        $data = [];
+        $now = Carbon::now();
+        $reminders = call::where('is_deleted', 0)->orderBy('id', 'desc');
 
-    $req = request()->all();
-    if (!isset($req['start'])) {
-        $req['start'] = 0;
-        $req['length'] = 10;
-        $req['draw'] = 1;
-    }
+        //->take(10)
+        //->orderBy('id','desc')
+        //where('next_call','>=',$now)
+        //->get();
 
-    
-    if(isset($req['from_date_persian'])){
-        //dd($this->jalaliToGregorian($req['from_date_persian']));
-        $reminders= $reminders->where('created_at','>=',$this->jalaliToGregorian($req['from_date_persian']));
-    }
-    if(isset($req['to_date_persian'])){
-        $reminders= $reminders->where('created_at','<=',$this->jalaliToGregorian($req['to_date_persian']));
-    }
-    $reminders=$reminders
-    ->whereHas('student' , function($query) use ($req){
-        if(isset($req['first_name'])){
-            //dd($req);
-
-            $query->where('first_name','Like','%'.$req['first_name']. '%');
-        }
-        if(isset($req['last_name'])){
-          
-            $query->where('last_name','Like','%'.$req['last_name']. '%');
-        }
-        if(isset($req['phone'])){           
-
-            $query->where('phone','Like','%'.$req['phone']. '%');
-        }
-        //return true;
-        
-    })->with('student')
-    ->whereHas('student.supporter' , function($query) use ($req){
-        if(isset($req['supporters_id'])){           
-
-            $query->where('id',$req['supporters_id']);
+        $req = request()->all();
+        if (!isset($req['start'])) {
+            $req['start'] = 0;
+            $req['length'] = 10;
+            $req['draw'] = 1;
         }
 
-    })
-    ->with('student.supporter') 
-    ->whereHas('product' , function($query) use ($req){
-        if(isset($req['products_id'])){          
 
-            $query->where('id',$req['products_id']);
+        if (isset($req['from_date_persian'])) {
+            //dd($this->jalaliToGregorian($req['from_date_persian']));
+            $reminders = $reminders->where('created_at', '>=', $this->jalaliToGregorian($req['from_date_persian']));
+        }
+        if (isset($req['to_date_persian'])) {
+            $reminders = $reminders->where('created_at', '<=', $this->jalaliToGregorian($req['to_date_persian']));
+        }
+        $reminders = $reminders
+            ->whereHas('student', function ($query) use ($req) {
+                if (isset($req['first_name'])) {
+                    //dd($req);
+
+                    $query->where('first_name', 'Like', '%' . $req['first_name'] . '%');
+                }
+                if (isset($req['last_name'])) {
+
+                    $query->where('last_name', 'Like', '%' . $req['last_name'] . '%');
+                }
+                if (isset($req['phone'])) {
+
+                    $query->where('phone', 'Like', '%' . $req['phone'] . '%');
+                }
+                //return true;
+
+            })->with('student')
+            ->whereHas('student.supporter', function ($query) use ($req) {
+                if (isset($req['supporters_id'])) {
+
+                    $query->where('id', $req['supporters_id']);
+                }
+            })
+            ->with('student.supporter')
+            ->whereHas('product', function ($query) use ($req) {
+                if (isset($req['products_id'])) {
+
+                    $query->where('id', $req['products_id']);
+                }
+            })
+            ->with('product');
+
+        $countOfReminder = $reminders->count();
+        $reminders = $reminders
+            ->offset($req['start'])
+            ->limit($req['length'])
+            // ->skip($req['start'])
+            // ->take($req['length'])
+            ->get();
+        //=> function($query) use($request){
+        //    if($request->has('supporters_id'))
+        //    {
+        //     $query->where('id',$request->input('supporters_id'));
+        //    }
+
+        //->orderBy('id','desc')    
+
+        foreach ($reminders as $index => $item) {
+
+            $data[] = [
+                "row" =>  $req['start'] + $index + 1,
+                "id" => $item->id,
+                "student" => $item->student->first_name . ' ' . $item->student->last_name,
+                "phone" => $item->student->phone,
+                "product" => $item->product->name,
+                "supporter" => $item->student->supporter->first_name . ' ' . $item->student->supporter->last_name,
+                "created_at" => jdate($item->created_at)->format("Y-m-d"),
+                "next_call" => jdate($item->next_call)->format("Y-m-d"),
+                "description" => $item->description
+
+                //"id" => $item->id,
+
+
+                // "description" => $item->description,
+
+                // "updated_at" => jdate($item->updated_at)->format("Y/m/d"),
+                // "total_cost" => $item->total_cost,
+                // "total_get" => $item->type > 0 ? $item->total : 0,
+                // "total_give" => $item->type < 0 ? $item->total : 0,
+                // "supporter_percent" =>  $item->type > 0 ?  number_format(ceil($item->total * $item->supporter_percent / 100)) : "", //// $item->supporter_percent,
+                // "end" => $btn
+
+
+            ];
         }
 
-    })
-    ->with('product') ;
-
-    $countOfReminder=$reminders->count();
-    $reminders=$reminders
-    ->offset($req['start'])
-    ->limit($req['length'])
-    // ->skip($req['start'])
-    // ->take($req['length'])
-    ->get();
-    //=> function($query) use($request){
-    //    if($request->has('supporters_id'))
-    //    {
-    //     $query->where('id',$request->input('supporters_id'));
-    //    }
-    
-    //->orderBy('id','desc')    
-    
-    foreach ($reminders as $index => $item) {
-
-        $data[] = [
-            "row" =>  $req['start'] + $index + 1 ,
-            "id" => $item->id ,
-            "student" => $item->student->first_name . ' ' .$item->student->last_name ,
-            "phone" => $item->student->phone  ,
-            "product" => $item->product->name  ,
-            "supporter" => $item->student->supporter->first_name . ' ' . $item->student->supporter->last_name,
-            "created_at" => jdate($item->created_at)->format("Y-m-d"),
-            "next_call" => jdate($item->next_call)->format("Y-m-d"),
-            "description" =>$item->description
-           
-            //"id" => $item->id,
-           
-           
-            // "description" => $item->description,
-           
-            // "updated_at" => jdate($item->updated_at)->format("Y/m/d"),
-            // "total_cost" => $item->total_cost,
-            // "total_get" => $item->type > 0 ? $item->total : 0,
-            // "total_give" => $item->type < 0 ? $item->total : 0,
-            // "supporter_percent" =>  $item->type > 0 ?  number_format(ceil($item->total * $item->supporter_percent / 100)) : "", //// $item->supporter_percent,
-            // "end" => $btn
-
-           
+        $result = [
+            "draw" => $req['draw'],
+            "data" => $data,
+            "request" => $req,
+            "recordsTotal" =>   $countOfReminder,
+            "recordsFiltered" =>    $countOfReminder,
         ];
 
+        return $result;
+        // return view('supporters.reminder',[
+        //     'reminders'=>$reminders,
+        //     'msg_success' => request()->session()->get('msg_success'),
+        //     'msg_error' => request()->session()->get('msg_error')
+        // ]);
     }
-
-    $result = [
-        "draw" => $req['draw'],
-        "data" => $data,
-        "request" => $req,
-        "recordsTotal" =>   $countOfReminder,
-        "recordsFiltered" =>    $countOfReminder,
-    ];
-
-    return $result;
-    // return view('supporters.reminder',[
-    //     'reminders'=>$reminders,
-    //     'msg_success' => request()->session()->get('msg_success'),
-    //     'msg_error' => request()->session()->get('msg_error')
-    // ]);
-   }
     public function postPurchases(Request $request)
     {
 
@@ -1920,22 +1920,38 @@ class SupporterController extends Controller
 
     public function calls($id)
     {
-        $getAllStudentIds=MergeStudents::where('main_students_id',$id)
-        ->orWhere('auxilary_students_id',$id)
-        ->orWhere('second_auxilary_students_id',$id)
-        ->orWhere('third_auxilary_students_id',$id)
-        ->select('main_students_id','auxilary_students_id','second_auxilary_students_id','third_auxilary_students_id')
-        ->first();
-        if(!$getAllStudentIds){
-            $getAllStudentIds = ['main_students_id' => $id, 'auxilary_students_id' => 0, 'second_auxilary_students_id' => 0, 'third_auxilary_students_id' => 0];
+        $getAllStudentName = "";
+        $mainStudent = "";
+        $getAllStudentIds = MergeStudents::where('main_students_id', $id)
+            ->orWhere('auxilary_students_id', $id)
+            ->orWhere('second_auxilary_students_id', $id)
+            ->orWhere('third_auxilary_students_id', $id)
+            ->select('main_students_id', 'auxilary_students_id', 'second_auxilary_students_id', 'third_auxilary_students_id')
+            ->first();
+        if (!$getAllStudentIds) {
+            $getAllStudentIds = ['main_students_id' => $id, 'auxilary_students_id' => 0, 'second_auxilary_students_id' => 0, 'third_auxilary_students_id' => 0];           
         } else {
-            $getAllStudentIds=$getAllStudentIds->toArray();
+            $getAllStudentIds = $getAllStudentIds->toArray();           
         }
-        $other_ids[]=$getAllStudentIds['auxilary_students_id'];
-        $other_ids[]=$getAllStudentIds['second_auxilary_students_id'];
-        $other_ids[]=$getAllStudentIds['third_auxilary_students_id'];
-        $other_ids[]=$getAllStudentIds['main_students_id'];
-       //dd( $other_ids);
+        $other_ids[] = $getAllStudentIds['auxilary_students_id'];
+        $other_ids[] = $getAllStudentIds['second_auxilary_students_id'];
+        $other_ids[] = $getAllStudentIds['third_auxilary_students_id'];
+        $other_ids[] = $getAllStudentIds['main_students_id'];
+        $allStudents = Student::whereIn('id', $getAllStudentIds)->where('id','!=',$id)->get();//->pluck("id");
+        //Log::info("id is:" . $id . " all students are:" .$allStudents);
+        if($allStudents->count()>0){
+            $mainStudent = Student::where('id', $id)->first();
+            $mainStudent = $mainStudent->first_name . " " .  $mainStudent->last_name . ' ';
+        }
+        
+        // foreach($allStudents as $otherstudent){
+        //     $mainStudent .= $otherstudent->first_name . " " .  $otherstudent->last_name . '-';
+        // }
+        
+        //dd($studentIds);
+        //$allStudent=$allStudent->whereNotIn('id',$id)->get();
+        
+        //dd( $other_ids);
         // $students=DB::table('students')
         //  //->where('id', $id)
         //  ->whereIn('id',['8286',$id])
@@ -1947,37 +1963,37 @@ class SupporterController extends Controller
         // ->toSql();
         // return ($students);
         $students = Student::where('id', $id)
-        ->orWhereIn('id',$other_ids)
-        ->where('banned', false)       
-        ->with('calls.product')
-        ->with('calls.product.collection')
-        ->with('calls.callresult')
-        ->with('calls.notice')
-        ->get();
-       // dd($students);
+            ->orWhereIn('id', $other_ids)
+            ->where('banned', false)
+            ->with('calls.product')
+            ->with('calls.product.collection')
+            ->with('calls.callresult')
+            ->with('calls.notice')
+            ->get();
+        // dd($students);
         // ->where('mergethirdauxilarystudent',function($query){
         //     $query->where()
         // })
         //->with('mergethirdauxilarystudent') 
-        
+
         //return $student;
-        foreach($students as  $student)
-        {
+        foreach ($students as  $student) {
             if ($student->calls)
-            foreach ($student->calls as $index => $call) {
-                if ($student->calls[$index]->product) {
-                    $student->calls[$index]->product->parents = "-";
-                    if ($student->calls[$index]->product->collection) {
-                        $parents = $student->calls[$index]->product->collection->parents();
-                        $name = ($parents != '') ? $parents . "->" . $student->calls[$index]->product->collection->name : $student->calls[$index]->product->collection->name;
-                        $student->calls[$index]->product->parents = $name;
+                foreach ($student->calls as $index => $call) {
+                    if ($student->calls[$index]->product) {
+                        $student->calls[$index]->product->parents = "-";
+                        if ($student->calls[$index]->product->collection) {
+                            $parents = $student->calls[$index]->product->collection->parents();
+                            $name = ($parents != '') ? $parents . "->" . $student->calls[$index]->product->collection->name : $student->calls[$index]->product->collection->name;
+                            $student->calls[$index]->product->parents = $name;
+                        }
                     }
                 }
-            }
         }
         //dd(json_decode($students));
         return view('supporters.call', [
-            "students" => $students
+            "students" => $students,            
+            "mainStudentName" => $mainStudent,
         ]);
     }
 
@@ -2013,7 +2029,7 @@ class SupporterController extends Controller
         $student->home_phone = request()->input('home_phone');
         $student->egucation_level = request()->input('egucation_level');
         $student->concours_year = request()->input('concours_year');
-        
+
         $student->father_phone = request()->input('father_phone');
         $student->mother_phone = request()->input('mother_phone');
         $student->phone  = request()->input('phone');
@@ -2022,7 +2038,7 @@ class SupporterController extends Controller
         $student->major = request()->input('major');
         $student->introducing = request()->input('introducing');
         $student->student_phone = request()->input('student_phone');
-        $student->sources_id =request()->has('sources_id') ? request()->input('sources_id') : 0;
+        $student->sources_id = request()->has('sources_id') ? request()->input('sources_id') : 0;
         $student->supporters_id = 0;
         $student->supporter_seen = false;
         try {
@@ -2258,7 +2274,7 @@ class SupporterController extends Controller
         ]);
     }
     public function supporterHistories()
-    {        
+    {
         $supportGroupId = Group::getSupport();
         if ($supportGroupId) {
             $supportGroupId = $supportGroupId->id;
