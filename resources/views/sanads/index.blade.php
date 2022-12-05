@@ -418,9 +418,7 @@
         //{ "type": "pstring", "targets": [2,3,4] }
       ],
 
-      "order": [
-        [1, 'asc']
-      ], /// sort columns 2
+     "order": [4, "asc" ], /// sort columns 4
       serverSide: true,
       processing: true,
       ajax: {

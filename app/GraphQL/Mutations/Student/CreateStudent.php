@@ -38,7 +38,7 @@ final class CreateStudent
             'home_phone'=> (!isset($args['home_phone']) || ($args['home_phone']=="")) ?  "" : $args['home_phone']  ,
             'father_phone'=> (!isset($args['father_phone']) || ($args['father_phone']=="")) ?  "" : $args['father_phone'] ,
             'mother_phone'=> (!isset($args['mother_phone']) || ($args['mother_phone']=="")) ?  "" : $args['mother_phone']  ,
-            //'school'=> $args['school'],
+            'is_academy_student'=> 1,
             //'average'=> $args['average'],
             'major'=> (!isset($args['major']) || ($args['major']=="")) ?  null : $args['major'] ,
             //'introducing'=> $args['introducing'],
