@@ -121,6 +121,7 @@ enum SortOrder {
 type Student @key(fields: "id") {
         id:ID! 
         phone:String 
+        is_academy_student:Int
         home_phone:String 
         first_name:String 
         last_name:String 
@@ -142,7 +143,7 @@ type Student @key(fields: "id") {
         phone:String! # @rules(apply: ["size:11","unique:students,phone"]),
         first_name:String!
         last_name:String!
-        nationality_code:String
+        nationality_code:String!
         concours_year:String
         
         level:String
@@ -159,7 +160,7 @@ type Student @key(fields: "id") {
       phone:String! # @rules(apply: ["size:11","unique:students,phone"]),
       first_name:String!
       last_name:String!
-      nationality_code:String
+      nationality_code:String!
       concours_year:String
       level:String
       egucation_level:String      

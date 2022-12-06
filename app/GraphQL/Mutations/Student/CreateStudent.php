@@ -21,7 +21,7 @@ final class CreateStudent
     {     
         //return auth()->guard('api')->user()->id;   
        // $user_id=auth()->guard('api')->user()->id;
-        $student=[
+        $student=[  
             // 'user_id_creator' => 1,
             // "course_id" => $args['course_id'],
             // "course_session_id" => $args['course_session_id'],            
@@ -31,7 +31,7 @@ final class CreateStudent
             'phone' => $args['phone'],
             'first_name' => $args['first_name'],
             'last_name'=> $args['last_name'],
-            'nationality_code'=> (!isset($args['nationality_code']) || ($args['nationality_code']=="")) ?  null : $args['nationality_code'] ,
+            'nationality_code'=> $args['nationality_code'], //(!isset($args['nationality_code']) || ($args['nationality_code']=="")) ?  null : $args['nationality_code'] ,
             'concours_year' => (!isset($args['concours_year']) || ($args['concours_year']=="")) ?  null : $args['concours_year'] ,
             'egucation_level'=> (!isset($args['egucation_level']) || ($args['egucation_level']=="")) ?  null : $args['egucation_level'] ,
             'parents_job_title'=>(!isset($args['parents_job_title']) || ($args['parents_job_title']=="")) ?  "" : $args['parents_job_title'] ,

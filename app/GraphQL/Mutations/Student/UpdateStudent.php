@@ -42,6 +42,7 @@ final class UpdateStudent
         //     return Error::createLocatedError("USER-UPDATE-NATIONAL_NO_IS_EXIST");
         // }
         $student_filled= $existed_student->fill($args);
+        $student_filled['is_academy_student']=1;
         $existed_student->save();       
        
         return $student_filled;
