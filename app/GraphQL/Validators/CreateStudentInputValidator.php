@@ -21,7 +21,7 @@ final class CreateStudentInputValidator extends Validator
                 Rule::unique('students', 'phone')->ignore($this->arg('id'), 'id'),
             ],
             'nationality_code' => [
-                'nullable',
+                'required',
                 Rule::unique('students', 'nationality_code')->ignore($this->arg('id'), 'id'),
             ],
         ];
