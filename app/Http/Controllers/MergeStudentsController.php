@@ -224,7 +224,8 @@ class MergeStudentsController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function create(Request $request)
-    {
+    {  
+        $null_arr=["",null];
         $students = Student::where('is_deleted', false)->where('banned', false)->where('archived', false)->get();
 
         if ($request->getMethod() == 'GET') {
@@ -235,45 +236,80 @@ class MergeStudentsController extends Controller
 
             ]);
         }
-        $merged = new AppMergeStudents();
-        $allRequests = [(int)$request->main, (int)$request->auxilary, (int)$request->second_auxilary, (int)$request->third_auxilary];
-        $merged->main_students_id = $allRequests[0];
-        $merged->auxilary_students_id = $allRequests[1];
-        $merged->second_auxilary_students_id = $allRequests[2];
-        $merged->third_auxilary_students_id = $allRequests[3];
-        $arr_without_zeros = $this->arrForComparingRepeatedItems($allRequests[0], $allRequests[1], $allRequests[2], $allRequests[3]);
-        try {
-            $sw = $this->handleError($arr_without_zeros, $request, $allRequests);
-            if ($sw) {
-                $allRequests[0] ? $mergeMain = $this->findRepeatedRow($allRequests[0]) : $mergeMain = 0;
-                $allRequests[1] ? $mergeAuxilary = $this->findRepeatedRow($allRequests[1]) : $mergeSecondAuxilary = 0;
-                $allRequests[2] ? $mergeSecondAuxilary = $this->findRepeatedRow($allRequests[2]) : $mergeSecondAuxilary = 0;
-                $allRequests[3] ? $mergeThirdAuxilary = $this->findRepeatedRow($allRequests[3]) : $mergeThirdAuxilary = 0;
-                if (!$mergeMain && !$mergeAuxilary && !$mergeSecondAuxilary && !$mergeThirdAuxilary) {
-                    try {
-                        $this->makeBannedAndArchivedToBefalse($allRequests);
-                        $merged->save();
-                    } catch (Exception $error) {
-                        $request->session()->flash("msg_error", "سطر با موفقیت افزوده نشد!");
-                        return redirect()->route('merge_students_index');
-                    }
-                } else {
-                    $request->session()->flash("msg_error", "سطر تکراری است!");
-                    return redirect()->route('merge_students_index');
-                }
-                $this->changeSupporter($merged->auxilaryStudent, $merged->mainStudent, $request, 'تغییر پشتیبان فرعی ۱ با مشکل روبرو شد.', $allRequests[1]);
-                $this->changeSupporter($merged->secondAuxilaryStudent, $merged->mainStudent, $request, 'تغییر پشتیبان فرعی ۲ با مشکل روبرو شد.', $allRequests[2]);
-                $this->changeSupporter($merged->thirdAuxilaryStudent, $merged->mainStudent, $request, 'تغییر پشتیبان فرعی ۳ با مشکل روبرو شد.', $allRequests[3]);
+        $main_student=Student::where('is_deleted', false)
+        ->where('id', $request->main)        
+        ->first();
+        if(in_array($main_student->home_phone,$null_arr))
+            dd($main_student);
+        dd("not run")    ;
+
+        $second_student=Student::where('is_deleted', false)
+        ->where('id', $request->auxilary)        
+        ->first();
+
+        if(!$second_student){
+            $request->session()->flash("msg_success", "اطلاعات دانش آموز فرعی یافت نشد.");
+        }
+
+        if(!$main_student){
+            $request->session()->flash("msg_success", "اطلاعات دانش آموز اصلی یافت نشد.");
+        }
+        $first=[$main_student->phone,$main_student->student_phone,$main_student->home_phone,$main_student->father_phone,$main_student->mother_phone];
+        $second=[$second_student->phone,$second_student->student_phone,$second_student->home_phone,$second_student->father_phone,$second_student->mother_phone];
+        $Subscription=[];
+        $canSubscription=true;
+        for($i=0;$i<5;$i++){
+            for($j=0;$j<5;$j++){
+                // if($first[$i]==$second[$j] && trim($first[$i] != NULL  || ){
+                //     $second[$j]="";
+                // }
+            
             }
-        } catch (Exception $error) {
-            $request->session()->flash("msg_error", "سطر با موفقیت افزوده نشد.");
-            return redirect()->route('merge_students_index');
         }
-        if ($sw) {
-            $request->session()->flash("msg_success", "سطر با موفقیت افزوده شد.");
-            return redirect()->route('merge_students_index');
+        if(!$canSubscription)
+        {
+            $request->session()->flash("msg_success", "به دلیل تداخل یا از دست دادن اطلاعات امکان ادغام وجود ندارد");
         }
-        return redirect()->route('merge_students_index');
+
+        // $merged = new AppMergeStudents();
+        // $allRequests = [(int)$request->main, (int)$request->auxilary, (int)$request->second_auxilary, (int)$request->third_auxilary];
+        // $merged->main_students_id = $allRequests[0];
+        // $merged->auxilary_students_id = $allRequests[1];
+        // $merged->second_auxilary_students_id = $allRequests[2];
+        // $merged->third_auxilary_students_id = $allRequests[3];
+        // $arr_without_zeros = $this->arrForComparingRepeatedItems($allRequests[0], $allRequests[1], $allRequests[2], $allRequests[3]);
+        // try {
+        //     $sw = $this->handleError($arr_without_zeros, $request, $allRequests);
+        //     if ($sw) {
+        //         $allRequests[0] ? $mergeMain = $this->findRepeatedRow($allRequests[0]) : $mergeMain = 0;
+        //         $allRequests[1] ? $mergeAuxilary = $this->findRepeatedRow($allRequests[1]) : $mergeSecondAuxilary = 0;
+        //         $allRequests[2] ? $mergeSecondAuxilary = $this->findRepeatedRow($allRequests[2]) : $mergeSecondAuxilary = 0;
+        //         $allRequests[3] ? $mergeThirdAuxilary = $this->findRepeatedRow($allRequests[3]) : $mergeThirdAuxilary = 0;
+        //         if (!$mergeMain && !$mergeAuxilary && !$mergeSecondAuxilary && !$mergeThirdAuxilary) {
+        //             try {
+        //                 $this->makeBannedAndArchivedToBefalse($allRequests);
+        //                 $merged->save();
+        //             } catch (Exception $error) {
+        //                 $request->session()->flash("msg_error", "سطر با موفقیت افزوده نشد!");
+        //                 return redirect()->route('merge_students_index');
+        //             }
+        //         } else {
+        //             $request->session()->flash("msg_error", "سطر تکراری است!");
+        //             return redirect()->route('merge_students_index');
+        //         }
+        //         $this->changeSupporter($merged->auxilaryStudent, $merged->mainStudent, $request, 'تغییر پشتیبان فرعی ۱ با مشکل روبرو شد.', $allRequests[1]);
+        //         $this->changeSupporter($merged->secondAuxilaryStudent, $merged->mainStudent, $request, 'تغییر پشتیبان فرعی ۲ با مشکل روبرو شد.', $allRequests[2]);
+        //         $this->changeSupporter($merged->thirdAuxilaryStudent, $merged->mainStudent, $request, 'تغییر پشتیبان فرعی ۳ با مشکل روبرو شد.', $allRequests[3]);
+        //     }
+        // } catch (Exception $error) {
+        //     $request->session()->flash("msg_error", "سطر با موفقیت افزوده نشد.");
+        //     return redirect()->route('merge_students_index');
+        // }
+        // if ($sw) {
+        //     $request->session()->flash("msg_success", "سطر با موفقیت افزوده شد.");
+        //     return redirect()->route('merge_students_index');
+        // }
+        // return redirect()->route('merge_students_index');
     }
     /**
      * Show the form for editing the specified resource.
