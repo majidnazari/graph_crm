@@ -5,6 +5,12 @@ namespace App\Http\Controllers;
 use App\Events\ChangeAllStudentCallsEvent;
 use App\Events\ChangeAllStudentPurchasesEvent;
 use App\Events\ChangeAllStudentSanadsEvent;
+
+use App\Events\RemoveAllStudentTempreturesEvent;
+use App\Events\RemoveAllStudentCollectionsEvent;
+use App\Events\RemoveAllStudentFromClassRoomEvent;
+use App\Events\RemoveAllStudentTagsEvent;
+
 use App\MergeStudents as AppMergeStudents;
 use App\Student;
 use Illuminate\Support\Facades\DB;
@@ -240,6 +246,11 @@ class MergeStudentsController extends Controller
         event(new  ChangeAllStudentCallsEvent($request->main, $request->auxilary));
         event(new  ChangeAllStudentPurchasesEvent($request->main, $request->auxilary));
         event(new  ChangeAllStudentSanadsEvent($request->main, $request->auxilary));
+
+        event(new  RemoveAllStudentTempreturesEvent($request->main));
+        event(new  RemoveAllStudentCollectionsEvent($request->main));
+        event(new  RemoveAllStudentFromClassRoomEvent($request->main));
+        event(new  RemoveAllStudentTagsEvent($request->main));
 
 
         $getSubscription = $this->ComparePhones($request->main, $request->auxilary);
