@@ -18,7 +18,7 @@ return new class extends Migration
             $table->string('phone2',20)->nullable()->after("phone");
             $table->string('phone3',20)->nullable()->after("phone");
             $table->string('phone4',20)->nullable()->after("phone");
-            $table->string('phone5',20)->nullable()->after("phone");
+            //$table->string('phone5',20)->nullable()->after("phone");
            
         });
     }
@@ -35,7 +35,7 @@ return new class extends Migration
             $table->dropColumn('phone2');
             $table->dropColumn('phone3');
             $table->dropColumn('phone4');
-            $table->dropColumn('phone5');
+            //$table->dropColumn('phone5');
             
         });
     }

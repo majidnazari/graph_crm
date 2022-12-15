@@ -2,10 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\ChangeAllStudentCallsEvent;
+use App\Events\ChangeAllStudentPurchasesEvent;
+use App\Events\ChangeAllStudentSanadsEvent;
 use App\MergeStudents as AppMergeStudents;
 use App\Student;
 use Illuminate\Support\Facades\DB;
 use Exception;
+use Log;
 
 use Illuminate\Http\Request;
 
@@ -43,12 +47,11 @@ class MergeStudentsController extends Controller
      */
     public function indexPost(Request $request)
     {
-
         $mergedStudents = AppMergeStudents::where('is_deleted', false);
         if ($request->input('name') != null) {
             $name = trim($request->input('name'));
             $student_ids = Student::where('is_deleted', false)->where('archived', false)->where('banned', false)->where(DB::raw("CONCAT(IFNULL(first_name, ''), IFNULL(CONCAT(' ', last_name), ''))"), 'like', '%' . $name . '%')->pluck('id');
-            if(count($student_ids)){
+            if (count($student_ids)) {
                 $mergedStudents = $mergedStudents->where(function ($query) use ($student_ids) {
                     $query->orWhereIn('main_students_id', $student_ids)
                         ->orWhereIn('auxilary_students_id', $student_ids)
@@ -58,12 +61,11 @@ class MergeStudentsController extends Controller
             } else {
                 $mergedStudents = null;
             }
-
         }
         if ($request->input('phone') != null) {
             $phone = $request->input('phone');
             $student_ids = Student::where('is_deleted', false)->where('archived', false)->where('banned', false)->where('phone', 'like', '%' . $phone . '%')->pluck('id');
-            if(count($student_ids)){
+            if (count($student_ids)) {
                 $mergedStudents = $mergedStudents->where(function ($query) use ($student_ids) {
                     $query->orWhereIn('main_students_id', $student_ids)
                         ->orWhereIn('auxilary_students_id', $student_ids)
@@ -73,7 +75,6 @@ class MergeStudentsController extends Controller
             } else {
                 $mergedStudents = null;
             }
-
         }
         //end filter
         $req = $request->all();
@@ -99,7 +100,7 @@ class MergeStudentsController extends Controller
                     ->skip($req['start'])
                     ->take($req['length'])
                     ->get();
-            } 
+            }
             foreach ($mergedStudents as $index => $item) {
 
                 $btn = '<a class="btn btn-primary" href="' . route('merge_students_edit', $item->id) . '"> ویرایش</a>
@@ -107,10 +108,10 @@ class MergeStudentsController extends Controller
                 $data[] = [
                     "row" => $req['start'] + $index + 1,
                     "id" => $item->id,
-                    "main_students_id" => (($item->mainStudent) ? $item->mainStudent->first_name : '-'). " ". (($item->mainStudent) ? $item->mainStudent->last_name : '-'). "-".(($item->mainStudent) ? $item->mainStudent->phone : '-'),
-                    "auxilary_students_id" => (($item->auxilaryStudent) ? $item->auxilaryStudent->first_name : '-'). " ". (($item->auxilaryStudent) ? $item->auxilaryStudent->last_name : '-'). "-".(($item->auxilaryStudent) ? $item->auxilaryStudent->phone : '-'),
-                    "second_auxilary_students_id" =>(($item->secondAuxilaryStudent) ? $item->secondAuxilaryStudent->first_name : '-'). " ". (($item->secondAuxilaryStudent) ? $item->secondAuxilaryStudent->last_name : '-'). "-".(($item->secondAuxilaryStudent) ? $item->secondAuxilaryStudent->phone : '-') ,
-                    "third_auxilary_students_id" => (($item->thirdAuxilaryStudent) ? $item->thirdAuxilaryStudent->first_name : '-'). " ". (($item->thirdAuxilaryStudent) ? $item->thirdAuxilaryStudent->last_name : '-'). "-".(($item->thirdAuxilaryStudent) ? $item->thirdAuxilaryStudent->phone : '-'),
+                    "main_students_id" => (($item->mainStudent) ? $item->mainStudent->first_name : '-') . " " . (($item->mainStudent) ? $item->mainStudent->last_name : '-') . "-" . (($item->mainStudent) ? $item->mainStudent->phone : '-'),
+                    "auxilary_students_id" => (($item->auxilaryStudent) ? $item->auxilaryStudent->first_name : '-') . " " . (($item->auxilaryStudent) ? $item->auxilaryStudent->last_name : '-') . "-" . (($item->auxilaryStudent) ? $item->auxilaryStudent->phone : '-'),
+                    "second_auxilary_students_id" => (($item->secondAuxilaryStudent) ? $item->secondAuxilaryStudent->first_name : '-') . " " . (($item->secondAuxilaryStudent) ? $item->secondAuxilaryStudent->last_name : '-') . "-" . (($item->secondAuxilaryStudent) ? $item->secondAuxilaryStudent->phone : '-'),
+                    "third_auxilary_students_id" => (($item->thirdAuxilaryStudent) ? $item->thirdAuxilaryStudent->first_name : '-') . " " . (($item->thirdAuxilaryStudent) ? $item->thirdAuxilaryStudent->last_name : '-') . "-" . (($item->thirdAuxilaryStudent) ? $item->thirdAuxilaryStudent->phone : '-'),
                     "end" => $btn
                 ];
             }
@@ -224,8 +225,8 @@ class MergeStudentsController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function create(Request $request)
-    {  
-        $null_arr=["",null];
+    {
+
         $students = Student::where('is_deleted', false)->where('banned', false)->where('archived', false)->get();
 
         if ($request->getMethod() == 'GET') {
@@ -236,40 +237,37 @@ class MergeStudentsController extends Controller
 
             ]);
         }
-        $main_student=Student::where('is_deleted', false)
-        ->where('id', $request->main)        
-        ->first();
-        if(in_array($main_student->home_phone,$null_arr))
-            dd($main_student);
-        dd("not run")    ;
+        event(new  ChangeAllStudentCallsEvent($request->main, $request->auxilary));
+        event(new  ChangeAllStudentPurchasesEvent($request->main, $request->auxilary));
+        event(new  ChangeAllStudentSanadsEvent($request->main, $request->auxilary));
 
-        $second_student=Student::where('is_deleted', false)
-        ->where('id', $request->auxilary)        
-        ->first();
 
-        if(!$second_student){
-            $request->session()->flash("msg_success", "اطلاعات دانش آموز فرعی یافت نشد.");
+        $getSubscription = $this->ComparePhones($request->main, $request->auxilary);
+
+        // Log::info("the main create method is:");
+        // Log::info($getSubscription);
+        // if ($getSubscription["msg"] != "zero") {
+        //     $request->session()->flash("msg_error", "اطلاعاتی برای مرج وجود ندارد.");
+        //     return redirect()->route('merge_students_index');
+        // }
+
+        if ($getSubscription["msg"] != "") {
+            $request->session()->flash("msg_error", "به دلیل تداخل یا از دست دادن اطلاعات امکان ادغام وجود ندارد");
+            return redirect()->route('merge_students_index');
+        }
+        $deleteStudent = $this->DeleteStudent($request->auxilary);
+        if (!$deleteStudent) {
+            $request->session()->flash("msg_error", "حذف دانش آموز فرعی با مشکل مواجه شد.");
+            return redirect()->route('merge_students_index');
         }
 
-        if(!$main_student){
-            $request->session()->flash("msg_success", "اطلاعات دانش آموز اصلی یافت نشد.");
-        }
-        $first=[$main_student->phone,$main_student->student_phone,$main_student->home_phone,$main_student->father_phone,$main_student->mother_phone];
-        $second=[$second_student->phone,$second_student->student_phone,$second_student->home_phone,$second_student->father_phone,$second_student->mother_phone];
-        $Subscription=[];
-        $canSubscription=true;
-        for($i=0;$i<5;$i++){
-            for($j=0;$j<5;$j++){
-                // if($first[$i]==$second[$j] && trim($first[$i] != NULL  || ){
-                //     $second[$j]="";
-                // }
-            
-            }
-        }
-        if(!$canSubscription)
-        {
-            $request->session()->flash("msg_success", "به دلیل تداخل یا از دست دادن اطلاعات امکان ادغام وجود ندارد");
-        }
+
+
+        $request->session()->flash("msg_success", "دانش آموز با موفقیت مرج شد.");
+        return redirect()->route('merge_students_index');
+        // if (!$canSubscription) {
+        //     $request->session()->flash("msg_success", "به دلیل تداخل یا از دست دادن اطلاعات امکان ادغام وجود ندارد");
+        // }
 
         // $merged = new AppMergeStudents();
         // $allRequests = [(int)$request->main, (int)$request->auxilary, (int)$request->second_auxilary, (int)$request->third_auxilary];
@@ -411,5 +409,140 @@ class MergeStudentsController extends Controller
             "text" => "-"
         ];
         return $response;
+    }
+    public function GetStudentModel($student_id/*, $second_student_id*/)
+    {
+        $student = Student::where('is_deleted', false)
+            ->where('id', $student_id)
+            ->first();
+        if (!$student) {
+            $errors["msg"] = "the student is not found";
+            return $errors;
+        }
+        return $student;
+        // $second_student = Student::where('is_deleted', false)
+        //     ->where('id', $second_student_id)
+        //     ->first();
+        // if (!$second_student) {
+        //     $errors["msg"] = "the second student is not found";
+        //     //return $data;
+        //     //$request->session()->flash("msg_success", "اطلاعات دانش آموز فرعی یافت نشد.");
+        // }
+        // return [$main_student, $second_student];
+    }
+    public function ComparePhones($main_student_id, $second_student_id)
+    {
+        $nullable = ["", null];
+        $errors = [
+            "msg" => "",
+        ];
+        $phones = [];
+        $main_student = $this->GetStudentModel($main_student_id);
+        $second_student = $this->GetStudentModel($second_student_id);
+
+        if ($errors["msg"] != "")
+            return $errors;
+
+        //return $data;
+        $first = array_filter(array_unique([
+            trim($main_student->phone),
+            trim($main_student->student_phone),
+            //trim($main_student->home_phone),
+            trim($main_student->father_phone),
+            trim($main_student->mother_phone),
+            trim($main_student->phone1),
+            trim($main_student->phone2),
+            trim($main_student->phone3),
+            trim($main_student->phone4),
+            //trim($main_student->phone5),
+        ]));
+        $second = array_filter(array_unique([
+            trim($second_student->phone),
+            trim($second_student->student_phone),
+            //trim($second_student->home_phone),
+            trim($second_student->father_phone),
+            trim($second_student->mother_phone),
+            trim($second_student->phone1),
+            trim($second_student->phone2),
+            trim($second_student->phone3),
+            trim($second_student->phone4),
+            //trim($second_student->phone5),
+        ]));
+        // Log::info("the first is:");
+        // Log::info($first);
+        // Log::info($second);
+        $result = array_unique(array_merge($first, $second));
+        $rshould_merge = array_diff($result, $first);
+        // Log::info("the merge is");
+        // Log::info($rshould_merge);
+
+        $sumPhones = count($result);
+        // Log::info($result);
+        // Log::info("count is:" .  $sumPhones);
+        if ($sumPhones > 8) {
+
+            $errors["msg"] = "It is too long to merge";
+        }
+        // if ($sumPhones ==0) {
+        //     //$canSubscription = false;
+        //     $errors["msg"] = "zero";
+        //     //return $data;
+        // }
+        //dd("jjj");
+        if ($errors["msg"] != "")
+            return $errors;
+        $phones = $this->MergePhones($main_student, array_filter($rshould_merge));
+        return $phones;
+    }
+    public function MergePhones(Student $main_student, $second_phones)
+    {
+        $nullable = ["", null];
+
+        foreach ($second_phones as $second_phone) {
+            if (in_array(trim($main_student->student_phone), $nullable)) {
+                $main_student->student_phone = $second_phone;
+                continue;
+            }
+            if (in_array(trim($main_student->father_phone), $nullable)) {
+                $main_student->father_phone = $second_phone;
+                continue;
+            }
+            if (in_array(trim($main_student->mother_phone), $nullable)) {
+                $main_student->mother_phone = $second_phone;
+                continue;
+            }
+            //    if( in_array($main_student->phone ,$nullable)){
+            //     $main_student->phone=$second_phone;
+            //     continue;
+            //    }   
+            if (in_array(trim($main_student->phone1), $nullable)) {
+                $main_student->phone1 = $second_phone;
+                continue;
+            }
+            if (in_array(trim($main_student->phone2), $nullable)) {
+                $main_student->phone2 = $second_phone;
+                continue;
+            }
+            if (in_array(trim($main_student->phone3), $nullable)) {
+                $main_student->phone3 = $second_phone;
+                continue;
+            }
+            if (in_array(trim($main_student->phone4), $nullable)) {
+                $main_student->phone4 = $second_phone;
+                continue;
+            }
+        }
+        $main_student->save();
+        return  $main_student;
+    }
+    public function DeleteStudent($second_student_id)
+    {
+        $second_student = Student::where("id", $second_student_id)->where("is_deleted", 0)->first();
+        if (!$second_student) {
+            return false;
+        }
+        $second_student->is_deleted = 1;
+        $second_student->save();
+        return true;
     }
 }
