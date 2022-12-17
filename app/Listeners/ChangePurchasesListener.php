@@ -27,7 +27,7 @@ class ChangePurchasesListener
      */
     public function handle(ChangeAllStudentPurchasesEvent $event)
     {
-        //Log::info("ChangeAllStudentPurchasesEvent");
+        //Log::info("Purchases");
         $update_student = Purchase::where('students_id', $event->second_student_id)->update(["students_id" => $event->main_student_id]);
     }
 }

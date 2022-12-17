@@ -6,6 +6,7 @@ use App\Events\RemoveAllStudentFromClassRoomEvent;
 use App\StudentClassRoom;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Queue\InteractsWithQueue;
+use Log;
 
 class RemoveClassRoomsListener
 {
@@ -27,6 +28,8 @@ class RemoveClassRoomsListener
      */
     public function handle(RemoveAllStudentFromClassRoomEvent $event)
     {
-        $delete_student = StudentClassRoom::where('students_id', $event->main_student_id)->delete();
+        //Log::info("ClassRoom");
+        //Log::info($event->second_student_id);
+        $delete_student = StudentClassRoom::where('students_id', $event->second_student_id)->delete();
     }
 }

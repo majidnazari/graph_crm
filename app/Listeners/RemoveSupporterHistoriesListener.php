@@ -2,11 +2,12 @@
 
 namespace App\Listeners;
 
-use App\Events\RemoveAllStudentHistoriesEvent;
+use App\Events\RemoveAllSupporterHistoriesEvent;
+use App\SupporterHistory;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Queue\InteractsWithQueue;
 
-class RemoveStudentHistoriesListener
+class RemoveSupporterHistoriesListener
 {
     /**
      * Create the event listener.
@@ -24,8 +25,8 @@ class RemoveStudentHistoriesListener
      * @param  \App\Events\RemoveAllStudentHistoriesEvent  $event
      * @return void
      */
-    public function handle(RemoveAllStudentHistoriesEvent $event)
+    public function handle(RemoveAllSupporterHistoriesEvent $event)
     {
-        //$delete_student = StudentHistories::where('student_id', $event->main_student_id)->delete();
+        $delete_student = SupporterHistory::where('students_id', $event->second_student_id)->delete();
     }
 }

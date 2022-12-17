@@ -28,7 +28,7 @@ class ChangeCallsListener
      */
     public function handle(ChangeAllStudentCallsEvent $event)
     {
-        //Log::info("ChangeAllStudentCallsEvent");
+        //Log::info("Calls");
         $update_student = Call::where('students_id', $event->second_student_id)->update(["students_id" => $event->main_student_id]);
     }
 }

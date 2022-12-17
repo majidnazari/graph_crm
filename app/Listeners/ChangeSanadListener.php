@@ -32,7 +32,7 @@ class ChangeSanadListener
         // Log::info("ChangeAllStudentSanadsEvent");
         // Log::info($event->main_student_id);
         // Log::info($event->second_student_id);
-
+        //Log::info("Sanads");
         $update_student = Sanad::where('student_id', $event->second_student_id)->update(["student_id" => $event->main_student_id]);
         //Log::info($update_student);
 

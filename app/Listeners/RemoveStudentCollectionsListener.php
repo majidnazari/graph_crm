@@ -6,6 +6,7 @@ use App\Events\RemoveAllStudentCollectionsEvent;
 use App\StudentCollection;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Queue\InteractsWithQueue;
+use Log;
 
 class RemoveStudentCollectionsListener
 {
@@ -27,6 +28,8 @@ class RemoveStudentCollectionsListener
      */
     public function handle(RemoveAllStudentCollectionsEvent $event)
     {
-        $delete_student = StudentCollection::where('students_id', $event->main_student_id)->delete();
+        //Log::info("Collections");
+        //Log::info($event->second_student_id);
+        $delete_student = StudentCollection::where('students_id', $event->second_student_id)->delete();
     }
 }

@@ -10,7 +10,7 @@ use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
 
-class RemoveAllStudentHistoriesEvent
+class RemoveAllSupporterHistoriesEvent
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
@@ -19,10 +19,10 @@ class RemoveAllStudentHistoriesEvent
      *
      * @return void
      */
-    public $main_student_id;
-    public function __construct($main_student_id)
+    public $second_student_id;
+    public function __construct($second_student_id)
     {
-        $this->main_student_id = $main_student_id;
+        $this->second_student_id = $second_student_id;
     }
 
     /**

@@ -6,6 +6,7 @@ use App\Events\RemoveAllStudentTempreturesEvent;
 use App\StudentTemperature;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Queue\InteractsWithQueue;
+use Log;
 
 class RemoveStudentTempreturesListener
 {
@@ -27,6 +28,8 @@ class RemoveStudentTempreturesListener
      */
     public function handle(RemoveAllStudentTempreturesEvent $event)
     {
-        $delete_student = StudentTemperature::where('students_id', $event->main_student_id)->delete();
+        //Log::info("Tempretures");
+        //Log::info($event->second_student_id);
+        $delete_student = StudentTemperature::where('students_id', $event->second_student_id)->delete();
     }
 }

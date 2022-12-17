@@ -9,6 +9,8 @@ use App\Events\ChangeAllStudentSanadsEvent;
 use App\Events\RemoveAllStudentTagsEvent;
 use App\Events\RemoveAllStudentTempreturesEvent;
 use App\Events\RemoveAllStudentCollectionsEvent;
+use App\Events\RemoveAllSupporterHistoriesEvent;
+
 use App\Listeners\ChangeCallsListener;
 use App\Listeners\ChangeSanadListener;
 use App\Listeners\ChangePurchasesListener;
@@ -16,6 +18,8 @@ use App\Listeners\RemoveStudentCollectionsListener;
 use App\Listeners\RemoveStudentTagsListener;
 use App\Listeners\RemoveStudentTempreturesListener;
 use App\Listeners\RemoveClassRoomsListener;
+use App\Listeners\RemoveSupporterHistoriesListener;
+
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Auth\Listeners\SendEmailVerificationNotification;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
@@ -88,6 +92,11 @@ class EventServiceProvider extends ServiceProvider
         Event::listen(
             RemoveAllStudentTempreturesEvent::class,
             [RemoveStudentTempreturesListener::class, 'handle']
+        );
+
+        Event::listen(
+            RemoveAllSupporterHistoriesEvent::class,
+            [RemoveSupporterHistoriesListener::class, 'handle']
         );
 
 
