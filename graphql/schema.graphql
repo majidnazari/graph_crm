@@ -80,7 +80,12 @@ scalar DateTime @scalar(class: "Nuwave\\Lighthouse\\Schema\\Types\\Scalars\\Date
       mother_phone: String @like (template : "%{}%")
       major: String @like (template : "%{}%")
       # description: String @like (template : "%{}%")
-      phone: String @like (template : "%{}%") #@where(operator: "like" clause: "orWhere", key: "mother_phone") @where(operator: "like" clause: "orWhere", key: "father_phone")
+      phone: String @where(operator: "like" clause: "Where", key: "phone") 
+      @where(operator: "like" clause: "orWhere", key: "father_phone")  @where(operator: "like" clause: "orWhere", key: "mother_phone") 
+      @where(operator: "like" clause: "orWhere", key: "phone1") @where(operator: "like" clause: "orWhere", key: "phone2")  
+      @where(operator: "like" clause: "orWhere", key: "phone3") @where(operator: "like" clause: "orWhere", key: "phone4")  
+      @where(operator: "like" clause: "orWhere", key: "student_phone")  
+      #@like (template : "%{}%") #@where(operator: "like" clause: "orWhere", key: "mother_phone") @where(operator: "like" clause: "orWhere", key: "father_phone")
       egucation_level: String   @like (template : "%{}%")
       
 #       active: Boolean @eq
@@ -122,6 +127,12 @@ enum SortOrder {
 type Student @key(fields: "id") {
         id:ID! 
         phone:String 
+        phone1:String 
+        phone2:String 
+        phone3:String 
+        phone4:String 
+        student_phone:String
+
         is_academy_student:Int
         home_phone:String 
         first_name:String 

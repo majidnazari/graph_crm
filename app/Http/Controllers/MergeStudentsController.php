@@ -26,6 +26,13 @@ class MergeStudentsController extends Controller
      * thirnary operators for index.blade.php items
      *
      */
+    private $msg_error = array(
+        "STUDENT_NOT_FOUND" => "دانش آموز مورد نظر پیدا نشد.",
+        "IS_ACADEMY_STUDENT" => "این دانش آموز در آکادمی موجود است و مرج نمی شود.",
+        "Too_LARGE_To_MERGE" => "به علت از دست دادن اطلاعات مرج امکان مرج وجود ندارد."
+
+    );
+    private $error = "";
     public function thirnaryOperators($item)
     {
         $first = $item ? $item->first_name : '';
@@ -244,16 +251,6 @@ class MergeStudentsController extends Controller
 
             ]);
         }
-        event(new  ChangeAllStudentCallsEvent($request->main, $request->auxilary));
-        event(new  ChangeAllStudentPurchasesEvent($request->main, $request->auxilary));
-        event(new  ChangeAllStudentSanadsEvent($request->main, $request->auxilary));
-
-        event(new  RemoveAllStudentTempreturesEvent($request->auxilary));
-        event(new  RemoveAllStudentCollectionsEvent($request->auxilary));
-        event(new  RemoveAllStudentFromClassRoomEvent($request->auxilary));
-        event(new  RemoveAllStudentTagsEvent($request->auxilary));
-        event(new  RemoveAllSupporterHistoriesEvent($request->auxilary));
-
 
         $getSubscription = $this->ComparePhones($request->main, $request->auxilary);
 
@@ -263,17 +260,29 @@ class MergeStudentsController extends Controller
         //     $request->session()->flash("msg_error", "اطلاعاتی برای مرج وجود ندارد.");
         //     return redirect()->route('merge_students_index');
         // }
-
-        if ($getSubscription["msg"] != "") {
-            $request->session()->flash("msg_error", "به دلیل تداخل یا از دست دادن اطلاعات امکان ادغام وجود ندارد");
+        if ($this->error != "") {
+            $request->session()->flash("msg_error", $this->msg_error[$this->error]);
             return redirect()->route('merge_students_index');
         }
-        $deleteStudent = $this->DeleteStudent($request->auxilary);
-        if (!$deleteStudent) {
-            $request->session()->flash("msg_error", "حذف دانش آموز فرعی با مشکل مواجه شد.");
-            return redirect()->route('merge_students_index');
-        }
+        // if ($getSubscription["msg"] != "") {
+        //     $request->session()->flash("msg_error", "به دلیل تداخل یا از دست دادن اطلاعات امکان ادغام وجود ندارد");
+        //     return redirect()->route('merge_students_index');
+        // }
+        // $deleteStudent = $this->DeleteStudent($request->auxilary);
+        // if (!$deleteStudent) {
+        //     $request->session()->flash("msg_error", "حذف دانش آموز فرعی با مشکل مواجه شد.");
+        //     return redirect()->route('merge_students_index');
+        // }
 
+        event(new  ChangeAllStudentCallsEvent($request->main, $request->auxilary));
+        event(new  ChangeAllStudentPurchasesEvent($request->main, $request->auxilary));
+        event(new  ChangeAllStudentSanadsEvent($request->main, $request->auxilary));
+
+        event(new  RemoveAllStudentTempreturesEvent($request->auxilary));
+        event(new  RemoveAllStudentCollectionsEvent($request->auxilary));
+        event(new  RemoveAllStudentFromClassRoomEvent($request->auxilary));
+        event(new  RemoveAllStudentTagsEvent($request->auxilary));
+        event(new  RemoveAllSupporterHistoriesEvent($request->auxilary));
 
 
         $request->session()->flash("msg_success", "دانش آموز با موفقیت مرج شد.");
@@ -429,32 +438,34 @@ class MergeStudentsController extends Controller
             ->where('id', $student_id)
             ->first();
         if (!$student) {
-            $errors["msg"] = "the student is not found";
-            return $errors;
+            $this->error = "STUDENT_NOT_FOUND";
+            return  $this->error;
         }
+
         return $student;
-        // $second_student = Student::where('is_deleted', false)
-        //     ->where('id', $second_student_id)
-        //     ->first();
-        // if (!$second_student) {
-        //     $errors["msg"] = "the second student is not found";
-        //     //return $data;
-        //     //$request->session()->flash("msg_success", "اطلاعات دانش آموز فرعی یافت نشد.");
-        // }
-        // return [$main_student, $second_student];
+    }
+    public function ExistInAcademy($student_id)
+    {
+        $student = Student::where('is_deleted', false)
+            ->where('id', $student_id)
+            ->first();
+        if ($student->is_academy_student == 1) {
+            $this->error = "IS_ACADEMY_STUDENT";
+            return false;
+        }
+        return true;
     }
     public function ComparePhones($main_student_id, $second_student_id)
     {
         $nullable = ["", null];
-        $errors = [
-            "msg" => "",
-        ];
+
         $phones = [];
         $main_student = $this->GetStudentModel($main_student_id);
         $second_student = $this->GetStudentModel($second_student_id);
+        $is_academy_student = $this->ExistInAcademy($second_student_id);
 
-        if ($errors["msg"] != "")
-            return $errors;
+        if (!$is_academy_student)
+            return false;
 
         //return $data;
         $first = array_filter(array_unique([
@@ -481,29 +492,20 @@ class MergeStudentsController extends Controller
             trim($second_student->phone4),
             //trim($second_student->phone5),
         ]));
-        // Log::info("the first is:");
-        // Log::info($first);
-        // Log::info($second);
+        
         $result = array_unique(array_merge($first, $second));
         $rshould_merge = array_diff($result, $first);
-        // Log::info("the merge is");
-        // Log::info($rshould_merge);
-
+        
         $sumPhones = count($result);
         // Log::info($result);
         // Log::info("count is:" .  $sumPhones);
         if ($sumPhones > 8) {
 
-            $errors["msg"] = "It is too long to merge";
+            $this->error = "Too_LARGE_To_MERGE";
         }
-        // if ($sumPhones ==0) {
-        //     //$canSubscription = false;
-        //     $errors["msg"] = "zero";
-        //     //return $data;
-        // }
-        //dd("jjj");
-        if ($errors["msg"] != "")
-            return $errors;
+        
+        if ($this->error != "")
+            return $this->error;
         $phones = $this->MergePhones($main_student, array_filter($rshould_merge));
         return $phones;
     }
