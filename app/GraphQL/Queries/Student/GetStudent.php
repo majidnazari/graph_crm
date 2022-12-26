@@ -26,7 +26,7 @@ final class GetStudent
         // return  $user_role;   
         //Log::info(json_encode($context->request()));
         $Student=Student::find($args['id'])->where("is_deleted",0);
-        return $Student;
+        return $Student; 
         
     }
     

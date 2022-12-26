@@ -268,11 +268,11 @@ class MergeStudentsController extends Controller
         //     $request->session()->flash("msg_error", "به دلیل تداخل یا از دست دادن اطلاعات امکان ادغام وجود ندارد");
         //     return redirect()->route('merge_students_index');
         // }
-        // $deleteStudent = $this->DeleteStudent($request->auxilary);
-        // if (!$deleteStudent) {
-        //     $request->session()->flash("msg_error", "حذف دانش آموز فرعی با مشکل مواجه شد.");
-        //     return redirect()->route('merge_students_index');
-        // }
+        $deleteStudent = $this->DeleteStudent($request->auxilary);
+        if (!$deleteStudent) {
+            $request->session()->flash("msg_error", "حذف دانش آموز فرعی با مشکل مواجه شد.");
+            return redirect()->route('merge_students_index');
+        }
 
         event(new  ChangeAllStudentCallsEvent($request->main, $request->auxilary));
         event(new  ChangeAllStudentPurchasesEvent($request->main, $request->auxilary));
