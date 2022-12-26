@@ -499,7 +499,7 @@ class MergeStudentsController extends Controller
         $sumPhones = count($result);
         // Log::info($result);
         // Log::info("count is:" .  $sumPhones);
-        if ($sumPhones > 8) {
+        if ($sumPhones > 9) {
 
             $this->error = "Too_LARGE_To_MERGE";
         }
