@@ -262,7 +262,8 @@ class MergeStudentsController extends Controller
         // }
         if ($this->error != "") {
             $request->session()->flash("msg_error", $this->msg_error[$this->error]);
-            return redirect()->route('merge_students_index');
+            //return redirect()->route('merge_students_index');
+            return redirect()->route('merge_students_create');
         }
         // if ($getSubscription["msg"] != "") {
         //     $request->session()->flash("msg_error", "به دلیل تداخل یا از دست دادن اطلاعات امکان ادغام وجود ندارد");
@@ -271,7 +272,8 @@ class MergeStudentsController extends Controller
         $deleteStudent = $this->DeleteStudent($request->auxilary);
         if (!$deleteStudent) {
             $request->session()->flash("msg_error", "حذف دانش آموز فرعی با مشکل مواجه شد.");
-            return redirect()->route('merge_students_index');
+            //return redirect()->route('merge_students_index');
+            return redirect()->route('merge_students_create');
         }
 
         event(new  ChangeAllStudentCallsEvent($request->main, $request->auxilary));
@@ -499,7 +501,7 @@ class MergeStudentsController extends Controller
         $sumPhones = count($result);
         // Log::info($result);
         // Log::info("count is:" .  $sumPhones);
-        if ($sumPhones > 9) {
+        if ($sumPhones > env('USER_PHONE_COUNT')) {
 
             $this->error = "Too_LARGE_To_MERGE";
         }
