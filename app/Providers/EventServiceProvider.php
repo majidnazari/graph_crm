@@ -10,6 +10,7 @@ use App\Events\RemoveAllStudentTagsEvent;
 use App\Events\RemoveAllStudentTempreturesEvent;
 use App\Events\RemoveAllStudentCollectionsEvent;
 use App\Events\RemoveAllSupporterHistoriesEvent;
+use App\Events\CreateLogMergedStudentEvent;
 
 use App\Listeners\ChangeCallsListener;
 use App\Listeners\ChangeSanadListener;
@@ -19,6 +20,7 @@ use App\Listeners\RemoveStudentTagsListener;
 use App\Listeners\RemoveStudentTempreturesListener;
 use App\Listeners\RemoveClassRoomsListener;
 use App\Listeners\RemoveSupporterHistoriesListener;
+use App\Listeners\CreateLogMergedStudentListener;
 
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Auth\Listeners\SendEmailVerificationNotification;
@@ -70,10 +72,6 @@ class EventServiceProvider extends ServiceProvider
             [ChangePurchasesListener::class, 'handle']
         );
 
-
-
-
-
         Event::listen(
             RemoveAllStudentTagsEvent::class,
             [RemoveStudentTagsListener::class, 'handle']
@@ -99,7 +97,11 @@ class EventServiceProvider extends ServiceProvider
             [RemoveSupporterHistoriesListener::class, 'handle']
         );
 
-
+        Event::listen(
+            CreateLogMergedStudentEvent::class,
+            [ CreateLogMergedStudentListener::class, 'handle']
+        );
+        
 
         // Event::listen(
         //     ChangeAllStudentSanadEvent::class,

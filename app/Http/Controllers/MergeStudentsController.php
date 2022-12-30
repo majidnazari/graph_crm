@@ -6,6 +6,9 @@ use App\Events\ChangeAllStudentCallsEvent;
 use App\Events\ChangeAllStudentPurchasesEvent;
 use App\Events\ChangeAllStudentSanadsEvent;
 use App\Events\RemoveAllSupporterHistoriesEvent;
+use App\Events\CreateLogMergedStudentEvent;
+
+
 
 use App\Events\RemoveAllStudentTempreturesEvent;
 use App\Events\RemoveAllStudentCollectionsEvent;
@@ -14,7 +17,10 @@ use App\Events\RemoveAllStudentTagsEvent;
 
 use App\MergeStudents as AppMergeStudents;
 use App\Student;
+use App\User;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Auth;
+
 use Exception;
 use Log;
 
@@ -240,7 +246,7 @@ class MergeStudentsController extends Controller
      */
     public function create(Request $request)
     {
-
+        $user = User::where('id',Auth::user()->id)->first();
         $students = Student::where('is_deleted', false)->where('banned', false)->where('archived', false)->get();
 
         if ($request->getMethod() == 'GET') {
@@ -251,6 +257,9 @@ class MergeStudentsController extends Controller
 
             ]);
         }
+        Log::info("before log is running");
+        event(new  CreateLogMergedStudentEvent($request->main, $request->auxilary, $user->id, $user->email . " " . $user->first_name . " " . $user->last_name));
+return false;
 
         $getSubscription = $this->ComparePhones($request->main, $request->auxilary);
 
@@ -275,7 +284,7 @@ class MergeStudentsController extends Controller
             //return redirect()->route('merge_students_index');
             return redirect()->route('merge_students_create');
         }
-
+       
         event(new  ChangeAllStudentCallsEvent($request->main, $request->auxilary));
         event(new  ChangeAllStudentPurchasesEvent($request->main, $request->auxilary));
         event(new  ChangeAllStudentSanadsEvent($request->main, $request->auxilary));
