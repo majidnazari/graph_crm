@@ -4,6 +4,7 @@ namespace App\GraphQL\Validators;
 
 use Illuminate\Validation\Rule;
 use Nuwave\Lighthouse\Validation\Validator;
+use App\Rules\CheckNationalCodeRule;
 
 final class UpdateStudentInputValidator extends Validator
 {
@@ -22,7 +23,9 @@ final class UpdateStudentInputValidator extends Validator
             ],
             'nationality_code' => [
                 'nullable',
-                Rule::unique('students', 'nationality_code')->ignore($this->arg('id'), 'id'),
+                //Rule::unique('students', 'nationality_code')->ignore($this->arg('id'), 'id'),
+                new CheckNationalCodeRule($this->arg('phone'),$this->arg('id')),
+               
             ],
         ];
     }

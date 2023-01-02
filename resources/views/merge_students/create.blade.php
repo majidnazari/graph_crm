@@ -131,7 +131,7 @@
 <script src="/plugins/select2/js/select2.min.js"></script>
 <script type="text/javascript">
     console.log($('#select2-main-results').children(":first"));
-    function removeItem(first, second_option, third_option, forth_option) {
+    function removeItem(first, second_option, third_option, forth_option) { 
         $(first).on('change', function() {
             var x = $(this).val();
             $(second_option).each(function() {

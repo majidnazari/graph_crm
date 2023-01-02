@@ -202,6 +202,12 @@
                                 <input type="text" class="form-control" id="school" name="school" placeholder="مدرسه"  value="{{ isset($school)?$school:'' }}" onkeypress="handle(event)"/>
                             </div>
                         </div>
+                        <div class="col">
+                            <div class="form-group">
+                                <label for="nationality_code">کد ملی</label>
+                                <input type="number" class="form-control" id="nationality_code" name="nationality_code" placeholder="کد ملی"  value="{{ isset($nationality_code)?$nationality_code:'' }}" onkeypress="handle(event)" />
+                            </div>
+                        </div>
                         <div class="col" style="padding-top: 32px;">
                             <a class="btn btn-success" onclick="theSearch()" href="#">
                                 جستجو

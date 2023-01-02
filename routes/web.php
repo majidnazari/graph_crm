@@ -354,5 +354,15 @@ Route::group(['middleware' => ['auth', 'message', 'changeCharactersAllToBePersia
     // Route::group(['middleware' => 'check-ip'], function () {
     //     Route::any('/graphql-playground', 'SanadController@index2')->name('sanads2');
     // });
+
+    Route::group(['prefix' => '/logMergeStudents', 'middleware' => 'limit-access'], function () {
+        Route::any('/', 'LogMergedStudentsController@index')->name('logMergeStudents');
+        Route::any('/searchIndexMergedStudent', 'LogMergedStudentsController@indexOfAjax')->name('search_index_Student');
+        Route::any('/searchSupporter', 'LogMergedStudentsController@AllAJAXSupporter')->name('searchSupporterForMergeStudent');
+        Route::any('/searchMainStudent', 'LogMergedStudentsController@AllAJAXMainStudent')->name('searchMainStudentForMergeStudent');
+        Route::any('/searchMergedStudent', 'LogMergedStudentsController@AllAJAXMergedStudent')->name('searchMergedStudentForMergeStudent');
+        
+       
+    });
    
 });

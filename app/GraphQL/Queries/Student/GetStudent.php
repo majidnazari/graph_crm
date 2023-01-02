@@ -25,8 +25,8 @@ final class GetStudent
         // $user_role=auth()->guard('api')->user()->group->type; 
         // return  $user_role;   
         //Log::info(json_encode($context->request()));
-        $Student=Student::find($args['id']);
-        return $Student;
+        $Student=Student::find($args['id'])->where("is_deleted",0);
+        return $Student; 
         
     }
     

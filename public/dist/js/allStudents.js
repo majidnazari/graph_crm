@@ -700,7 +700,7 @@ function isEmpty (obj) {
 
     return JSON.stringify(obj) === JSON.stringify({})
 }
-function theSearch () {
+function theSearch () { 
     $('#loading').css('display', 'inline')
     table.ajax.reload()
     return false
@@ -731,7 +731,7 @@ $(function () {
     })
     $('select.select2').select2()
 
-    table = $('#example2').DataTable({
+    table = $('#example2').DataTable({ 
         paging: true,
         lengthChange: false,
         searching: false,
@@ -774,6 +774,7 @@ $(function () {
                 data['phone'] = $('#phone').val()
                 data['level'] = $('#level').val();
                 data['concours_year'] = $('#concours_year').val();
+                data['nationality_code'] = $('#nationality_code').val();
                 
                 return JSON.stringify(data)
             },
