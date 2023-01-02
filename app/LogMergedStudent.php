@@ -36,7 +36,7 @@ class LogMergedStudent extends Model implements Auditable
         "user_id_updater",        
         "user_fullname_updater",        
     ];
-    public function user()
+    public function userUpdater()
     {
         return $this->belongsTo(User::class,"user_id_updater");
     }

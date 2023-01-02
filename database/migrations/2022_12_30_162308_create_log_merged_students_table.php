@@ -17,26 +17,28 @@ return new class extends Migration
             $table->id();
 
             $table->string("current_student_fullname",20); 
+            $table->integer("current_student_id");
             $table->string("current_student_phone",20); 
-            $table->string("current_student_phone1",20); 
-            $table->string("current_student_phone2",20); 
-            $table->string("current_student_phone3",20); 
-            $table->string("current_student_phone4",20); 
-            $table->string("current_student_student_phone",20); 
-            $table->string("current_student_mother_phone",20); 
-            $table->string("current_student_father_phone",20); 
-            $table->integer("current_student_id"); 
+            $table->string("current_student_phone1",20)->nullable(); 
+            $table->string("current_student_phone2",20)->nullable(); 
+            $table->string("current_student_phone3",20)->nullable(); 
+            $table->string("current_student_phone4",20)->nullable(); 
+            $table->string("current_student_student_phone",20)->nullable(); 
+            $table->string("current_student_mother_phone",20)->nullable(); 
+            $table->string("current_student_father_phone",20)->nullable(); 
+            
            
             $table->string("old_student_fullname",20); 
-            $table->string("old_student_phone",20); 
-            $table->string("old_student_phone1",20); 
-            $table->string("old_student_phone2",20); 
-            $table->string("old_student_phone3",20); 
-            $table->string("old_student_phone4",20); 
-            $table->string("old_student_student_phone",20); 
-            $table->string("old_student_mother_phone",20); 
-            $table->string("old_student_father_phone",20); 
             $table->integer("old_student_id"); 
+            $table->string("old_student_phone",20); 
+            $table->string("old_student_phone1",20)->nullable(); 
+            $table->string("old_student_phone2",20)->nullable();
+            $table->string("old_student_phone3",20)->nullable(); 
+            $table->string("old_student_phone4",20)->nullable(); 
+            $table->string("old_student_student_phone",20)->nullable(); 
+            $table->string("old_student_mother_phone",20)->nullable(); 
+            $table->string("old_student_father_phone",20)->nullable(); 
+            
 
             $table->integer("user_id_updater");
             $table->string("user_fullname_updater"); 

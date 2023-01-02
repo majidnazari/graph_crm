@@ -604,6 +604,15 @@
                                 <p>لیست سندها</p>
                             </a>
                         </li>
+                        <li class="nav-item">
+                            @if(strpos(\Request::route()->getName(), 'logMergeStudents')===0)
+                            <a href="{{ route('logMergeStudents') }}" class="nav-link active">
+                            @else
+                            <a href="{{ route('logMergeStudents') }}" class="nav-link">
+                            @endif
+                                <p> لاگ مرج دانش آموزان </p>
+                            </a>
+                        </li>
                         @endif
                         @if (Gate::allows('sale_suggestions'))
                         <!--

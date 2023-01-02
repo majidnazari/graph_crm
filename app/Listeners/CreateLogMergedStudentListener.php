@@ -55,8 +55,8 @@ class CreateLogMergedStudentListener
         $log_merged_student->old_student_phone3= $second_student->phone3;
         $log_merged_student->old_student_phone4= $second_student->phone4;
         $log_merged_student->old_student_student_phone= $second_student->student_phone;
-        $log_merged_student->old_student_mother_phone= $second_student->student_phone;
-        $log_merged_student->old_student_father_phone= $second_student->student_phone;
+        $log_merged_student->old_student_mother_phone= $second_student->mother_phone;
+        $log_merged_student->old_student_father_phone= $second_student->father_phone;
         $log_merged_student->old_student_id=$second_student->id;
 
         $log_merged_student->user_id_updater=$user_id_updater;
@@ -65,7 +65,7 @@ class CreateLogMergedStudentListener
 
         if($result)
         {
-            log::info("the merge log is:" . $result);
+            //log::info("the merge log is:" . $result);
             return true;
         }
         return false;

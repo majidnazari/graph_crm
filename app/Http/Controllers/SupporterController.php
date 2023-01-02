@@ -1997,8 +1997,41 @@ class SupporterController extends Controller
         ]);
     }
 
-    public function studentCreate()
+    public function studentCreate(Request $request)
     {
+
+        $all_phones = array_filter(array_unique(array(
+            trim($request->input('phone')),
+            trim($request->input('phone1')),
+            trim($request->input('phone2')),
+            trim($request->input('phone3')),
+            trim($request->input('phone4')),
+            trim($request->input('student_phone')),
+            trim($request->input('mother_phone')),
+            trim($request->input('father_phone'))
+
+        )));
+        foreach ($all_phones as $one_phone) {
+            $is_exist = Student::where('is_deleted', 0)
+                ->where(function ($query) use ($one_phone) {
+                    $query->where('phone', $one_phone)
+                        ->orWhere('father_phone', $one_phone)
+                        ->orWhere('mother_phone', $one_phone)
+                        ->orWhere('phone1', $one_phone)
+                        ->orWhere('phone2', $one_phone)
+                        ->orWhere('phone3', $one_phone)
+                        ->orWhere('phone4', $one_phone)
+                        ->orWhere('student_phone', $one_phone);
+                })
+                //->where('id','!=',$id)
+                ->first();
+            if ($is_exist) {
+                $request->session()->flash("msg_error", " شماره تکراریست و مربوط به دانش آموز یا ولی  " . $is_exist->first_name . " " . $is_exist->last_name );
+                return redirect()->route("supporter_student_new");
+            }
+        }
+
+
         $student = new Student();
         $supportGroupId = Group::getSupport();
         if ($supportGroupId)

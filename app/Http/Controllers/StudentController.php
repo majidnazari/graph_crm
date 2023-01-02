@@ -1497,7 +1497,6 @@ class StudentController extends Controller
 
     public function csv(Request $request)
     {
-
         $msg = null;
         $fails = [];
         $majors = [
@@ -1534,17 +1533,18 @@ class StudentController extends Controller
             'دانشجو' => '14'
         ];
         $sources = Source::where('is_deleted', false)->get();
-        if ($request->getMethod() == 'POST') {
+        if ($request->getMethod() == 'POST') { 
             $msg = 'بروز رسانی با موفقیت انجام شد';
             $csvPath = $request->file('attachment')->getPathname();
             $sources_id = $request->input('sources_id');
             $concours_year = $request->input('concours_year');
-            if ($request->file('attachment')->extension() == 'xlsx') {
+            if ($request->file('attachment')->extension() == 'xlsx') { 
                 $importer = new StudentsImport;
                 $importer->source_id = $sources_id;
                 $importer->concours_year = $concours_year;
                 $res = $importer->import($csvPath, null, \Maatwebsite\Excel\Excel::XLSX);
                 $fails = $importer->getFails();
+                //dd($fails);
                 return view('students.csv', [
                     'msg_success' => $msg,
                     'fails' => $fails,

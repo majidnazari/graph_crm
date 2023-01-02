@@ -257,9 +257,8 @@ class MergeStudentsController extends Controller
 
             ]);
         }
-        Log::info("before log is running");
+        
         event(new  CreateLogMergedStudentEvent($request->main, $request->auxilary, $user->id, $user->email . " " . $user->first_name . " " . $user->last_name));
-return false;
 
         $getSubscription = $this->ComparePhones($request->main, $request->auxilary);
 
@@ -510,7 +509,7 @@ return false;
         $sumPhones = count($result);
         // Log::info($result);
         // Log::info("count is:" .  $sumPhones);
-        if ($sumPhones > env('USER_PHONE_COUNT')) {
+        if ($sumPhones >= env('USER_PHONE_COUNT')) {
 
             $this->error = "Too_LARGE_To_MERGE";
         }
