@@ -1892,19 +1892,20 @@ class StudentController extends Controller
             // $studentObject = Student::where('phone', $student['phone'])->first();
 
             $all_phones = array_filter(array_unique(array(
-                trim($student['phone']),
-                trim($student['phone1']),
-                trim($student['phone2']),
-                trim($student['phone3']),
-                trim($student['phone4']),
-                trim($student['student_phone']),
-                trim($student['mother_phone']),
-                trim($student['father_phone'])
+                trim($student['phone'])
+                // trim($student['phone1']),
+                // trim($student['phone2']),
+                // trim($student['phone3']),
+                // trim($student['phone4']),
+                // trim($student['student_phone']),
+                // trim($student['mother_phone']),
+                // trim($student['father_phone'])
 
             )));
+
             foreach ($all_phones as $one_phone) {
-                $is_exist = $student_tmp
-                    ->where(function ($query) use ($one_phone) {
+                
+                $is_exist = $student_tmp->where(function ($query) use ($one_phone) {
                         $query->where('phone', $one_phone)
                             ->orWhere('father_phone', $one_phone)
                             ->orWhere('mother_phone', $one_phone)
@@ -1913,11 +1914,11 @@ class StudentController extends Controller
                             ->orWhere('phone3', $one_phone)
                             ->orWhere('phone4', $one_phone)
                             ->orWhere('student_phone', $one_phone);
-                    })
-                    ->first();
-                    if ($is_exist) {
-                       break;
-                    }
+                    })->first();
+                  // dd($is_exist);
+                if ($is_exist) {
+                    break;
+                }
             }
             if ($is_exist) {
                 $ids[] = $is_exist->phone;
