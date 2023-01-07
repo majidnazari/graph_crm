@@ -71,7 +71,7 @@
                                     </select>
                                 </div>
                             </div>
-                            <div class="col">
+                            <!-- <div class="col">
                                 <div class="form-group">
                                     <label for="second_auxilary">فرعی ۲</label>
                                     <select class="form-control" id="second_auxilary" name="second_auxilary">
@@ -100,7 +100,7 @@
                                         @endif
                                     </select>
                                 </div>
-                            </div>
+                            </div> -->
                         </div>
                         <div class="row">
                             <div class="col">
@@ -154,8 +154,8 @@
     }
     removeItem('#main', '#auxilary option', '#second_auxilary option', '#third_auxilary option');
     removeItem('#auxilary', '#main option', '#second_auxilary option', '#third_auxilary option');
-    removeItem('#second_auxilary', '#main option', '#auxilary option', '#third_auxilary option');
-    removeItem('#third_auxilary', '#main option', '#auxilary option', '#second_auxilary option');
+    // removeItem('#second_auxilary', '#main option', '#auxilary option', '#third_auxilary option');
+    // removeItem('#third_auxilary', '#main option', '#auxilary option', '#second_auxilary option');
 
 </script>
 <script type="text/javascript">
@@ -187,8 +187,8 @@
     }
     select2_load_remote_data_with_ajax('#main');
     select2_load_remote_data_with_ajax('#auxilary');
-    select2_load_remote_data_with_ajax('#second_auxilary');
-    select2_load_remote_data_with_ajax('#third_auxilary');
+    // select2_load_remote_data_with_ajax('#second_auxilary');
+    // select2_load_remote_data_with_ajax('#third_auxilary');
 
 </script>
 @endsection

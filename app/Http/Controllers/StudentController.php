@@ -1321,10 +1321,10 @@ class StudentController extends Controller
                         ->orWhere('phone4', $one_phone)
                         ->orWhere('student_phone', $one_phone);
                 })
-                ->where('id','!=',$id)
+                ->where('id', '!=', $id)
                 ->first();
             if ($is_exist) {
-                $request->session()->flash("msg_error", " شماره تکراریست و مربوط به دانش آموز یا ولی  " . $is_exist->first_name . " " . $is_exist->last_name );
+                $request->session()->flash("msg_error", " شماره تکراریست و مربوط به دانش آموز یا ولی  " . $is_exist->first_name . " " . $is_exist->last_name);
                 return redirect()->route($call_back);
             }
         }
@@ -1533,12 +1533,12 @@ class StudentController extends Controller
             'دانشجو' => '14'
         ];
         $sources = Source::where('is_deleted', false)->get();
-        if ($request->getMethod() == 'POST') { 
+        if ($request->getMethod() == 'POST') {
             $msg = 'بروز رسانی با موفقیت انجام شد';
             $csvPath = $request->file('attachment')->getPathname();
             $sources_id = $request->input('sources_id');
             $concours_year = $request->input('concours_year');
-            if ($request->file('attachment')->extension() == 'xlsx') { 
+            if ($request->file('attachment')->extension() == 'xlsx') {
                 $importer = new StudentsImport;
                 $importer->source_id = $sources_id;
                 $importer->concours_year = $concours_year;
@@ -1833,28 +1833,95 @@ class StudentController extends Controller
     }
 
     //---------------------API------------------------------------
-    public function apiAddStudents(Request $request)
+    // public function apiAddStudents(Request $request) //old
+    // {
+    //     $students = $request->input('students', []);
+    //     $ids = [];
+    //     $fails = [];
+    //     foreach ($students as $student) {
+    //         if (!isset($student['phone'])) {
+    //             $student['error'] = "No Phone";
+    //             $fails[] = $student;
+    //             continue;
+    //         }
+    //         $studentObject = Student::where('phone', $student['phone'])->first();
+
+    //         if ($studentObject/* && isset($student['marketers_id']) && $studentObject->marketers_id<=0*/) {
+    //             // $marketer = Marketer::where('users_id', $student['marketers_id'])->first();
+    //             // if($marketer){
+    //             //     $studentObject->marketers_id = $student['marketers_id'];
+    //             //     $studentObject->save();
+    //             //     $ids[] = $studentObject->id;
+    //             // }else{
+    //             // $fails[] = $student;
+    //             $ids[] = $studentObject->phone;
+    //             // }
+    //         } else {
+    //             $studentObject = new Student;
+    //             foreach ($student as $key => $value) {
+    //                 $studentObject->$key = $value;
+    //             }
+    //             $studentObject->is_from_site = true;
+    //             try {
+    //                 $studentObject->save();
+    //                 $ids[] = $studentObject->phone;
+    //             } catch (Exception $e) {
+    //                 $student['error'] = $e->getMessage();
+    //                 $fails[] = $student;
+    //             }
+    //         }
+    //     }
+    //     return [
+    //         "added_ids" => $ids,
+    //         "fails" => $fails
+    //     ];
+    // }
+
+    public function apiAddStudents(Request $request) // new added 4 phones to student
     {
         $students = $request->input('students', []);
         $ids = [];
         $fails = [];
+        $student_tmp = Student::where('is_deleted', 0);
         foreach ($students as $student) {
             if (!isset($student['phone'])) {
                 $student['error'] = "No Phone";
                 $fails[] = $student;
                 continue;
             }
-            $studentObject = Student::where('phone', $student['phone'])->first();
-            if ($studentObject/* && isset($student['marketers_id']) && $studentObject->marketers_id<=0*/) {
-                // $marketer = Marketer::where('users_id', $student['marketers_id'])->first();
-                // if($marketer){
-                //     $studentObject->marketers_id = $student['marketers_id'];
-                //     $studentObject->save();
-                //     $ids[] = $studentObject->id;
-                // }else{
-                // $fails[] = $student;
-                $ids[] = $studentObject->phone;
-                // }
+            // $studentObject = Student::where('phone', $student['phone'])->first();
+
+            $all_phones = array_filter(array_unique(array(
+                trim($student['phone'])
+                // trim($student['phone1']),
+                // trim($student['phone2']),
+                // trim($student['phone3']),
+                // trim($student['phone4']),
+                // trim($student['student_phone']),
+                // trim($student['mother_phone']),
+                // trim($student['father_phone'])
+
+            )));
+
+            foreach ($all_phones as $one_phone) {
+                
+                $is_exist = $student_tmp->where(function ($query) use ($one_phone) {
+                        $query->where('phone', $one_phone)
+                            ->orWhere('father_phone', $one_phone)
+                            ->orWhere('mother_phone', $one_phone)
+                            ->orWhere('phone1', $one_phone)
+                            ->orWhere('phone2', $one_phone)
+                            ->orWhere('phone3', $one_phone)
+                            ->orWhere('phone4', $one_phone)
+                            ->orWhere('student_phone', $one_phone);
+                    })->first();
+                  // dd($is_exist);
+                if ($is_exist) {
+                    break;
+                }
+            }
+            if ($is_exist) {
+                $ids[] = $is_exist->phone;
             } else {
                 $studentObject = new Student;
                 foreach ($student as $key => $value) {
