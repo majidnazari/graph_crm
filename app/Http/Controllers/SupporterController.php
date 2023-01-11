@@ -1370,6 +1370,7 @@ class SupporterController extends Controller
 
         $searchStudent = new SearchStudent;
         $students = Student::where('is_deleted', false)->where('banned', false)->where('archived', false)->where('supporter_seen', false)->where('supporters_id', Auth::user()->id);
+        
         $sources = Source::where('is_deleted', false)->get();
         $name = null;
         $sources_id = null;
