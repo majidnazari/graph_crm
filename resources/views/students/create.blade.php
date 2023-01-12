@@ -467,7 +467,7 @@
         const phones = [];
 
         //let pattern = new RegExp('^([09]+[0-9]{9}|)$'); //pattern or null 
-        let pattern = new RegExp('^(09(1[0-9]|3[0-9]|2[0-9]|0[0-9])-?[0-9]{3}-?[0-9]{4}|)$'); //pattern or null 
+        let pattern = new RegExp('^(09(0[0-9]|1[0-9]|2[0-9]|3[0-9]|9[0-9])-?[0-9]{3}-?[0-9]{4}|)$'); //pattern or null 
         phones.push(pattern.test($("#phone").val()) ? $("#phone").val() : "");
         phones.push(pattern.test($("#phone1").val()) ? $("#phone1").val() : "");
         phones.push(pattern.test($("#phone2").val()) ? $("#phone2").val() : "");
