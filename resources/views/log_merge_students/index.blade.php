@@ -40,6 +40,18 @@
     <form method="post">
         @csrf
         <div class="row">
+            
+             <div class="col-2">
+                <label for="successfull_id">وضعیت</label>
+                <select id="successfull_id" name="successfull_id" class="form-control" onchange="theChange()">
+                    <option value="-1">همه</option>
+                    <option value="0">ناموفق</option>
+                    <option value="1">موفق</option>
+                   
+                </select>
+
+            </div>
+
             <div class="col-3">
                 <label for="supporter_id">کاربر</label>
                 <select id="supporter_id" name="supporter_id" class="form-control select2" onchange="theChange()">
@@ -91,7 +103,7 @@
 
             </div>
 
-            <div class="col">
+            <div class="col-1">
                 <div class="form-group">
                     <label for="to_date">&nbsp;</label>
                     <a href="#" class="btn btn-success form-control" onclick="theSearch()">جستجو</a>
@@ -125,6 +137,7 @@
                         <thead>
                             <tr>
                                 <th>ردیف</th>
+                                <th>وضعیت</th>
                                 <th>دانش آموز اصلی</th>
                                 <th>تلفن دانش آموز اصلی</th>
                                 <th>تلفن ۱ دانش آموز اصلی</th>
@@ -150,8 +163,11 @@
                             @foreach ($merged_students as $index => $item)
                             <tr>
                                 <td>{{ $index + 1 }}</td>
+                                <td>{{$item->successfull }}</td>
                                 <td>{{ $item->current_student_fullname }}</td>
                                 <td>{{ $item->old_student_fullname }}</td>
+
+                               
                                 <!-- <td>{{ jdate($item->updated_at)->format("Y/m/d") }}</td> -->
                             </tr>
                             @endforeach
@@ -296,7 +312,7 @@
                 {
                     "searchable": false,
                     "orderable": false,
-                    "targets": [0, 18]
+                    "targets": [0, 19]
                 },
                 //{ "type": "pstring", "targets": [2,3,4] }
             ],
@@ -315,6 +331,7 @@
                     // console.log(data);
                     //alert($("#receipt_date_ser").val());
                     // data['name'] = "fFF";//$("#name").val();
+                    data['successfull_id'] = $("#successfull_id").val();
                     data['user_id'] = $("#user_id").val();
                     data['supporter_id'] = $("#supporter_id").val();
                     data['main_student_id'] = $("#main_student_id").val();
@@ -347,6 +364,9 @@
             columns: [{
                     data: 'row'
                 },
+                {
+                    data: 'successfull'
+                },                
                 {
                     data: 'current_student_fullname'
                 },

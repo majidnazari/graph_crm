@@ -13,6 +13,7 @@ class LogMergedStudent extends Model implements Auditable
     use HasFactory;
     use SoftDeletes;
     protected $fillable=[
+        "successfull",
         "current_student_fullname",
         "current_student_phone",
         "current_student_phone1",
