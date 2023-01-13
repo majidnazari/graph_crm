@@ -37,7 +37,6 @@ class LogMergedStudentsController extends Controller
     public function indexOfAjax(Request $request)
     {
         $supporter= User::where('is_deleted', false)->where('groups_id', env('USER_ROLE'))->get();
-        $supporter= User::where('is_deleted', false)->where('groups_id', env('USER_ROLE'))->get();
         // $main_student 
         //     "main_student" =>[],
         //     "merged_student" =>[],
@@ -57,6 +56,12 @@ class LogMergedStudentsController extends Controller
             //Log::info("add to log");              
             $merged_student_id = $request->input('merged_student_id');
             $all_logs = $all_logs->where('old_student_id', $merged_student_id);
+        }
+        if ($request->input('successfull_id') != -1) {
+           // Log::info("add to log");   
+           // Log::info($request->input('successfull_id'));              
+            $successfull = $request->input('successfull_id');
+            $all_logs = $all_logs->where('successfull', $successfull);
         }
 
 
@@ -81,7 +86,8 @@ class LogMergedStudentsController extends Controller
                 "row" =>  $req['start'] + $index + 1,
                 "id" => $item->id,
                 // "supporter" => $item->supporter->first_name . ' ' . $item->supporter->last_name,
-                
+                "successfull" =>(($item->successfull==1) ? "موفق"  : "ناموفق"),
+
                 "current_student_fullname" => ($item->current_student_fullname),
                 "current_student_phone" => ($item->current_student_phone),
                 "current_student_phone1" => ($item->current_student_phone1),

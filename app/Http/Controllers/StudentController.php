@@ -255,7 +255,9 @@ class StudentController extends Controller
             );
         } else {
 
-            $students = Student::where('students.is_deleted', false)->where('students.banned', false)->where('students.archived', false);
+            $students = Student::where('students.is_deleted', false)
+            ->where('students.banned', false)
+            ->where('students.archived', false);
             if ($level != "all") {
                 $students = $students->where('level', $level);
             }
@@ -1239,6 +1241,12 @@ class StudentController extends Controller
             $request->session()->flash("msg_error", " شماره تکراریست و مربوط به دانش آموز یا ولی  " . $is_exist->first_name . " " . $is_exist->last_name);
             return redirect()->route('student_create');
         }
+       $is_national_code_exist= $this->IsNationalCodeExist($request->input('national_no'));
+        if ($is_national_code_exist) {
+            
+            $request->session()->flash("msg_error", " کد ملی تکراریست و مربوط به دانش آموز    " . $is_national_code_exist->first_name . " " . $is_national_code_exist->last_name);
+            return redirect()->route('student_create');
+        }
 
         $student->users_id = Auth::user()->id;
         $student->first_name = $request->input('first_name');
@@ -1328,7 +1336,7 @@ class StudentController extends Controller
                 return redirect()->route($call_back);
             }
         }
-
+        
         $supportGroupId = Group::getSupport();
         if ($supportGroupId)
             $supportGroupId = $supportGroupId->id;
@@ -1351,6 +1359,14 @@ class StudentController extends Controller
                 'msg_error' => request()->session()->get('msg_error')
             ]);
         }
+
+        $is_national_code_exist= $this->IsNationalCodeExist($request->input('national_no'), $id);
+        if ($is_national_code_exist) {
+            
+            $request->session()->flash("msg_error", " کد ملی تکراریست و مربوط به دانش آموز    " . $is_national_code_exist->first_name . " " . $is_national_code_exist->last_name);
+            return redirect()->route($call_back);
+        }
+        
 
         $student->users_id_editor = Auth::user()->id;
         $student->first_name = $request->input('first_name');
@@ -2146,7 +2162,7 @@ class StudentController extends Controller
                 $query = $query->where($key, 'like', "%$value%");
         }
         $result = $query->where('is_deleted', 0)
-            ->where('first_name', 'like', '%majid%')
+           // ->where('first_name', 'like', '%majid%')
             ->orderBy('id', 'desc')
             ->get();
 
@@ -2262,5 +2278,15 @@ class StudentController extends Controller
             return true;
         }
         return  false;
+    }
+    public function IsNationalCodeExist($national_code, $id=null)
+    {
+        Log::info("th eid nation code is:" . $id);
+       return  Student::where('is_deleted',0)
+        ->where('archived',0)
+        ->where('banned',0)
+        ->where('nationality_code',$national_code)
+        ->where('id',($id!=null) ? '!=':'>',($id!=null) ? $id:0)
+        ->first();
     }
 }

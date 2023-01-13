@@ -11,6 +11,7 @@ class Student extends Model implements Auditable
 {
     use \OwenIt\Auditing\Auditable;
     protected $fillable = [
+        
         'phone',
         'is_academy_student',
         'first_name',

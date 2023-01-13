@@ -30,6 +30,8 @@ final class GetStudents
         $phone = isset($args['phone']) ? $args['phone'] : "";
         // Log::info(json_encode($context->request()));
         $Student = Student::where('is_deleted', 0)
+        ->where('archived',0)
+        ->where('banned',0)
             ->where(DB::raw('CONCAT(first_name, \' \',last_name)'), 'like', "%" . $full_name . "%")
             // ->where(function ($query) use ($args) {
             //     if (isset($args['phone']) && ($args['phone']!="")) {

@@ -17,6 +17,8 @@ use App\Events\RemoveAllStudentTagsEvent;
 
 use App\MergeStudents as AppMergeStudents;
 use App\Student;
+use App\LogMergedStudent;
+
 use App\User;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
@@ -34,7 +36,7 @@ class MergeStudentsController extends Controller
      */
     private $msg_error = array(
         "STUDENT_NOT_FOUND" => "دانش آموز مورد نظر پیدا نشد.",
-        "IS_ACADEMY_STUDENT" => "این دانش آموز در آکادمی موجود است و مرج نمی شود.",
+        "IS_ACADEMY_STUDENT" => "این دانش آموز فرعی در آکادمی موجود است و مرج نمی شود.",
         "Too_LARGE_To_MERGE" => "به علت از دست دادن اطلاعات مرج امکان مرج وجود ندارد."
 
     );
@@ -294,7 +296,7 @@ class MergeStudentsController extends Controller
         event(new  RemoveAllStudentTagsEvent($request->auxilary));
         event(new  RemoveAllSupporterHistoriesEvent($request->auxilary));
 
-
+        $this->setSuccessLogMerge($request->main, $request->auxilary);
         $request->session()->flash("msg_success", "دانش آموز با موفقیت مرج شد.");
         return redirect()->route('merge_students_index');
         // if (!$canSubscription) {
@@ -422,7 +424,7 @@ class MergeStudentsController extends Controller
                 false
             )->get();
         } else {
-            $students = Student::select('id', 'first_name', 'last_name', 'phone', DB::raw("CONCAT(first_name,' ',last_name)"))->where(
+            $students = Student::select('id', 'first_name', 'last_name', 'phone','is_academy_student', DB::raw("CONCAT(first_name,' ',last_name)"))->where(
                 'is_deleted',
                 false
             )->where(function ($query) use ($search) {
@@ -431,9 +433,11 @@ class MergeStudentsController extends Controller
         }
         $response = array();
         foreach ($students as $student) {
+            //Log::info(json_encode($student));
+            $is_academy=($student->is_academy_student==1) ? "آکادمی" : "";
             $response[] = array(
                 "id" => $student->id,
-                "text" => $student->first_name . ' ' . $student->last_name . '-' . $student->phone
+                "text" => $student->first_name . ' ' . $student->last_name . '-' . $student->phone. " " . $is_academy
             );
         }
         $response[] = [
@@ -509,7 +513,7 @@ class MergeStudentsController extends Controller
         $sumPhones = count($result);
         // Log::info($result);
         // Log::info("count is:" .  $sumPhones);
-        if ($sumPhones >= env('USER_PHONE_COUNT')) {
+        if ($sumPhones > env('USER_PHONE_COUNT')) {
 
             $this->error = "Too_LARGE_To_MERGE";
         }
@@ -562,12 +566,21 @@ class MergeStudentsController extends Controller
     }
     public function DeleteStudent($second_student_id)
     {
-        $second_student = Student::where("id", $second_student_id)->where("is_deleted", 0)->first();
-        if (!$second_student) {
-            return false;
-        }
-        $second_student->is_deleted = 1;
-        $second_student->save();
-        return true;
+        return  Student::where("id", $second_student_id)->update([
+           "is_deleted" =>1 
+        ]);
+        // if (!$second_student) {
+        //     return false;
+        // }
+        // $second_student->is_deleted = 1;
+        // $second_student->save();
+        // return true;
+    }
+    public function setSuccessLogMerge($main_student_id, $auxilary_student_id){
+        LogMergedStudent::where('current_student_id',$main_student_id)
+        ->where('old_student_id',$auxilary_student_id)       
+        ->update([
+            "successfull"=> 1
+        ]);
     }
 }
