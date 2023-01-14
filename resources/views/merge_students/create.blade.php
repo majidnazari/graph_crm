@@ -109,7 +109,7 @@
                                     ویرایش
                                 </button>
                                 @else
-                                <button class="btn btn-primary">
+                                <button class="btn btn-primary" onclick="return checkNotNull()">
                                     ذخیره
                                 </button>
                                 @endif
@@ -190,5 +190,16 @@
     // select2_load_remote_data_with_ajax('#second_auxilary');
     // select2_load_remote_data_with_ajax('#third_auxilary');
 
+function checkNotNull(){
+    if($("#main").val()==0){
+        alert("دانش آموز اصلی نمی تواند خالی باشد.");
+        return false;
+    }
+    if($("#auxilary").val()==0){
+        alert("دانش آموز فرعی نمی تواند خالی باشد.");
+        return false;
+    }
+    return true;
+}
 </script>
 @endsection
