@@ -1896,49 +1896,37 @@ class StudentController extends Controller
     public function apiAddStudents(Request $request) // new added 4 phones to student
     {
         $students = $request->input('students', []);
+       // Log::info(json_encode($students));
         $ids = [];
         $fails = [];
-        $student_tmp = Student::where('is_deleted', 0);
-        foreach ($students as $student) {
-            if (!isset($student['phone'])) {
+        //$student_tmp = Student::where('is_deleted', 0);
+        foreach ($students as $student) 
+        {
+            $student_tmp = Student::where('is_deleted', 0);
+            //Log::info("the studentds is:".$student['phone']);
+            if (!isset($student['phone'])) 
+            {
                 $student['error'] = "No Phone";
                 $fails[] = $student;
                 continue;
             }
             // $studentObject = Student::where('phone', $student['phone'])->first();
-
-            $all_phones = array_filter(array_unique(array(
-                trim($student['phone'])
-                // trim($student['phone1']),
-                // trim($student['phone2']),
-                // trim($student['phone3']),
-                // trim($student['phone4']),
-                // trim($student['student_phone']),
-                // trim($student['mother_phone']),
-                // trim($student['father_phone'])
-
-            )));
-
-            foreach ($all_phones as $one_phone) {
-                
-                $is_exist = $student_tmp->where(function ($query) use ($one_phone) {
-                        $query->where('phone', $one_phone)
-                            ->orWhere('father_phone', $one_phone)
-                            ->orWhere('mother_phone', $one_phone)
-                            ->orWhere('phone1', $one_phone)
-                            ->orWhere('phone2', $one_phone)
-                            ->orWhere('phone3', $one_phone)
-                            ->orWhere('phone4', $one_phone)
-                            ->orWhere('student_phone', $one_phone);
-                    })->first();
-                  // dd($is_exist);
-                if ($is_exist) {
-                    break;
-                }
-            }
+            
+                $is_exist = $student_tmp->where('phone', $student['phone'])
+                ->orWhere('father_phone', $student['phone'])
+                ->orWhere('mother_phone', $student['phone'])
+                ->orWhere('phone1', $student['phone'])
+                ->orWhere('phone2', $student['phone'])
+                ->orWhere('phone3', $student['phone'])
+                ->orWhere('phone4', $student['phone'])
+                ->orWhere('student_phone', $student['phone'])
+                ->first();
+                Log::info(json_encode($is_exist));
             if ($is_exist) {
-                $ids[] = $is_exist->phone;
-            } else {
+                $ids[] =$is_exist->phone;
+                //$ids[] =$is_exist->id;
+            } 
+            else {
                 $studentObject = new Student;
                 foreach ($student as $key => $value) {
                     $studentObject->$key = $value;
@@ -1947,6 +1935,7 @@ class StudentController extends Controller
                 try {
                     $studentObject->save();
                     $ids[] = $studentObject->phone;
+                    //$ids[] = $studentObject->id;
                 } catch (Exception $e) {
                     $student['error'] = $e->getMessage();
                     $fails[] = $student;
@@ -1970,7 +1959,16 @@ class StudentController extends Controller
                 $fails[] = $student;
                 continue;
             }
-            $studentObject = Student::where('phone', $student['phone'])->where('banned', false)->first();
+            $studentObject = Student::where('phone', $student['phone'])
+            ->orWhere('father_phone', $student['phone'])
+            ->orWhere('mother_phone', $student['phone'])
+            ->orWhere('phone1', $student['phone'])
+            ->orWhere('phone2', $student['phone'])
+            ->orWhere('phone3', $student['phone'])
+            ->orWhere('phone4', $student['phone'])
+            ->orWhere('student_phone', $student['phone'])
+            ->where('banned', false)
+            ->first();
             if ($studentObject == null) {
                 $studentObject = new Student;
             }
