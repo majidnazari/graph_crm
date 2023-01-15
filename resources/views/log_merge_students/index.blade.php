@@ -12,7 +12,7 @@
 
 @section('content')
 <!-- Content Header (Page header) -->
-<section class="content-header">
+<section class="content-header ">
     <div class="container-fluid">
         <div class="row mb-2">
             <div class="col-sm-6">
@@ -213,6 +213,7 @@
         return false;
     }
     $(function() {
+        $("#Content_Div_Class").css("width","130%"); // set layout size bigger when get into log page
         $.ajaxSetup({
             headers: {
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
