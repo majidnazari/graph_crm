@@ -24,7 +24,7 @@ final class CreateStudentInputValidator extends Validator
             'nationality_code' => [
                 'required',
                // Rule::unique('students', 'nationality_code')->ignore($this->arg('id'), 'id'),
-               new CheckNationalCodeRule($this->arg('phone')),
+               new CheckNationalCodeRule($this->arg('phone'),$this->arg('id')),
             ],
         ];
     }
