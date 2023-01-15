@@ -1372,7 +1372,7 @@
         </aside>
 
         <!-- Content Wrapper. Contains page content -->
-        <div class="content-wrapper">
+        <div class="content-wrapper " id="Content_Div_Class"  >
             @yield('content')
             @if (isset($msg_success))
             <div class="card card-success" style="width: 400px;position: fixed;left: 10px;bottom: 10px;">

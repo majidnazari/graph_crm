@@ -424,10 +424,11 @@ class MergeStudentsController extends Controller
                 false
             )->get();
         } else {
-            $students = Student::select('id', 'first_name', 'last_name', 'phone','is_academy_student', DB::raw("CONCAT(first_name,' ',last_name)"))->where(
-                'is_deleted',
-                false
-            )->where(function ($query) use ($search) {
+            $students = Student::select('id', 'first_name', 'last_name', 'phone','is_academy_student', DB::raw("CONCAT(first_name,' ',last_name)"))
+            ->where('is_deleted',false)
+            ->where('banned',0)
+            ->where('archived',0)
+            ->where(function ($query) use ($search) {
                 $query->where(DB::raw("CONCAT(first_name,' ',last_name)"), 'like', '%' . $search . '%')->orWhere('phone', 'like', '%' . $search . '%');
             })->orderby('id', 'desc')->get();
         }
