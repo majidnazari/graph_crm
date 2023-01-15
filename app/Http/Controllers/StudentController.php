@@ -1921,7 +1921,7 @@ class StudentController extends Controller
                 ->orWhere('phone4', $student['phone'])
                 ->orWhere('student_phone', $student['phone'])
                 ->first();
-                Log::info(json_encode($is_exist));
+                //Log::info(json_encode($is_exist));
             if ($is_exist) {
                 $ids[] =$is_exist->phone;
                 //$ids[] =$is_exist->id;
@@ -2279,12 +2279,16 @@ class StudentController extends Controller
     }
     public function IsNationalCodeExist($national_code, $id=null)
     {
-        Log::info("th eid nation code is:" . $id);
-       return  Student::where('is_deleted',0)
-        ->where('archived',0)
-        ->where('banned',0)
-        ->where('nationality_code',$national_code)
-        ->where('id',($id!=null) ? '!=':'>',($id!=null) ? $id:0)
-        ->first();
+        if($national_code!=""){
+            return  Student::where('is_deleted',0)
+            ->where('archived',0)
+            ->where('banned',0)
+            ->where('nationality_code',$national_code)
+            ->where('id',($id!=null) ? '!=':'>',($id!=null) ? $id:0)
+            ->first();
+        }
+        return false;
+        //Log::info("th eid nation code is:" . $id);
+       
     }
 }
