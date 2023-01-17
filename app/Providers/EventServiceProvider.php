@@ -6,7 +6,7 @@ use App\Events\ChangeAllStudentCallsEvent;
 use App\Events\ChangeAllStudentPurchasesEvent;
 use App\Events\RemoveAllStudentFromClassRoomEvent;
 use App\Events\ChangeAllStudentSanadsEvent;
-use App\Events\RemoveAllStudentTagsEvent;
+use App\Events\ChangeAllStudentTagsEvent;
 use App\Events\RemoveAllStudentTempreturesEvent;
 use App\Events\RemoveAllStudentCollectionsEvent;
 use App\Events\RemoveAllSupporterHistoriesEvent;
@@ -16,7 +16,7 @@ use App\Listeners\ChangeCallsListener;
 use App\Listeners\ChangeSanadListener;
 use App\Listeners\ChangePurchasesListener;
 use App\Listeners\RemoveStudentCollectionsListener;
-use App\Listeners\RemoveStudentTagsListener;
+use App\Listeners\ChangeStudentTagsListener;
 use App\Listeners\RemoveStudentTempreturesListener;
 use App\Listeners\RemoveClassRoomsListener;
 use App\Listeners\RemoveSupporterHistoriesListener;
@@ -73,8 +73,8 @@ class EventServiceProvider extends ServiceProvider
         );
 
         Event::listen(
-            RemoveAllStudentTagsEvent::class,
-            [RemoveStudentTagsListener::class, 'handle']
+            ChangeAllStudentTagsEvent::class,
+            [ChangeStudentTagsListener::class, 'handle']
         );
 
         Event::listen(
