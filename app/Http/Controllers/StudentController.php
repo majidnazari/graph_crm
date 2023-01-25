@@ -1417,6 +1417,7 @@ class StudentController extends Controller
             if ($student->banned || $student->archived) {
                 $student->supporters_id = 0;
             }
+            
             $student->save();
         } catch (Exception $e) {
             // dd($e);
@@ -1425,7 +1426,7 @@ class StudentController extends Controller
             else
                 $request->session()->flash("msg_error", "خطا در ثبت دانش آموز");
 
-            return redirect()->route('student_create');
+            return redirect()->route($call_back);
         }
 
         $request->session()->flash("msg_success", "دانش آموز با موفقیت بروز شد.");
@@ -1439,8 +1440,9 @@ class StudentController extends Controller
             $request->session()->flash("msg_error", "دانش آموز مورد نظر پیدا نشد!");
             return redirect()->route('students');
         }
-        $student->is_deleted = true;
-        $student->save();
+        $student->delete();
+        //$student->is_deleted = true;
+        //$student->save();
 
         $request->session()->flash("msg_success", "دانش آموز با موفقیت حذف شد.");
         return redirect()->route('students');
