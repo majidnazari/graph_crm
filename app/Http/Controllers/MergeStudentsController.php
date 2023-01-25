@@ -13,7 +13,7 @@ use App\Events\CreateLogMergedStudentEvent;
 use App\Events\RemoveAllStudentTempreturesEvent;
 use App\Events\RemoveAllStudentCollectionsEvent;
 use App\Events\RemoveAllStudentFromClassRoomEvent;
-use App\Events\RemoveAllStudentTagsEvent;
+use App\Events\ChangeAllStudentTagsEvent;
 
 use App\MergeStudents as AppMergeStudents;
 use App\Student;
@@ -293,7 +293,7 @@ class MergeStudentsController extends Controller
         event(new  RemoveAllStudentTempreturesEvent($request->auxilary));
         event(new  RemoveAllStudentCollectionsEvent($request->auxilary));
         event(new  RemoveAllStudentFromClassRoomEvent($request->auxilary));
-        event(new  RemoveAllStudentTagsEvent($request->auxilary));
+        event(new  ChangeAllStudentTagsEvent($request->main, $request->auxilary));
         event(new  RemoveAllSupporterHistoriesEvent($request->auxilary));
 
         $this->setSuccessLogMerge($request->main, $request->auxilary);

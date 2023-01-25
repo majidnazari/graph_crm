@@ -48,7 +48,8 @@ class CheckNationalCodeRule implements Rule
 
             $this->err =
                 [
-                    "data" => $date
+                    // "data" => $date // the object of student
+                    "data" => "THIS NATIONAL CODE IS FOR STUDENT:". $student['first_name'] . " " . $student['last_name'],  // the string of student
                 ];
 
             return false;
