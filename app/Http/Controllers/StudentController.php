@@ -309,7 +309,7 @@ class StudentController extends Controller
                     $students = $students->where('nationality_code', 'like',  '%' . $nationality_code . '%');
                 }
             }
-            $allStudents = $students->get();
+            $allStudents = $students->count();
             $x = 0;
             $columnIndex_arr = $request->get('order');
             $columnName_arr = $request->get('columns');
@@ -485,8 +485,8 @@ class StudentController extends Controller
                 "draw" => $req['draw'],
                 "data" => $data,
                 "theStudents" => $students,
-                "recordsTotal" => count($allStudents),
-                "recordsFiltered" => count($allStudents),
+                "recordsTotal" => $allStudents,
+                "recordsFiltered" => $allStudents,
             ];
 
             return $result;
