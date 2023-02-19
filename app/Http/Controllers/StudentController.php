@@ -318,9 +318,9 @@ class StudentController extends Controller
             $columnName = $columnName_arr[$columnIndex]['data']; // Column name
             $columnSortOrder = $order_arr[0]['dir']; // asc or desc
 
-            foreach ($allStudents as $index => $item) {
-                $allStudents[$index]->foo = $index;
-            }
+            // foreach ($allStudents as $index => $item) {
+            //     $allStudents[$index]->foo = $index;
+            // }
             if ($columnName != 'row' && $columnName != 'end' && $columnName != "temps" && $columnName != "tags") {
                 $students = $students->orderBy($columnName, $columnSortOrder)
                     ->select('students.*')
