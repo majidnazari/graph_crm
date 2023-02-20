@@ -23,22 +23,27 @@ final class GetStudents
     public function resolveStudentsAttribute($root, array $args, GraphQLContext $context, ResolveInfo $resolveInfo)
     {
         //Log::info($args);
-        //    $first_name=isset($args['first_name']) ? $args['first_name'] : "";
-        //    $last_name=isset($args['last_name']) ? $args['last_name'] : "";
+        $first_name = isset($args['first_name']) ? $args['first_name'] : "";
+        $last_name = isset($args['last_name']) ? $args['last_name'] : "";
         $full_name = isset($args['full_name']) ? $args['full_name'] : "";
+        $full_name=$full_name !=="" ? $full_name : $first_name . ' '.$last_name;
         //  Log::info("full name is:". $full_name );
         $phone = isset($args['phone']) ? $args['phone'] : "";
         // Log::info(json_encode($context->request()));
         $Student = Student::where('is_deleted', 0)
-        ->where('archived',0)
-        ->where('banned',0)
+            ->where('archived', 0)
+            ->where('banned', 0)
             ->where(DB::raw('CONCAT(first_name, \' \',last_name)'), 'like', "%" . $full_name . "%")
-            // ->where(function ($query) use ($args) {
-            //     if (isset($args['phone']) && ($args['phone']!="")) {
-            //         $query->where('phone','like',"%". $args['phone'] . "%");
-            //     }
-            //     return true;
-            // });
+            //->orWhere('is_academy_student1', 1)
+            ->orWhere(function ($query) use ($full_name) {
+                // if (isset($args['phone']) && ($args['phone']!="")) {
+                //     $query->where('phone','like',"%". $args['phone'] . "%");
+                // }
+                $query->where('is_academy_student', 1)
+                    // ->where('archived', 0)
+                    //->where('banned', 0)
+                    ->where(DB::raw('CONCAT(first_name, \' \',last_name)'), 'like', "%" . $full_name . "%");
+            })
             ->where(function ($query) use ($phone) {
                 //Log::info("inner where in run");
                 if ($phone !== "") {
@@ -51,7 +56,6 @@ final class GetStudents
                         ->orWhere('mother_phone', 'like', "%" . $phone . "%")
                         ->orWhere('student_phone', 'like', "%" . $phone . "%");
                 }
-               
             });
 
 
