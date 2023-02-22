@@ -1351,7 +1351,7 @@ class StudentController extends Controller
             return view('students.create', [
                 "supports" => $supports,
                 "consultants" => $consultants,
-                // "sources" => $sources,
+                "sources" => $sources,
                 "cities" => $cities,
                 "student" => $student,
                 'i' => $i,
