@@ -33,7 +33,9 @@ final class GetStudents
         $Student = Student::where('is_deleted', 0)
             ->where('archived', 0)
             ->where('banned', 0)
-            ->where(DB::raw('CONCAT(first_name, \' \',last_name)'), 'like', "%" . $full_name . "%")
+            //->where(DB::raw('CONCAT(first_name, \' \',last_name)'), 'like', "%" . $full_name . "%")
+            ->where("first_name", 'like','%'.$first_name . '%')
+            ->where("last_name", 'like','%'.$last_name . '%')
             //->orWhere('is_academy_student1', 1)
             // ->orWhere(function ($query) use ($full_name) {
             //     // if (isset($args['phone']) && ($args['phone']!="")) {
