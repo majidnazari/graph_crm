@@ -271,3 +271,10 @@ type AbsencePresenceList @key(fields: "id") @extends {
   student_id:Int @external
   student: Student @requires(fields: "student_id")
 }
+
+type ConsultantDefinitionDetail @key(fields: "id") @extends{
+
+  id: ID! @external
+  student_id:Int @external
+  student: Student @requires(fields: "student_id")
+}
