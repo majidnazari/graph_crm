@@ -231,6 +231,7 @@ class SupporterController extends Controller
         if ($supportGroupId)
             $supportGroupId = $supportGroupId->id;
         $supporters = User::where('is_deleted', false)->where('groups_id', $supportGroupId)->with('students.purchases')->with('students.studenttags.tag')->orderBy('max_student', 'desc')->get();
+        //dd($supporters);
         return view('supporters.index', [
             'supporters' => $supporters,
             'msg_success' => request()->session()->get('msg_success'),
