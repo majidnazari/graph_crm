@@ -193,8 +193,12 @@
 
 @section('js')
 <!-- DataTables -->
-<script src="../../plugins/datatables/jquery.dataTables.js"></script>
-<script src="../../plugins/datatables-bs4/js/dataTables.bootstrap4.js"></script>
+<!-- <script src="../../plugins/datatables/jquery.dataTables.js"></script>
+<script src="../../plugins/datatables-bs4/js/dataTables.bootstrap4.js"></script> -->
+
+<script src="../../plugins/DataTables/DataTables-1.13.4/js/jquery.dataTables.js"></script>  
+<script src="../../plugins/DataTables/DataTables-1.13.4/js/dataTables.bootstrap4.js"></script>  
+
 <script src="/plugins/select2/js/select2.full.min.js"></script>
 <!-- page script -->
 <script>
