@@ -278,6 +278,13 @@ type ConsultantDefinitionDetail @key(fields: "id") @extends{
   student_id:Int @external
   student: Student @requires(fields: "student_id")
 }
+type ConsultantDefinitionDetailFlatModel @key(fields: "id") @extends{
+
+  id: ID @external
+  student_id:Int @external
+  student: Student @requires(fields: "student_id")
+}
+
 type ConsultantFinancial @key(fields: "id") @extends{
 
   id: ID @external
