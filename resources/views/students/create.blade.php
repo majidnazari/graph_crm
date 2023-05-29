@@ -465,21 +465,21 @@
     });
     const pattern = new RegExp('^(09(0[0-9]|1[0-9]|2[0-9]|3[0-9]|9[0-9])-?[0-9]{3}-?[0-9]{4}|)$'); //pattern or null 
 
-    function sendForm() {
+    const sendForm = () => {
         const phones = [];
         const warnings = [];
         $(".phone-group").each((i, elm) => {
             phones.push(pattern.test(elm.value) ? elm.value : '');
             if (!pattern.test(elm.value)) warnings.push(`فرمت تلفن${names[i]} اشتباه وارد شده است.`);
         });
-        if (warnings.length>0) {
+        if (warnings.length > 0) {
             alert(warnings.join('\n'));
             return false;
         }
 
         return checkDuplication(phones);
 
-    }
+    };
 
     const names = ['', '۱', '۲', '۳', '۴', 'دانش آموز', 'مادر دانش آموز', 'پدر دانش آموز'];
 
