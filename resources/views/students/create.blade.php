@@ -262,7 +262,7 @@
                                         </option>
                                         @endforeach
                                     </select>
-                                </div>                               
+                                </div>
                                 @endif
 
                                 <div class="form-group">
@@ -341,68 +341,68 @@
                                 <div class="form-group">
                                     <label for="phone">تلفن <span style="color: red;">*</span></label>
                                     @if (isset($student) && isset($student->id))
-                                    <input required type="number" class="form-control" id="phone" name="phone" placeholder="تلفن" value="{{ $student->phone }}" />
+                                    <input required type="number" class="form-control phone-group" id="phone" name="phone" placeholder="تلفن" value="{{ $student->phone }}" />
                                     @else
-                                    <input required type="number" class="form-control" id="phone" name="phone" placeholder="تلفن" />
+                                    <input required type="number" class="form-control phone-group" id="phone" name="phone" placeholder="تلفن" />
                                     @endif
                                 </div>
 
                                 <div class="form-group">
                                     <label for="phone1"> شماره تلفن ۱ </label>
                                     @if (isset($student) && isset($student->id))
-                                    <input type="number" class="form-control" id="phone1" name="phone1" placeholder="تلفن ۱" value="{{ $student->phone1 }}" />
+                                    <input type="number" class="form-control phone-group" id="phone1" name="phone1" placeholder="تلفن ۱" value="{{ $student->phone1 }}" />
                                     @else
-                                    <input type="number" class="form-control" id="phone1" name="phone1" placeholder="تلفن ۱" />
+                                    <input type="number" class="form-control phone-group" id="phone1" name="phone1" placeholder="تلفن ۱" />
                                     @endif
                                 </div>
                                 <div class="form-group">
                                     <label for="phone2"> شماره تلفن ۲ </label>
                                     @if (isset($student) && isset($student->id))
-                                    <input type="number" class="form-control" id="phone2" name="phone2" placeholder="تلفن ۲" value="{{ $student->phone2 }}" />
+                                    <input type="number" class="form-control phone-group" id="phone2" name="phone2" placeholder="تلفن ۲" value="{{ $student->phone2 }}" />
                                     @else
-                                    <input type="number" class="form-control" id="phone2" name="phone2" placeholder="تلفن ۲" />
+                                    <input type="number" class="form-control phone-group" id="phone2" name="phone2" placeholder="تلفن ۲" />
                                     @endif
                                 </div>
 
                                 <div class="form-group">
                                     <label for="phone3"> شماره تلفن ۳ </label>
                                     @if (isset($student) && isset($student->id))
-                                    <input type="number" class="form-control" id="phone3" name="phone3" placeholder="تلفن ۳" value="{{ $student->phone3 }}" />
+                                    <input type="number" class="form-control phone-group" id="phone3" name="phone3" placeholder="تلفن ۳" value="{{ $student->phone3 }}" />
                                     @else
-                                    <input type="number" class="form-control" id="phone3" name="phone3" placeholder="تلفن ۳" />
+                                    <input type="number" class="form-control phone-group" id="phone3" name="phone3" placeholder="تلفن ۳" />
                                     @endif
                                 </div>
                                 <div class="form-group">
                                     <label for="phone4"> شماره تلفن ۴ </label>
                                     @if (isset($student) && isset($student->id))
-                                    <input type="number" class="form-control" id="phone4" name="phone4" placeholder=" تلفن ۴" value="{{ $student->phone4 }}" />
+                                    <input type="number" class="form-control phone-group" id="phone4" name="phone4" placeholder=" تلفن ۴" value="{{ $student->phone4 }}" />
                                     @else
-                                    <input type="number" class="form-control" id="phone4" name="phone4" placeholder=" تلفن ۴" />
+                                    <input type="number" class="form-control phone-group" id="phone4" name="phone4" placeholder=" تلفن ۴" />
                                     @endif
                                 </div>
                                 <div class="form-group">
                                     <label for="student_phone">تلفن دانش آموز</label>
                                     @if (isset($student) && isset($student->id))
-                                    <input type="number" class="form-control" id="student_phone" name="student_phone" placeholder="تلفن" value="{{ $student->student_phone }}" />
+                                    <input type="number" class="form-control phone-group" id="student_phone" name="student_phone" placeholder="تلفن" value="{{ $student->student_phone }}" />
                                     @else
-                                    <input type="number" class="form-control" id="student_phone" name="student_phone" placeholder="تلفن" />
+                                    <input type="number" class="form-control phone-group" id="student_phone" name="student_phone" placeholder="تلفن" />
                                     @endif
                                 </div>
                                 <div class="form-group">
                                     <label for="mother_phone">تلفن مادر</label>
                                     @if (isset($student) && isset($student->id))
-                                    <input type="number" class="form-control" id="mother_phone" name="mother_phone" placeholder="تلفن مادر" value="{{ $student->mother_phone }}" />
+                                    <input type="number" class="form-control phone-group" id="mother_phone" name="mother_phone" placeholder="تلفن مادر" value="{{ $student->mother_phone }}" />
                                     @else
-                                    <input type="number" class="form-control" id="mother_phone" name="mother_phone" placeholder="تلفن مادر" />
+                                    <input type="number" class="form-control phone-group" id="mother_phone" name="mother_phone" placeholder="تلفن مادر" />
                                     @endif
                                 </div>
 
                                 <div class="form-group">
                                     <label for="father_phone">تلفن پدر</label>
                                     @if (isset($student) && isset($student->id))
-                                    <input type="number" class="form-control" id="father_phone" name="father_phone" placeholder="تلفن پدر" value="{{ $student->father_phone }}" />
+                                    <input type="number" class="form-control phone-group" id="father_phone" name="father_phone" placeholder="تلفن پدر" value="{{ $student->father_phone }}" />
                                     @else
-                                    <input type="number" class="form-control" id="father_phone" name="father_phone" placeholder="تلفن پدر" />
+                                    <input type="number" class="form-control phone-group" id="father_phone" name="father_phone" placeholder="تلفن پدر" />
                                     @endif
                                 </div>
 
@@ -463,85 +463,34 @@
     $(document).ready(function() {
         $('select.select2').select2();
     });
+    const pattern = new RegExp('^(09(0[0-9]|1[0-9]|2[0-9]|3[0-9]|9[0-9])-?[0-9]{3}-?[0-9]{4}|)$'); //pattern or null 
 
     function sendForm() {
         const phones = [];
+        const warnings = [];
+        $(".phone-group").each((i, elm) => {
+            phones.push(pattern.test(elm.value) ? elm.value : '');
+            if (!pattern.test(elm.value)) warnings.push(`فرمت تلفن${names[i]} اشتباه وارد شده است.`);
+        });
+        if (warnings.length>0) {
+            alert(warnings.join('\n'));
+            return false;
+        }
 
-        //let pattern = new RegExp('^([09]+[0-9]{9}|)$'); //pattern or null 
-        let pattern = new RegExp('^(09(0[0-9]|1[0-9]|2[0-9]|3[0-9]|9[0-9])-?[0-9]{3}-?[0-9]{4}|)$'); //pattern or null 
-        phones.push(pattern.test($("#phone").val()) ? $("#phone").val() : "");
-        phones.push(pattern.test($("#phone1").val()) ? $("#phone1").val() : "");
-        phones.push(pattern.test($("#phone2").val()) ? $("#phone2").val() : "");
-        phones.push(pattern.test($("#phone3").val()) ? $("#phone3").val() : "");
-        phones.push(pattern.test($("#phone4").val()) ? $("#phone4").val() : "");
-        phones.push(pattern.test($("#student_phone").val()) ? $("#student_phone").val() : "");
-        phones.push(pattern.test($("#mother_phone").val()) ? $("#mother_phone").val() : "");
-        phones.push(pattern.test($("#father_phone").val()) ? $("#father_phone").val() : "");
-
-        return checkForDuplicate(pattern, phones);
+        return checkDuplication(phones);
 
     }
 
-    function checkForDuplicate(pattern, phones) {
-        phonesInFunc = phones;
-        //console.log(phonesInFunc);
-        const msg = {
-            0: "فرمت تلفن اشتباه وارد شده است.",
-            1: "فرمت تلفن ۱ اشتباه وارد شده است.",
-            2: "فرمت تلفن ۲ اشتباه وارد شده است.",
-            3: "فرمت تلفن ۳ اشتباه وارد شده است.",
-            4: "فرمت تلفن ۴ اشتباه وارد شده است.",
-            5: "فرمت تلفن دانش آموز اشتباه وارد شده است.",
-            6: "فرمت تلفن مادر دانش آموز اشتباه وارد شده است.",
-            7: "فرمت تلفن پدر دانش آموز اشتباه وارد شده است.",
+    const names = ['', '۱', '۲', '۳', '۴', 'دانش آموز', 'مادر دانش آموز', 'پدر دانش آموز'];
 
-        }
-        const msgduble = {
-            0: "تلفن تکراری است",
-            1: "تلفن ۱ تکراری است",
-            2: "تلفن ۲ تکراری است",
-            3: "تلفن ۳ تکراری است",
-            4: "تلفن ۴ تکراری است",
-            5: "تلفن دانش آموز تکراری است",
-            6: "تلفن مادر دانش آموز تکراری است",
-            7: "تلفن پدر دانش آموز تکراری است",
-        }
-        const variableName = {
-            0: "phone",
-            1: "phone1",
-            2: "phone2",
-            3: "phone3",
-            4: "phone4",
-            5: "student_phone",
-            6: "mother_phone",
-            7: "father_phone",
-
-        }
-        //console.log(phones);
-        for (i = 0; i < 8; i++) {
-            phone_tmp = phones[i];
-            canChange = false;
-            phones[i] = "";
-
-            if (($.inArray(phone_tmp, phones) !== -1) && (phone_tmp != "")) {
-
-                alert(msgduble[i]);
-                //console.log(i);
-                phones[i] = phone_tmp;
-                canChange = true;
-                return false;
-            }
-            if (!canChange) {
-                phones[i] = phone_tmp;
-                canChange = true;
-            }
-            if (!pattern.test($("#" + variableName[i]).val())) {
-                alert(msg[i]);
-                return false;
-            }
+    const toFindDuplicates = arry => arry.filter((item, index) => arry.indexOf(item) !== index);
+    const checkDuplication = (phones) => {
+        const duplicates = (toFindDuplicates(phones)).filter((phone) => phone !== '');
+        if (duplicates.length > 0) {
+            alert([...new Set(duplicates.map((phone) => `تلفن${names[phones.indexOf(phone)]} تکراری است`))].join(','));
+            return false;
         }
         return true;
-
-    }
+    };
 </script>
 @endsection
