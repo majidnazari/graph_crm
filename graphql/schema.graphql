@@ -65,6 +65,7 @@ scalar DateTime @scalar(class: "Nuwave\\Lighthouse\\Schema\\Types\\Scalars\\Date
     # ): [User!]! @paginate(defaultCount: 10)
     getStudent(id:ID!): Student @field(resolver: "App\\GraphQL\\Queries\\Student\\GetStudent@resolveStudentAttribute")
     getStudents(
+      ids:[Int]
       first_name: String @like (template : "%{}%")
       last_name: String @like (template : "%{}%")     
       full_name: String 
