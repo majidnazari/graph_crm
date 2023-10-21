@@ -22,7 +22,11 @@ final class GetStudents
     }
     public function resolveStudentsAttribute($root, array $args, GraphQLContext $context, ResolveInfo $resolveInfo)
     {
+        $ids=[];
         //Log::info($args);
+        if(isset($args['ids'])){
+            $ids=$args['ids'];
+        }
         $first_name = isset($args['first_name']) ? $args['first_name'] : "";
         $last_name = isset($args['last_name']) ? $args['last_name'] : "";
         $full_name = isset($args['full_name']) ? $args['full_name'] : "";
@@ -30,7 +34,11 @@ final class GetStudents
         //  Log::info("full name is:". $full_name );
         $phone = isset($args['phone']) ? $args['phone'] : "";
         // Log::info(json_encode($context->request()));
-        $Student = Student::where('is_deleted', 0)
+        $Student = Student::where('is_deleted', 0);
+        if(!empty($ids)){
+            $Student= $Student->whereIn('id',$ids);
+        }
+        $Student = $Student
             //->where('archived', 0)
             ->where('banned', 0)
             //->where(DB::raw('CONCAT(first_name, \' \',last_name)'), 'like', "%" . $full_name . "%")

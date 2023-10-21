@@ -65,6 +65,7 @@ scalar DateTime @scalar(class: "Nuwave\\Lighthouse\\Schema\\Types\\Scalars\\Date
     # ): [User!]! @paginate(defaultCount: 10)
     getStudent(id:ID!): Student @field(resolver: "App\\GraphQL\\Queries\\Student\\GetStudent@resolveStudentAttribute")
     getStudents(
+      ids:[Int]
       first_name: String @like (template : "%{}%")
       last_name: String @like (template : "%{}%")     
       full_name: String 
@@ -278,6 +279,13 @@ type ConsultantDefinitionDetail @key(fields: "id") @extends{
   student_id:Int @external
   student: Student @requires(fields: "student_id")
 }
+type ConsultantDefinitionDetailFlatModel @key(fields: "id") @extends{
+
+  id: ID @external
+  student_id:Int @external
+  student: Student @requires(fields: "student_id")
+}
+
 type ConsultantFinancial @key(fields: "id") @extends{
 
   id: ID @external

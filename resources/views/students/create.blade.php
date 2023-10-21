@@ -464,84 +464,115 @@
         $('select.select2').select2();
     });
 
-    function sendForm() {
+    // function sendForm() {
+    //     const phones = [];
+
+    //     //let pattern = new RegExp('^([09]+[0-9]{9}|)$'); //pattern or null 
+    //     let pattern = new RegExp('^(09(0[0-9]|1[0-9]|2[0-9]|3[0-9]|9[0-9])-?[0-9]{3}-?[0-9]{4}|)$'); //pattern or null 
+    //     phones.push(pattern.test($("#phone").val()) ? $("#phone").val() : "");
+    //     phones.push(pattern.test($("#phone1").val()) ? $("#phone1").val() : "");
+    //     phones.push(pattern.test($("#phone2").val()) ? $("#phone2").val() : "");
+    //     phones.push(pattern.test($("#phone3").val()) ? $("#phone3").val() : "");
+    //     phones.push(pattern.test($("#phone4").val()) ? $("#phone4").val() : "");
+    //     phones.push(pattern.test($("#student_phone").val()) ? $("#student_phone").val() : "");
+    //     phones.push(pattern.test($("#mother_phone").val()) ? $("#mother_phone").val() : "");
+    //     phones.push(pattern.test($("#father_phone").val()) ? $("#father_phone").val() : "");
+
+    //     return checkForDuplicate(pattern, phones);
+
+    // }
+
+    // function checkForDuplicate(pattern, phones) {
+    //     phonesInFunc = phones;
+    //     //console.log(phonesInFunc);
+    //     const msg = {
+    //         0: "فرمت تلفن اشتباه وارد شده است.",
+    //         1: "فرمت تلفن ۱ اشتباه وارد شده است.",
+    //         2: "فرمت تلفن ۲ اشتباه وارد شده است.",
+    //         3: "فرمت تلفن ۳ اشتباه وارد شده است.",
+    //         4: "فرمت تلفن ۴ اشتباه وارد شده است.",
+    //         5: "فرمت تلفن دانش آموز اشتباه وارد شده است.",
+    //         6: "فرمت تلفن مادر دانش آموز اشتباه وارد شده است.",
+    //         7: "فرمت تلفن پدر دانش آموز اشتباه وارد شده است.",
+
+    //     }
+    //     const msgduble = {
+    //         0: "تلفن تکراری است",
+    //         1: "تلفن ۱ تکراری است",
+    //         2: "تلفن ۲ تکراری است",
+    //         3: "تلفن ۳ تکراری است",
+    //         4: "تلفن ۴ تکراری است",
+    //         5: "تلفن دانش آموز تکراری است",
+    //         6: "تلفن مادر دانش آموز تکراری است",
+    //         7: "تلفن پدر دانش آموز تکراری است",
+    //     }
+    //     const variableName = {
+    //         0: "phone",
+    //         1: "phone1",
+    //         2: "phone2",
+    //         3: "phone3",
+    //         4: "phone4",
+    //         5: "student_phone",
+    //         6: "mother_phone",
+    //         7: "father_phone",
+
+    //     }
+    //     //console.log(phones);
+    //     for (i = 0; i < 8; i++) {
+    //         phone_tmp = phones[i];
+    //         canChange = false;
+    //         phones[i] = "";
+
+    //         if (($.inArray(phone_tmp, phones) !== -1) && (phone_tmp != "")) {
+
+    //             alert(msgduble[i]);
+    //             //console.log(i);
+    //             phones[i] = phone_tmp;
+    //             canChange = true;
+    //             return false;
+    //         }
+    //         if (!canChange) {
+    //             phones[i] = phone_tmp;
+    //             canChange = true;
+    //         }
+    //         if (!pattern.test($("#" + variableName[i]).val())) {
+    //             alert(msg[i]);
+    //             return false;
+    //         }
+    //     }
+    //     return true;
+
+    // }
+
+    const sendForm = () => {
         const phones = [];
-
-        //let pattern = new RegExp('^([09]+[0-9]{9}|)$'); //pattern or null 
-        let pattern = new RegExp('^(09(0[0-9]|1[0-9]|2[0-9]|3[0-9]|9[0-9])-?[0-9]{3}-?[0-9]{4}|)$'); //pattern or null 
-        phones.push(pattern.test($("#phone").val()) ? $("#phone").val() : "");
-        phones.push(pattern.test($("#phone1").val()) ? $("#phone1").val() : "");
-        phones.push(pattern.test($("#phone2").val()) ? $("#phone2").val() : "");
-        phones.push(pattern.test($("#phone3").val()) ? $("#phone3").val() : "");
-        phones.push(pattern.test($("#phone4").val()) ? $("#phone4").val() : "");
-        phones.push(pattern.test($("#student_phone").val()) ? $("#student_phone").val() : "");
-        phones.push(pattern.test($("#mother_phone").val()) ? $("#mother_phone").val() : "");
-        phones.push(pattern.test($("#father_phone").val()) ? $("#father_phone").val() : "");
-
-        return checkForDuplicate(pattern, phones);
-
-    }
-
-    function checkForDuplicate(pattern, phones) {
-        phonesInFunc = phones;
-        //console.log(phonesInFunc);
-        const msg = {
-            0: "فرمت تلفن اشتباه وارد شده است.",
-            1: "فرمت تلفن ۱ اشتباه وارد شده است.",
-            2: "فرمت تلفن ۲ اشتباه وارد شده است.",
-            3: "فرمت تلفن ۳ اشتباه وارد شده است.",
-            4: "فرمت تلفن ۴ اشتباه وارد شده است.",
-            5: "فرمت تلفن دانش آموز اشتباه وارد شده است.",
-            6: "فرمت تلفن مادر دانش آموز اشتباه وارد شده است.",
-            7: "فرمت تلفن پدر دانش آموز اشتباه وارد شده است.",
-
+        const warnings = [];
+        $(".phone-group").each((i, elm) => {
+            phones.push(pattern.test(elm.value) ? elm.value : '');
+            if (!pattern.test(elm.value)) warnings.push(`فرمت تلفن${names[i]} اشتباه وارد شده است.`);
+        });
+        if (warnings.length > 0) {
+            alert(warnings.join('\n'));
+            return false;
         }
-        const msgduble = {
-            0: "تلفن تکراری است",
-            1: "تلفن ۱ تکراری است",
-            2: "تلفن ۲ تکراری است",
-            3: "تلفن ۳ تکراری است",
-            4: "تلفن ۴ تکراری است",
-            5: "تلفن دانش آموز تکراری است",
-            6: "تلفن مادر دانش آموز تکراری است",
-            7: "تلفن پدر دانش آموز تکراری است",
-        }
-        const variableName = {
-            0: "phone",
-            1: "phone1",
-            2: "phone2",
-            3: "phone3",
-            4: "phone4",
-            5: "student_phone",
-            6: "mother_phone",
-            7: "father_phone",
 
-        }
-        //console.log(phones);
-        for (i = 0; i < 8; i++) {
-            phone_tmp = phones[i];
-            canChange = false;
-            phones[i] = "";
+        return checkDuplication(phones);
 
-            if (($.inArray(phone_tmp, phones) !== -1) && (phone_tmp != "")) {
+    };
 
-                alert(msgduble[i]);
-                //console.log(i);
-                phones[i] = phone_tmp;
-                canChange = true;
-                return false;
-            }
-            if (!canChange) {
-                phones[i] = phone_tmp;
-                canChange = true;
-            }
-            if (!pattern.test($("#" + variableName[i]).val())) {
-                alert(msg[i]);
-                return false;
-            }
+    const names = ['', '۱', '۲', '۳', '۴', 'دانش آموز', 'مادر دانش آموز', 'پدر دانش آموز'];
+
+    const toFindDuplicates = arry => arry.filter((item, index) => arry.indexOf(item) !== index);
+    const checkDuplication = (phones) => {
+        const duplicates = (toFindDuplicates(phones)).filter((phone) => phone !== '');
+        if (duplicates.length > 0) {
+            alert([...new Set(duplicates.map((phone) => `تلفن${names[phones.indexOf(phone)]} تکراری است`))].join(','));
+            return false;
         }
         return true;
+    };
 
-    }
+    
+
 </script>
 @endsection
