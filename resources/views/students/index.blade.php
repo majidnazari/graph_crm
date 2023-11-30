@@ -87,7 +87,7 @@
                                 </select>
                             </div>
                         </div>
-                        <!-- <div class="col">
+                        <div class="col">
                             <div class="form-group">
                                 <label for="sources_id">منبع</label>
                                 <select  id="sources_id" name="sources_id" class="form-control" onchange="theChange()">
@@ -103,7 +103,24 @@
                                     @endforeach
                                 </select>
                             </div>
-                        </div> -->
+                        </div>
+                        <div class="col">
+                            <div class="form-group">
+                                <label for="tag_id">تگ</label>
+                                <select  id="tag_id" name="tag" class="form-control" onchange="theChange()">
+                                    <option value="">همه</option>
+                                    @foreach ($needTags as $key => $item)
+                                        @if(isset($tag_id) && $tag_id==$key)
+                                        <option value="{{ $item->id }}" selected >
+                                        @else
+                                        <option value="{{ $item->id }}" >
+                                        @endif
+                                        {{ $item->name }}
+                                        </option>
+                                    @endforeach
+                                </select>
+                            </div>
+                        </div>
                         @if($route == "student_all")
                         <div class="col">
                             <div class="form-group">
@@ -208,6 +225,12 @@
                                 <input type="number" class="form-control" id="nationality_code" name="nationality_code" placeholder="کد ملی"  value="{{ isset($nationality_code)?$nationality_code:'' }}" onkeypress="handle(event)" />
                             </div>
                         </div>
+                        <!-- <div class="col">
+                            <div class="form-group">
+                                <label for="tag_id">تگ</label>
+                                <input type="text" class="form-control" id="tag_id" name="tag_id" placeholder="تگ"  value="{{ isset($tag_id)?$tag_id:'' }}" onkeypress="handle(event)"/>
+                            </div>
+                        </div> -->
                         <div class="col" style="padding-top: 32px;">
                             <a class="btn btn-success" onclick="theSearch()" href="#">
                                 جستجو
@@ -250,7 +273,7 @@
         <!-- /.row -->
       </section>
       <!-- /.content -->
-@endsection
+@endsection 
 
 @section('js')
 <div class="modal" id="tag_modal" tabindex="-1" role="dialog">
