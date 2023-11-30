@@ -147,7 +147,7 @@ class StudentController extends Controller
         return redirect()->route('student_class', ["id" => $student_id]);
     }
     public function showStudents(Request $request, $level, $view, $route)
-    {    //dd("rr"); 
+    {
         $searchStudent = new SearchStudent;
         $students = Student::where('students.is_deleted', false)->where('students.banned', false)->where('students.archived', false);
         if ($level != "all") {
@@ -168,6 +168,7 @@ class StudentController extends Controller
         $concours_year = null;
         $school = null;
         $major = null;
+        $tag_id=null;
 
 
         $moralTags = Tag::where('is_deleted', false)
@@ -307,6 +308,12 @@ class StudentController extends Controller
                 if (request()->input('nationality_code') != null) {
                     $nationality_code = request()->input('nationality_code');
                     $students = $students->where('nationality_code', 'like',  '%' . $nationality_code . '%');
+                }
+                if (request()->input('tag_id') != null) {
+                    $tag_id = request()->input('tag_id');
+                    $students->whereHas('studenttags', function ($q) use ($tag_id) {
+                        $q->where('tags_id', $tag_id);
+                    });
                 }
             }
             $allStudents = $students->count();
