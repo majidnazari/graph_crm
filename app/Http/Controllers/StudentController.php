@@ -168,7 +168,7 @@ class StudentController extends Controller
         $concours_year = null;
         $school = null;
         $major = null;
-        $tag_id=null;
+        $tag_id = null;
 
 
         $moralTags = Tag::where('is_deleted', false)
@@ -257,8 +257,8 @@ class StudentController extends Controller
         } else {
 
             $students = Student::where('students.is_deleted', false)
-            ->where('students.banned', false)
-            ->where('students.archived', false);
+                ->where('students.banned', false)
+                ->where('students.archived', false);
             if ($level != "all") {
                 $students = $students->where('level', $level);
             }
@@ -1248,9 +1248,9 @@ class StudentController extends Controller
             $request->session()->flash("msg_error", " شماره تکراریست و مربوط به دانش آموز یا ولی  " . $is_exist->first_name . " " . $is_exist->last_name);
             return redirect()->route('student_create');
         }
-       $is_national_code_exist= $this->IsNationalCodeExist($request->input('national_no'));
+        $is_national_code_exist = $this->IsNationalCodeExist($request->input('national_no'));
         if ($is_national_code_exist) {
-            
+
             $request->session()->flash("msg_error", " کد ملی تکراریست و مربوط به دانش آموز    " . $is_national_code_exist->first_name . " " . $is_national_code_exist->last_name);
             return redirect()->route('student_create');
         }
@@ -1298,7 +1298,7 @@ class StudentController extends Controller
     }
 
     public function edit(Request $request, $call_back, $id)
-    {       
+    {
         $i = 1;
         $student = Student::where('is_deleted', false)->where('id', $id)->first();
 
@@ -1342,7 +1342,7 @@ class StudentController extends Controller
                 return redirect()->route($call_back);
             }
         }
-        
+
         $supportGroupId = Group::getSupport();
         if ($supportGroupId)
             $supportGroupId = $supportGroupId->id;
@@ -1366,13 +1366,13 @@ class StudentController extends Controller
             ]);
         }
 
-        $is_national_code_exist= $this->IsNationalCodeExist($request->input('national_no'), $id);
+        $is_national_code_exist = $this->IsNationalCodeExist($request->input('national_no'), $id);
         if ($is_national_code_exist) {
-            
+
             $request->session()->flash("msg_error", " کد ملی تکراریست و مربوط به دانش آموز    " . $is_national_code_exist->first_name . " " . $is_national_code_exist->last_name);
             return redirect()->route($call_back);
         }
-        
+
 
         $student->users_id_editor = Auth::user()->id;
         $student->first_name = $request->input('first_name');
@@ -1397,6 +1397,10 @@ class StudentController extends Controller
         $student->introducing = $request->input('introducing');
         $student->student_phone = $request->input('student_phone');
         //$student->sources_id = $request->has('sources_id') ? $request->input('sources_id') : 0;
+        if(($request->input('sources_id')!=0)){
+           $student->sources_id = $request->has('sources_id') ;//? $request->input('sources_id') : 0;
+        }
+        
         $student->cities_id = $request->input('cities_id');
         if ($student->supporters_id != $request->input('supporters_id') && $student->supporter_seen) {
             $student->supporter_seen = false;
@@ -1417,13 +1421,13 @@ class StudentController extends Controller
         if ($request->input('description_exists') and Auth::user()->groups_id != 2) {
             $student->description = $request->input('description_exists');
         }
-
+        //dd($student);
 
         try {
             if ($student->banned || $student->archived) {
                 $student->supporters_id = 0;
             }
-            
+
             $student->save();
         } catch (Exception $e) {
             // dd($e);
@@ -1904,23 +1908,21 @@ class StudentController extends Controller
     public function apiAddStudents(Request $request) // new added 4 phones to student
     {
         $students = $request->input('students', []);
-       // Log::info(json_encode($students));
+        // Log::info(json_encode($students));
         $ids = [];
         $fails = [];
         //$student_tmp = Student::where('is_deleted', 0);
-        foreach ($students as $student) 
-        {
+        foreach ($students as $student) {
             $student_tmp = Student::where('is_deleted', 0);
             //Log::info("the studentds is:".$student['phone']);
-            if (!isset($student['phone'])) 
-            {
+            if (!isset($student['phone'])) {
                 $student['error'] = "No Phone";
                 $fails[] = $student;
                 continue;
             }
             // $studentObject = Student::where('phone', $student['phone'])->first();
-            
-                $is_exist = $student_tmp->where('phone', $student['phone'])
+
+            $is_exist = $student_tmp->where('phone', $student['phone'])
                 ->orWhere('father_phone', $student['phone'])
                 ->orWhere('mother_phone', $student['phone'])
                 ->orWhere('phone1', $student['phone'])
@@ -1929,12 +1931,11 @@ class StudentController extends Controller
                 ->orWhere('phone4', $student['phone'])
                 ->orWhere('student_phone', $student['phone'])
                 ->first();
-                //Log::info(json_encode($is_exist));
+            //Log::info(json_encode($is_exist));
             if ($is_exist) {
-                $ids[] =$is_exist->phone;
+                $ids[] = $is_exist->phone;
                 //$ids[] =$is_exist->id;
-            } 
-            else {
+            } else {
                 $studentObject = new Student;
                 foreach ($student as $key => $value) {
                     $studentObject->$key = $value;
@@ -1968,15 +1969,15 @@ class StudentController extends Controller
                 continue;
             }
             $studentObject = Student::where('phone', $student['phone'])
-            ->orWhere('father_phone', $student['phone'])
-            ->orWhere('mother_phone', $student['phone'])
-            ->orWhere('phone1', $student['phone'])
-            ->orWhere('phone2', $student['phone'])
-            ->orWhere('phone3', $student['phone'])
-            ->orWhere('phone4', $student['phone'])
-            ->orWhere('student_phone', $student['phone'])
-            ->where('banned', false)
-            ->first();
+                ->orWhere('father_phone', $student['phone'])
+                ->orWhere('mother_phone', $student['phone'])
+                ->orWhere('phone1', $student['phone'])
+                ->orWhere('phone2', $student['phone'])
+                ->orWhere('phone3', $student['phone'])
+                ->orWhere('phone4', $student['phone'])
+                ->orWhere('student_phone', $student['phone'])
+                ->where('banned', false)
+                ->first();
             if ($studentObject == null) {
                 $studentObject = new Student;
             }
@@ -2168,7 +2169,7 @@ class StudentController extends Controller
                 $query = $query->where($key, 'like', "%$value%");
         }
         $result = $query->where('is_deleted', 0)
-           // ->where('first_name', 'like', '%majid%')
+            // ->where('first_name', 'like', '%majid%')
             ->orderBy('id', 'desc')
             ->get();
 
@@ -2285,18 +2286,18 @@ class StudentController extends Controller
         }
         return  false;
     }
-    public function IsNationalCodeExist($national_code, $id=null)
+    public function IsNationalCodeExist($national_code, $id = null)
     {
-        if($national_code!=""){
-            return  Student::where('is_deleted',0)
-            ->where('archived',0)
-            ->where('banned',0)
-            ->where('nationality_code',$national_code)
-            ->where('id',($id!=null) ? '!=':'>',($id!=null) ? $id:0)
-            ->first();
+        if ($national_code != "") {
+            return  Student::where('is_deleted', 0)
+                ->where('archived', 0)
+                ->where('banned', 0)
+                ->where('nationality_code', $national_code)
+                ->where('id', ($id != null) ? '!=' : '>', ($id != null) ? $id : 0)
+                ->first();
         }
         return false;
         //Log::info("th eid nation code is:" . $id);
-       
+
     }
 }
