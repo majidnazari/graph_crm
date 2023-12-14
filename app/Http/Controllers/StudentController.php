@@ -1298,8 +1298,7 @@ class StudentController extends Controller
     }
 
     public function edit(Request $request, $call_back, $id)
-    {
-
+    {       
         $i = 1;
         $student = Student::where('is_deleted', false)->where('id', $id)->first();
 
@@ -1397,7 +1396,7 @@ class StudentController extends Controller
         $student->major = $request->input('major');
         $student->introducing = $request->input('introducing');
         $student->student_phone = $request->input('student_phone');
-        $student->sources_id = $request->has('sources_id') ? $request->input('sources_id') : 0;
+        //$student->sources_id = $request->has('sources_id') ? $request->input('sources_id') : 0;
         $student->cities_id = $request->input('cities_id');
         if ($student->supporters_id != $request->input('supporters_id') && $student->supporter_seen) {
             $student->supporter_seen = false;
