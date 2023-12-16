@@ -1301,6 +1301,7 @@ class StudentController extends Controller
     {
         $i = 1;
         $student = Student::where('is_deleted', false)->where('id', $id)->first();
+        $old_sources_id=$student->sources_id;
 
         if ($student == null) {
             $request->session()->flash("msg_error", "دانش آموز مورد نظر پیدا نشد!");
@@ -1397,8 +1398,8 @@ class StudentController extends Controller
         $student->introducing = $request->input('introducing');
         $student->student_phone = $request->input('student_phone');
         //$student->sources_id = $request->has('sources_id') ? $request->input('sources_id') : 0;
-        if(($request->input('sources_id')!=0)){
-           $student->sources_id = $request->has('sources_id') ;//? $request->input('sources_id') : 0;
+        if(($request->input('sources_id')!=0) && $old_sources_id === 0){
+           $student->sources_id = $request->input('sources_id') ;//? $request->input('sources_id') : 0;
         }
         
         $student->cities_id = $request->input('cities_id');
@@ -1421,7 +1422,7 @@ class StudentController extends Controller
         if ($request->input('description_exists') and Auth::user()->groups_id != 2) {
             $student->description = $request->input('description_exists');
         }
-        //dd($student);
+        //dd($old_sources_id);
 
         try {
             if ($student->banned || $student->archived) {
