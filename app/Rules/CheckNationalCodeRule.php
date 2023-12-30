@@ -38,9 +38,11 @@ class CheckNationalCodeRule implements Rule
         return $this->CheckNationalCode($this->phone, $value, $this->id);
     }
     public function CheckNationalCode($phone, $national_code, $id)
-    {
+    {        
         //Log::info("the id is :" . $id );
-        $student = Student::where('nationality_code', $national_code)->first();
+        $student = Student::where('nationality_code', $national_code)
+        ->where('nationality_code','!=',)
+        ->first();
         if ($student && $student['id'] != $id) {
             $date['id'] = $student['id'];
             $date['first_name'] = $student['first_name'];
