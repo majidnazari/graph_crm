@@ -41,7 +41,7 @@ class CheckNationalCodeRule implements Rule
     {        
         //Log::info("the id is :" . $id );
         $student = Student::where('nationality_code', $national_code)
-        ->where('nationality_code','!=',)
+        ->where('nationality_code','!=','1151847593')
         ->first();
         if ($student && $student['id'] != $id) {
             $date['id'] = $student['id'];
