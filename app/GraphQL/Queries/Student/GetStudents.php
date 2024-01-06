@@ -22,28 +22,28 @@ final class GetStudents
     }
     public function resolveStudentsAttribute($root, array $args, GraphQLContext $context, ResolveInfo $resolveInfo)
     {
-        $ids=[];
+        $ids = [];
         //Log::info($args);
-        if(isset($args['ids'])){
-            $ids=$args['ids'];
+        if (isset($args['ids'])) {
+            $ids = $args['ids'];
         }
         $first_name = isset($args['first_name']) ? $args['first_name'] : "";
         $last_name = isset($args['last_name']) ? $args['last_name'] : "";
         $full_name = isset($args['full_name']) ? $args['full_name'] : "";
-        $full_name=$full_name !=="" ? $full_name : $first_name . ' '.$last_name;
+        $full_name = $full_name !== "" ? $full_name : $first_name . ' ' . $last_name;
         //  Log::info("full name is:". $full_name );
         $phone = isset($args['phone']) ? $args['phone'] : "";
         // Log::info(json_encode($context->request()));
         $Student = Student::where('is_deleted', 0);
-        if(!empty($ids)){
-            $Student= $Student->whereIn('id',$ids);
+        if (!empty($ids)) {
+            $Student = $Student->whereIn('id', $ids);
         }
         $Student = $Student
             //->where('archived', 0)
             ->where('banned', 0)
-            //->where(DB::raw('CONCAT(first_name, \' \',last_name)'), 'like', "%" . $full_name . "%")
-            ->where("first_name", 'like','%'.$first_name . '%')
-            ->where("last_name", 'like','%'.$last_name . '%')
+            ->where(DB::raw('CONCAT(first_name, \' \',last_name)'), 'like', "%" . $full_name . "%")
+           ->where("first_name", 'like', '%' . $first_name . '%')
+           ->where("last_name", 'like', '%' . $last_name . '%')
             //->orWhere('is_academy_student1', 1)
             // ->orWhere(function ($query) use ($full_name) {
             //     // if (isset($args['phone']) && ($args['phone']!="")) {
