@@ -40,10 +40,12 @@ use Illuminate\Support\Facades\Gate;
 use App\MergeStudents as AppMergeStudents;
 use App\Purchase;
 use App\SupporterHistory;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\Route;
 use Exception;
+use IntlDateFormatter;
 use Log;
-
+use Morilog\Jalali\Jalalian;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 
@@ -148,6 +150,9 @@ class StudentController extends Controller
     }
     public function showStudents(Request $request, $level, $view, $route)
     {
+        $from_date = null;
+        $to_date = null;
+        //Log::info("the request is:" . json_encode($request));
         $searchStudent = new SearchStudent;
         $students = Student::where('students.is_deleted', false)->where('students.banned', false)->where('students.archived', false);
         if ($level != "all") {
@@ -216,6 +221,8 @@ class StudentController extends Controller
         }
 
         if (request()->getMethod() == 'GET') {
+            //Log::info("get is running");
+
             //dd($Students);
             return view(
                 $view,
@@ -247,7 +254,9 @@ class StudentController extends Controller
                     'needTagParentOnes',
                     'needTagParentTwos',
                     'needTagParentThrees',
-                    'needTagParentFours'
+                    'needTagParentFours',
+                    'from_date',
+                    'to_date'
                 ]),
                 [
                     'msg_success' => request()->session()->get('msg_success'),
@@ -256,6 +265,14 @@ class StudentController extends Controller
             );
         } else {
 
+            $formatter = new IntlDateFormatter(
+                'en_US',
+                IntlDateFormatter::FULL,
+                IntlDateFormatter::FULL,
+                'Asia/Tehran',
+                IntlDateFormatter::TRADITIONAL
+            );
+           // Log::info(" else get is running");
             $students = Student::where('students.is_deleted', false)
                 ->where('students.banned', false)
                 ->where('students.archived', false);
@@ -263,7 +280,9 @@ class StudentController extends Controller
                 $students = $students->where('level', $level);
             }
             if (request()->getMethod() == 'POST') {
-                // dump(request()->all());           
+               // Log::info("post is running");
+                //Log::info("the request is:" . json_encode(request()));
+                 //dump(request()->all());           
                 if (request()->input('supporters_id') != null) {
                     $supporters_id = (int)request()->input('supporters_id');
                     $students = $students->where('supporters_id', $supporters_id);
@@ -306,6 +325,8 @@ class StudentController extends Controller
                     $students = $students->where('school', 'like',  '%' . $school . '%');
                 }
                 if (request()->input('nationality_code') != null) {
+               // Log::info("national is running" . request()->input('nationality_code'));
+
                     $nationality_code = request()->input('nationality_code');
                     $students = $students->where('nationality_code', 'like',  '%' . $nationality_code . '%');
                 }
@@ -314,6 +335,22 @@ class StudentController extends Controller
                     $students->whereHas('studenttags', function ($q) use ($tag_id) {
                         $q->where('tags_id', $tag_id);
                     });
+                }
+                if (request()->input('from_date') != null) { 
+                    $formatter->setPattern('yyyy/MM/dd');
+                    $englishDate = $formatter->parse(request()->input('from_date'));
+                    $from_date = Carbon::parse($englishDate)->subDays(8,'days')->format("Y-m-d");
+                    //Log::info("from_date shamsi is:". $from_date );
+                    $from_date = Jalalian::fromFormat('Y-m-d', $from_date)->toCarbon();
+                    $students->where('created_at', '>=',  $from_date);                       
+                }
+                if (request()->input('to_date') != null) {
+                    $formatter->setPattern('yyyy/MM/dd');
+                    $englishDate = $formatter->parse(request()->input('to_date'));
+                    $to_date = Carbon::parse($englishDate)->subDays(8,'days')->format("Y-m-d");  
+                    $to_date = Jalalian::fromFormat('Y-m-d', $to_date )->toCarbon();
+                    //Log::info("to date is:". $to_date );
+                    $students->where('created_at', '<=',  $to_date);             
                 }
             }
             $allStudents = $students->count();
@@ -417,6 +454,8 @@ class StudentController extends Controller
                     $levelsToSelect .= '>' . $l . '</option>';
                 }
                 if ($route == "student_all") {
+                    //Log::info("student_all is running");
+
                     $data[] = [
                         "row" => $index + 1,
                         "id" => $item->id,
@@ -1301,7 +1340,7 @@ class StudentController extends Controller
     {
         $i = 1;
         $student = Student::where('is_deleted', false)->where('id', $id)->first();
-        $old_sources_id=$student->sources_id;
+        $old_sources_id = $student->sources_id;
 
         if ($student == null) {
             $request->session()->flash("msg_error", "دانش آموز مورد نظر پیدا نشد!");
@@ -1398,10 +1437,10 @@ class StudentController extends Controller
         $student->introducing = $request->input('introducing');
         $student->student_phone = $request->input('student_phone');
         //$student->sources_id = $request->has('sources_id') ? $request->input('sources_id') : 0;
-        if(($request->input('sources_id')!=0) && $old_sources_id === 0){
-           $student->sources_id = $request->input('sources_id') ;//? $request->input('sources_id') : 0;
+        if (($request->input('sources_id') != 0) && $old_sources_id === 0) {
+            $student->sources_id = $request->input('sources_id'); //? $request->input('sources_id') : 0;
         }
-        
+
         $student->cities_id = $request->input('cities_id');
         if ($student->supporters_id != $request->input('supporters_id') && $student->supporter_seen) {
             $student->supporter_seen = false;

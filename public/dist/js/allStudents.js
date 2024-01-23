@@ -776,6 +776,8 @@ $(function () {
                 data['concours_year'] = $('#concours_year').val();
                 data['nationality_code'] = $('#nationality_code').val();
                 data['tag_id'] = $('#tag_id').val();
+                data['from_date'] = $('#from_date').val();
+                data['to_date'] = $('#to_date').val();
                 
                 return JSON.stringify(data)
             },
