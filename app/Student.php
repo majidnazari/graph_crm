@@ -31,7 +31,7 @@ class Student extends Model implements Auditable
         'major',
         'introducing',
         'student_phone',
-        'citys_id',
+        'cities_id',
         'sources_id',
         'supporters_id',
         'archived',
