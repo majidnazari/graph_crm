@@ -604,6 +604,15 @@
                                 <p>لیست سندها</p>
                             </a>
                         </li>
+                        <li class="nav-item">
+                            @if(strpos(\Request::route()->getName(), 'logMergeStudents')===0)
+                            <a href="{{ route('logMergeStudents') }}" class="nav-link active">
+                            @else
+                            <a href="{{ route('logMergeStudents') }}" class="nav-link">
+                            @endif
+                                <p> لاگ مرج دانش آموزان </p>
+                            </a>
+                        </li>
                         @endif
                         @if (Gate::allows('sale_suggestions'))
                         <!--
@@ -1363,7 +1372,7 @@
         </aside>
 
         <!-- Content Wrapper. Contains page content -->
-        <div class="content-wrapper">
+        <div class="content-wrapper " id="Content_Div_Class"  >
             @yield('content')
             @if (isset($msg_success))
             <div class="card card-success" style="width: 400px;position: fixed;left: 10px;bottom: 10px;">

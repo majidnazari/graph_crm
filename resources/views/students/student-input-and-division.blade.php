@@ -156,6 +156,12 @@
                         </div>
                         <div class="col">
                             <div class="form-group">
+                                <label for="concours_year">سال کنکور</label>
+                                <input type="number" class="form-control" id="concours_year" name="concours_year" placeholder="سال کنکور"  value="{{ isset($concours_year)?$concours_year:'' }}" onkeypress="handle(event)" />
+                            </div>
+                        </div>
+                        <div class="col">
+                            <div class="form-group">
                                 <label for="major">رشته</label>
                                 <select  id="major" name="major" class="form-control" onchange="theChange()">
                                     <option value="">همه</option>
@@ -390,8 +396,12 @@
 <!-- Select2 -->
 <script src="/plugins/select2/js/select2.full.min.js"></script>
 <!-- DataTables -->
-<script src="../../plugins/datatables/jquery.dataTables.js"></script>
-<script src="../../plugins/datatables-bs4/js/dataTables.bootstrap4.js"></script>
+<!-- <script src="../../plugins/datatables/jquery.dataTables.js"></script>
+<script src="../../plugins/datatables-bs4/js/dataTables.bootstrap4.js"></script> -->
+
+<script src="../../plugins/DataTables/DataTables-1.13.4/js/jquery.dataTables.js"></script>  
+<script src="../../plugins/DataTables/DataTables-1.13.4/js/dataTables.bootstrap4.js"></script>  
+
 <!-- page script -->
 <script>
     let students = @JSON($students);
@@ -977,6 +987,7 @@
                     data['sources_id'] = $("#sources_id").val();
                     data['cities_id'] = $("#cities_id").val();
                     data['egucation_level'] = $("#egucation_level").val();
+                    data['concours_year'] = $("#concours_year").val();
                     data['major'] = $("#major").val();
                     data['school'] = $("#school").val();
                     data['name'] = $("#name").val();

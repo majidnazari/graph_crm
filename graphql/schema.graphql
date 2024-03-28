@@ -1,18 +1,16 @@
-
 scalar _Any
 scalar _FieldSet
-
 
 # a union of all types that use the @key directive
 union _Entity = Student | Course | User
 
 type _Service {
-  sdl: String
+    sdl: String
 }
 
 # extend type Query {
-#   _entities(representations: [_Any!]!): [_Entity]! 
-#   _service: _Service!  
+#   _entities(representations: [_Any!]!): [_Entity]!
+#   _service: _Service!
 # }
 
 directive @external on FIELD_DEFINITION
@@ -24,7 +22,8 @@ directive @key(fields: _FieldSet!) repeatable on OBJECT | INTERFACE
 directive @extends on OBJECT | INTERFACE
 
 "A datetime string with format `Y-m-d H:i:s`, e.g. `2018-05-23 13:43:32`."
-scalar DateTime @scalar(class: "Nuwave\\Lighthouse\\Schema\\Types\\Scalars\\DateTime")
+scalar DateTime
+    @scalar(class: "Nuwave\\Lighthouse\\Schema\\Types\\Scalars\\DateTime")
 
 # scalar _Any
 # scalar _FieldSet
@@ -35,20 +34,18 @@ scalar DateTime @scalar(class: "Nuwave\\Lighthouse\\Schema\\Types\\Scalars\\Date
 #   sdl: String
 # }
 
-
 # directive @external on FIELD_DEFINITION
 # directive @requires(fields: _FieldSet!) on FIELD_DEFINITION
 # directive @provides(fields: _FieldSet!) on FIELD_DEFINITION
 # directive @key(fields: _FieldSet!) repeatable on OBJECT | INTERFACE
 
 # # this is an optional directive discussed below
-# directive @extends on OBJECT 
-
+# directive @extends on OBJECT
 
 "Indicates what fields are available at the top level of a query operation."
- type Query {
-         _entities(representations: [_Any!]!): [_Entity]!
-         _service: _Service! 
+type Query {
+    _entities(representations: [_Any!]!): [_Entity]!
+    _service: _Service!
     "Find a single user by an identifying attribute."
     # user(
     #   "Search by primary key."
@@ -63,28 +60,57 @@ scalar DateTime @scalar(class: "Nuwave\\Lighthouse\\Schema\\Types\\Scalars\\Date
     #   "Filters by name. Accepts SQL LIKE wildcards `%` and `_`."
     #   name: String @where(operator: "like")
     # ): [User!]! @paginate(defaultCount: 10)
-    getStudent(id:ID!): Student @field(resolver: "App\\GraphQL\\Queries\\Student\\GetStudent@resolveStudentAttribute")
+    getStudent(id: ID!): Student
+        @field(
+            resolver: "App\\GraphQL\\Queries\\Student\\GetStudent@resolveStudentAttribute"
+        )
     getStudents(
-      first_name: String @like (template : "%{}%")
-      last_name: String @like (template : "%{}%")     
-      nationality_code: String @like (template : "%{}%")     
-      # level: String @like (template : "%{}%")
-      egucation_level: String @like (template : "%{}%")
-      parents_job_title: String @like (template : "%{}%")
-      home_phone: String @like (template : "%{}%")
-      father_phone: String @like (template : "%{}%")
-      mother_phone: String @like (template : "%{}%")
-      major: String @like (template : "%{}%")
-      # description: String @like (template : "%{}%")
-      phone: String @like (template : "%{}%") #@where(operator: "like" clause: "orWhere", key: "mother_phone") @where(operator: "like" clause: "orWhere", key: "father_phone")
-      egucation_level: String   @like (template : "%{}%")
-      
-#       active: Boolean @eq
-      orderBy:[OrderByClause!] @orderBy
-    ): [Student] @paginate(builder: "App\\GraphQL\\Queries\\Student\\GetStudents@resolveStudentsAttribute")
+        ids: [Int]
+        first_name: String @like(template: "%{}%")
+        last_name: String @like(template: "%{}%")
+        full_name: String
+        is_academy_student: Int @eq
+        cities_id: Int @eq
+        # @where(operator: "like", key: "first_name1")
+        # @where(operator: "like", clause: "orWhere", key: "last_name")
+        nationality_code: String @like(template: "%{}%")
+        # level: String @like (template : "%{}%")
+        egucation_level: String @like(template: "%{}%")
+        parents_job_title: String @like(template: "%{}%")
+        home_phone: String @like(template: "%{}%")
+        father_phone: String @like(template: "%{}%")
+        mother_phone: String @like(template: "%{}%")
+        major: String @like(template: "%{}%")
+        # description: String @like (template : "%{}%")
+        phone: String
+        #  @where(operator: "like" clause: "orWhere", key: "@phone" )
+        # @where(operator: "like" clause: "orWhere", key: "father_phone")
+        # @where(operator: "like" clause: "orWhere", key: "mother_phone")
+        # @where(operator: "like" clause: "orWhere", key: "phone1")
+        # @where(operator: "like" clause: "orWhere", key: "phone2")
+        # @where(operator: "like" clause: "orWhere", key: "phone3")
+        # @where(operator: "like" clause: "orWhere", key: "phone4")
+        # @where(operator: "like" clause: "orWhere", key: "student_phone")
+        #@like (template : "%{}%") #@where(operator: "like" clause: "orWhere", key: "mother_phone") @where(operator: "like" clause: "orWhere", key: "father_phone")
+        egucation_level: String @like(template: "%{}%")
+
+        #       active: Boolean @eq
+        orderBy: [OrderByClause!] @orderBy
+    ): [Student]
+        @paginate(
+            builder: "App\\GraphQL\\Queries\\Student\\GetStudents@resolveStudentsAttribute"
+        )
+
+    getCities(
+        name: String @like(template: "%{}%")
+        orderBy: [OrderByClause!] @orderBy
+    ): [City]
+        @paginate(
+            builder: "App\\GraphQL\\Queries\\City\\GetCities@resolveCitiesAttribute"
+        )
 }
 
-input OrderByClause{
+input OrderByClause {
     field: String!
     order: SortOrder!
 }
@@ -95,153 +121,178 @@ enum SortOrder {
 }
 
 "Account of a person who utilizes this application."
-# type User {
-#     "Unique primary key."
-#     id: ID!
-
-#     "Non-unique name."
-#     name: String!
-
-#     "Unique email address."
-#     email: String!
-
-#     "When the email was verified."
-#     email_verified_at: DateTime
-
-#     "When the account was created."
-#     created_at: DateTime!
-
-#     "When the account was last updated."
-#     updated_at: DateTime!
-# }
-
 type Student @key(fields: "id") {
-        id:ID! 
-        phone:String 
-        home_phone:String 
-        first_name:String 
-        last_name:String 
-        nationality_code:String
-        concours_year:String
-        egucation_level:String 
-        level:String
-        parents_job_title:String 
-        father_phone:String 
-        mother_phone:String 
-        major:String 
-        # description:String 
-        
+    id: ID!
+
+    phone: String
+    phone1: String
+    phone2: String
+    phone3: String
+    phone4: String
+    student_phone: String
+
+    is_academy_student: Int
+    home_phone: String
+    first_name: String
+    last_name: String
+    nationality_code: String
+    concours_year: String
+    egucation_level: String
+    level: String
+    parents_job_title: String
+    father_phone: String
+    mother_phone: String
+    major: String
+    school: String
+    cities_id: Int
+    # description:String
+}
+
+type City @key(fields: "id") {
+    id: ID!
+    name: String
 }
 # type Course @key(fields: "id") @extends{
-#       id:ID @external  
+#       id:ID @external
 # }
- input CreateStudentInput @validator{
-        phone:String! # @rules(apply: ["size:11","unique:students,phone"]),
-        first_name:String!
-        last_name:String!
-        nationality_code:String
-        concours_year:String
-        
-        level:String
-        egucation_level:String
-        parents_job_title:String
-        home_phone:String
-        father_phone:String
-        mother_phone:String      
-        major:String
-        # description:String
-    } 
-     input UpdateStudentInput @validator{
-      id:ID!
-      phone:String! # @rules(apply: ["size:11","unique:students,phone"]),
-      first_name:String!
-      last_name:String!
-      nationality_code:String
-      concours_year:String
-      level:String
-      egucation_level:String      
-      parents_job_title:String
-      home_phone:String
-      father_phone:String
-      mother_phone:String       
-      major:String
-      # description:String
-    } 
-type Mutation  {
+input CreateStudentInput @validator {
+    phone: String! # @rules(apply: ["size:11","unique:students,phone"]),
+    first_name: String!
+    last_name: String!
+    nationality_code: String!
+    concours_year: String
 
-  #region student
-    createStudent(input: CreateStudentInput @spread): Student!  @field(resolver: "App\\GraphQL\\Mutations\\Student\\CreateStudent@resolver")
-    updateStudent(input: UpdateStudentInput @spread): Student!   @field(resolver: "App\\GraphQL\\Mutations\\Student\\UpdateStudent@resolver")
-    deleteStudent(id:ID!):Student  @field(resolver: "App\\GraphQL\\Mutations\\Student\\DeleteStudent@resolver")
-  #end student
+    level: String
+    egucation_level: String
+    parents_job_title: String
+    home_phone: String
+    father_phone: String
+    mother_phone: String
+    major: String
+    cities_id: Int
+    # description:String
+}
+input UpdateStudentInput @validator {
+    id: ID!
+    phone: String! # @rules(apply: ["size:11","unique:students,phone"]),
+    first_name: String!
+    last_name: String!
+    nationality_code: String!
+    concours_year: String
+    level: String
+    egucation_level: String
+    parents_job_title: String
+    home_phone: String
+    father_phone: String
+    mother_phone: String
+    major: String
+    cities_id: Int
 
+    # description:String
+}
+type Mutation {
+    #region student
+    createStudent(input: CreateStudentInput @spread): Student
+        @field(
+            resolver: "App\\GraphQL\\Mutations\\Student\\CreateStudent@resolver"
+        )
+    updateStudent(input: UpdateStudentInput @spread): Student
+        @field(
+            resolver: "App\\GraphQL\\Mutations\\Student\\UpdateStudent@resolver"
+        )
+    deleteStudent(id: ID!): Student
+        @field(
+            resolver: "App\\GraphQL\\Mutations\\Student\\DeleteStudent@resolver"
+        )
+    #end student
 }
 
-type CourseStudent @key(fields: "id") @extends {   
-  id: ID! @external
-  student_id:Int @external
-  student: Student @requires(fields: "student_id")
+type CourseStudent @key(fields: "id") @extends {
+    id: ID! @external
+    student_id: Int @external
+    student: Student @requires(fields: "student_id")
 }
-type CourseStudentWithAbsencePresence @key(fields: "id") @extends {   
-  id: ID! @external
-  student_id:Int @external
-  student: Student @requires(fields: "student_id")
+type CourseStudentWithAbsencePresence @key(fields: "id") @extends {
+    id: ID! @external
+    student_id: Int @external
+    student: Student @requires(fields: "student_id")
 }
-type CourseStudentWithIllegalStudent @key(fields: "id") @extends {   
-  id: ID! @external
-  student_id:Int @external
-  student: Student @requires(fields: "student_id")
+type CourseStudentWithIllegalStudent @key(fields: "id") @extends {
+    id: ID! @external
+    student_id: Int @external
+    student: Student @requires(fields: "student_id")
 }
 type StudentWarningHistory @key(fields: "id") @extends {
-  id: ID! @external
-  student_id:Int @external
-  student:Student @requires(fields: "student_id")
+    id: ID! @external
+    student_id: Int @external
+    student: Student @requires(fields: "student_id")
 }
 type StudentWarning @key(fields: "id") @extends {
-  id: ID! @external
-  student_id:Int @external
-  student:Student @requires(fields: "student_id")
+    id: ID! @external
+    student_id: Int @external
+    student: Student @requires(fields: "student_id")
 }
 type Data {
-
-  id:Int
-  student_id:Int
-  financial_status:String
-  session_count: Int
-  name: String
-  course_id: String
+    id: Int
+    student_id: Int
+    financial_status: String
+    session_count: Int
+    name: String
+    course_id: String
 }
-type paginatorInfo{
-      count:Int
-      currentPage:Int
-      firstItem:Int
-      hasMorePages:Boolean
-      lastItem:Int
-      lastPage:Int
-      perPage:Int
-      total:Int
-}
-
-type StudentContact @key(fields: "id") @extends {   
-  id: ID! @external
-  student_id:Int @external
-  student: Student @requires(fields: "student_id")
+type paginatorInfo {
+    count: Int
+    currentPage: Int
+    firstItem: Int
+    hasMorePages: Boolean
+    lastItem: Int
+    lastPage: Int
+    perPage: Int
+    total: Int
 }
 
-type StudentFault @key(fields: "id") @extends {   
-  id: ID! @external
-  student_id:Int @external
-  student: Student @requires(fields: "student_id")
+type StudentContact @key(fields: "id") @extends {
+    id: ID! @external
+    student_id: Int @external
+    student: Student @requires(fields: "student_id")
 }
 
-type AzmoonResult @key(fields: "id") @extends {   
-  id: ID! @external
-  student_id:Int @external
-  student: Student @requires(fields: "student_id")
+type StudentFault @key(fields: "id") @extends {
+    id: ID! @external
+    student_id: Int @external
+    student: Student @requires(fields: "student_id")
 }
 
-type AbsencePresence @key(fields: "id") @extends {   
-  id: ID! @external
-  student_id:Int @external
-  student: Student @requires(fields: "student_id")
+type AzmoonResult @key(fields: "id") @extends {
+    id: ID! @external
+    student_id: Int @external
+    student: Student @requires(fields: "student_id")
+}
+
+type AbsencePresence @key(fields: "id") @extends {
+    id: ID! @external
+    student_id: Int @external
+    student: Student @requires(fields: "student_id")
+}
+type AbsencePresenceList @key(fields: "id") @extends {
+    id: ID! @external
+    student_id: Int @external
+    student: Student @requires(fields: "student_id")
+}
+
+type ConsultantDefinitionDetail @key(fields: "id") @extends {
+    id: ID @external
+    student_id: Int @external
+    student: Student @requires(fields: "student_id")
+}
+type ConsultantDefinitionDetailFlatModel @key(fields: "id") @extends {
+    id: ID @external
+    student_id: Int @external
+    student: Student @requires(fields: "student_id")
+}
+
+type ConsultantFinancial @key(fields: "id") @extends {
+    id: ID @external
+    student_id: Int @external
+    student: Student @requires(fields: "student_id")
 }

@@ -14,6 +14,8 @@ class StudentsImport implements ToModel, WithChunkReading, ShouldQueue
     use Importable;
     public $fails = [];
     public $source_id = null;
+    public $concours_year = null;
+
 
     public function chunkSize(): int
     {
@@ -59,7 +61,7 @@ class StudentsImport implements ToModel, WithChunkReading, ShouldQueue
             'فارغ التحصیل' => '13',
             'دانشجو' => '14',
         ];
-        if((int)$this->perToEn($row[0])==0){
+        if ((int)$this->perToEn($row[0]) == 0) {
             return null;
         }
 
@@ -69,11 +71,22 @@ class StudentsImport implements ToModel, WithChunkReading, ShouldQueue
         } else if (!isset($educationLevels[$educationLevel]) && !isset($educationLevelsInPersian[$educationLevel])) {
             $educationLevel = null;
         }
-
-        $student = Student::where('phone', ((strpos($this->perToEn($row[0]), '0') !== 0) ? '0' : '') . $this->perToEn($row[0]))->first();
+        $phone_entry = (((strpos($this->perToEn($row[0]), '0') !== 0) ? '0' : '') . $this->perToEn($row[0]));
+        //Log::info("the phone is:"  . $phone_entry);
+        $student = Student::where('is_deleted', 0)
+            ->where('phone', $phone_entry)
+            ->orWhere('phone1', $phone_entry)
+            ->orWhere('phone2', $phone_entry)
+            ->orWhere('phone3', $phone_entry)
+            ->orWhere('phone4', $phone_entry)
+            ->orWhere('student_phone', $phone_entry)
+            ->orWhere('father_phone', $phone_entry)
+            ->orWhere('mother_phone', $phone_entry)
+            ->first();
+        //dd($student); 
         if ($student === null) {
             $st = [
-                'phone' => ((strpos($this->perToEn($row[0]), '0') !== 0) ? '0' : '') . $this->perToEn($row[0]),
+                'phone' => $phone_entry, //((strpos($this->perToEn($row[0]), '0') !== 0) ? '0' : '') . $this->perToEn($row[0]),
                 'first_name' => $row[1],
                 'last_name' => $row[2],
                 'egucation_level' => $educationLevel,
@@ -97,12 +110,15 @@ class StudentsImport implements ToModel, WithChunkReading, ShouldQueue
             if ($source_id) {
                 $st['sources_id'] = $source_id;
             }
+
+            if ($this->concours_year) {
+                $st['concours_year'] = $this->concours_year;
+            }
             return new Student($st);
         } else {
-            Log::info("fail:" . $student->phone);
-            $this->fails[] = $student->phone;
+            Log::info("fail:" . $phone_entry /* $student->phone */);
+            $this->fails[] = $phone_entry /* $student->phone */;
             Log::info("fails:" . json_encode($this->fails));
-
         }
         return $student;
     }

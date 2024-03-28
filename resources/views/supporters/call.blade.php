@@ -21,12 +21,15 @@ $persons = [
     <section class="content-header">
         <div class="container-fluid">
           <div class="row mb-2">
-            <div class="col-sm-6">
+            <div class="col-sm-6"> 
               <h1>
                   تماس های
                   {{ isset($students[0]->first_name) ?  $students[0]->first_name : "" }}
                   {{  isset($students[0]->last_name) ?  $students[0]->last_name : ""}}
               </h1>
+              <h6>               
+                {{ (isset($mainStudentName) and ($mainStudentName!= "")) ? "دانش آموزان مرج شده :" .  $mainStudentName : ""}}
+              </h6>
             </div>
             <div class="col-sm-6">
               <!--
@@ -122,8 +125,12 @@ $persons = [
 
 @section('js')
 <!-- DataTables -->
-<script src="../../plugins/datatables/jquery.dataTables.js"></script>
-<script src="../../plugins/datatables-bs4/js/dataTables.bootstrap4.js"></script>
+<!-- <script src="../../plugins/datatables/jquery.dataTables.js"></script>
+<script src="../../plugins/datatables-bs4/js/dataTables.bootstrap4.js"></script> -->
+
+<script src="../../plugins/DataTables/DataTables-1.13.4/js/jquery.dataTables.js"></script>  
+<script src="../../plugins/DataTables/DataTables-1.13.4/js/dataTables.bootstrap4.js"></script>  
+
 <!-- page script -->
 <script>
     function showStudents(index){

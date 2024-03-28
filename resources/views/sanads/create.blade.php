@@ -2,6 +2,7 @@
 
 @section('css')
 <link href="/plugins/select2/css/select2.min.css" rel="stylesheet" />
+
 @endsection
 
 @section('content')
@@ -74,7 +75,7 @@
               <div class="col">
                 <div class="form-group">
                   <label for="supporter_id">پشتیبان</label>
-                  <select id="supporter_id" name="supporter_id" class="form-control">
+                  <select id="supporter_id" name="supporter_id" class="form-control select2">
                     <option value="0"></option>
                     @foreach ($supports as $item)
                     @if (isset($sanad) && isset($sanad->id) && $sanad->supporter_id == $item->id)
@@ -104,17 +105,43 @@
                   @endif
                 </div>
 
-                <div class="form-group">
+                <!-- <div class="form-group">
                   <label for="description">نام دانش آموز</label>
                   @if (isset($sanad) && isset($sanad->id))
                   <input type="text" class="form-control" id="student_fullname" name="student_fullname" placeholder="نام کامل دانش آموز" value="{{ $sanad->student_fullname }}" />
                   @else
                   <input type="text" class="form-control" id="student_fullname" name="student_fullname" placeholder="نام کامل دانش آموز" />
                   @endif
+                </div> -->
+
+                <div class="form-group">
+                  <label for="student_id">دانش آموز</label>
+                  <select id="student_id" name="student_id" class="form-control select2">
+                    <option value="0"></option>
+                   
+                    @if (isset($sanad) && isset($sanad->id) && $sanad->supporter_id == $item->id)
+                    <option value="{{ $item->id }}" selected>
+                      @else
+                    <option value="{{ $item->id }}">
+                      @endif
+                      {{ $item->first_name. ' ' . $item->last_name }}
+                    </option>
+                    
+                  </select>
+                </div>
+
+                <div class="col">
+                  <div class="form-group">
+                    <label for="from_date"> تاریخ دریافت پول </label>
+                    <input type="text" id="receipt_date" name="receipt_date" class="form-control pdate"
+                     value="" />
+                  </div>
                 </div>
 
               </div>
+
             </div>
+
             <div class="row">
               <div class="col">
                 <button class="btn btn-primary" type="button" onclick="submitForm()">
@@ -136,12 +163,36 @@
 @endsection
 
 @section('js')
+<script src="/plugins/select2/js/select2.full.min.js"></script>
 <!-- Select2 -->
 <!-- <script src="/plugins/select2/js/select2.full.min.js"></script> -->
 <script>
   $(document).ready(function() {
 
-    $('select.select2').select2();
+    $("#supporter_id").select2();
+    $('#student_id').select2({
+      ajax: {
+        url: "{{ route('searchStudentForSanad') }}",
+        dataType: 'json',
+        delay: 250,
+        data: function(params) {
+          return {
+            q: params.term, // search term
+            //page: params.page
+          };
+        },
+        processResults: function(data) {
+          console.log("data" , data);
+          return {
+            results: data
+          };
+        },
+        cache: true
+      },
+      placeholder: 'حداقل باید ۳ کاراکتر وارد کنید',
+      minimumInputLength: 3,
+
+    });
   });
 
   function checkType(dobj) {
@@ -151,10 +202,10 @@
 
     } else {
       var x = document.getElementById("block_supporter");
-     // document.getElementById("supporter_percent").innerHTML = "100";
-     $("#supporter_percent").val('100');
+      // document.getElementById("supporter_percent").innerHTML = "100";
+      $("#supporter_percent").val('100');
       x.style.display = "none";
-      
+
     }
   }
 
@@ -165,7 +216,7 @@
     $('#frm').submit();
   }
 
- function validateForm() {
+  function validateForm() {
     if ($('#total_cost').val() === "") {
       alert("مقدار مبلغ کل را وارد نمایید.");
       return false;
@@ -186,10 +237,19 @@
       alert("   پشتیبان  را وارد نمایید.");
       return false;
     }
+    if ($('#student_id').val() == 0) {
+      alert("   دانش آموز  را وارد نمایید.");
+      return false;
+    }
     if ($('#description').val() === "") {
       alert(" توضیحات را وارد نمایید.");
       return false;
     }
+    // if ($('#receipt_date').val() === "") {
+    //   alert(" تاریخ دریافت وجه را وارد نمایید.");
+    //   return false;
+    // }
+    
     return true;
   }
 </script>

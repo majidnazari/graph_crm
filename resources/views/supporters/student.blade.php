@@ -228,6 +228,13 @@ null => ""
                                         @endfor
                                 </select>
                         </div>
+                        <div class="form-group">                            
+                            @if (isset($student) && isset($student->concours_year))
+                            <input  type="number" class="form-control" id="concours_year" name="concours_year" placeholder="سال کنکور" value="{{ $student->concours_year }}" />
+                            @else
+                            <input  type="number" class="form-control" id="concours_year" name="concours_year" placeholder="سال کنکور"  />
+                            @endif
+                        </div>
                         <div class="col text-center p-1">
                                 <select id="major" class="form-control select2" onchange="return selectMajors();">
                                     <option selected value="" disabled>رشته</option>
@@ -604,8 +611,12 @@ null => ""
 <!-- Select2 -->
 <script src="/plugins/select2/js/select2.full.min.js"></script>
 <!-- DataTables -->
-<script src="../../plugins/datatables/jquery.dataTables.js"></script>
-<script src="../../plugins/datatables-bs4/js/dataTables.bootstrap4.js"></script>
+<!-- <script src="../../plugins/datatables/jquery.dataTables.js"></script>
+<script src="../../plugins/datatables-bs4/js/dataTables.bootstrap4.js"></script> -->
+
+<script src="../../plugins/DataTables/DataTables-1.13.4/js/jquery.dataTables.js"></script>  
+<script src="../../plugins/DataTables/DataTables-1.13.4/js/dataTables.bootstrap4.js"></script>  
+
 <script type="text/javascript">
 
     var studentMergeData = ``;
@@ -1579,6 +1590,7 @@ null => ""
     }
 
     function theSearch() {
+       console.log("the log is: " , table.ajax);
         $('#loading').css('display', 'inline');
         emptySomeData();
         lastPage = table.page();
@@ -1700,6 +1712,7 @@ null => ""
                     data['has_reminder'] = $("#has_reminder").val();
                     data['has_tag'] = $("#has_tag").val();
                     data['education_level'] = $("#education_level").val();
+                    data['concours_year'] = $("#concours_year").val();                    
                     data['major'] = $('#major').val();
                     data['conditions'] = $('#conditions').val();
                     data['current_page'] = lastPage;

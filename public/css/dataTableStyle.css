@@ -3,19 +3,29 @@
     padding-top: .755em;
 }
 table.dataTable thead .sorting{
+    background-repeat: no-repeat;
     background-image: url('/images/sort_both.png');
 }
 table.dataTable thead .sorting{
+    background-repeat: no-repeat;
     background-image:url("/images/sort_both.png")
 }
 table.dataTable thead .sorting_asc{
+    background-repeat: no-repeat;
+
     background-image:url("/images/sort_asc.png")
 }table.dataTable thead .sorting_desc{
+    background-repeat: no-repeat;
+
     background-image:url("/images/sort_desc.png")
 }table.dataTable thead .sorting_asc_disabled{
+    background-repeat: no-repeat;
+
     background-image:url("/images/sort_asc_disabled.png")
 }
 table.dataTable thead .sorting_desc_disabled{
+    background-repeat: no-repeat;
+
     background-image:url("/images/sort_desc_disabled.png")
 }
 #example2_paginate{

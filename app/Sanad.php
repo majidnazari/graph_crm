@@ -24,9 +24,11 @@ class Sanad extends Model implements Auditable
         "description",
         "student_fullname",
         "total",
+        "receipt_date",
         "total_cost",
         "supporter_percent" ,
         "supporter_id",
+        "student_id",
         "user_id",
         "status",
         "type"
@@ -64,5 +66,9 @@ class Sanad extends Model implements Auditable
     public function supporter()
     {
         return $this->hasOne('App\User', 'id', 'supporter_id');
+    }
+    public function student()
+    {
+        return $this->hasOne('App\Student','id','student_id');
     }
 }

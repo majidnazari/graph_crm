@@ -16,14 +16,16 @@ use Illuminate\Support\Facades\DB;
 
 class StudentsExport implements FromCollection, WithHeadings, WithColumnWidths, WithMapping
 {
-    protected $students_select, $from_date, $to_date, $education_level, $major, $supporters_id;
+    protected $students_select, $from_date, $to_date, $education_level,$concours_year, $major, $supporters_id;
 
-    function __construct($students_select, $supporters_id, $major, $education_level, $from_date = null, $to_date = null)
+    function __construct($students_select, $supporters_id, $major, $education_level,$concours_year, $from_date = null, $to_date = null)
     {
         $this->students_select = $students_select;
         $this->from_date = $from_date;
         $this->to_date = $to_date;
         $this->education_level = $education_level;
+        $this->concours_year = $concours_year;
+        
         $this->major = $major;
         $this->supporters_id = $supporters_id;
     }
@@ -85,6 +87,7 @@ class StudentsExport implements FromCollection, WithHeadings, WithColumnWidths, 
             $student->viewed = $student->viewed == 1 ? 'بله' : 'خیر',
             $student->major,
             $student->egucation_level,
+            $student->concours_year,
             $student->provinces_id = $province ? $province->name : '',
             $student->is_from_site = $student->is_from_site == 1 ? 'بله' : 'خیر',
             $student->description,
@@ -163,6 +166,7 @@ class StudentsExport implements FromCollection, WithHeadings, WithColumnWidths, 
             'مشاهده شده',
             'رشته',
             'مقطع تحصیلی',
+            'سال کنکور',
             'استان',
             'از طریق سایت',
             'توصیف',
@@ -255,11 +259,17 @@ class StudentsExport implements FromCollection, WithHeadings, WithColumnWidths, 
         }
 
         $egucation_level = $this->education_level;
-        $students = $students->where('egucation_level', $egucation_level);
+        if ($this->education_level != null) {
+            $students = $students->where('egucation_level', $egucation_level);
+        }
 
         if ($this->major != null) {
             $major = $this->major;
             $students = $students->where('major', $major);
+        }
+        if ($this->concours_year != null) {
+            $concours_year = $this->concours_year;
+            $students = $students->where('concours_year', $concours_year);
         }
         if ($this->from_date != null) {
             $from_date = $this->jalaliToGregorian($this->from_date);

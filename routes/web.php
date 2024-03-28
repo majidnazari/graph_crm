@@ -251,6 +251,7 @@ Route::group(['middleware' => ['auth', 'message', 'changeCharactersAllToBePersia
     Route::group(['prefix' => '/supporter_students'], function () {
         Route::any('/', 'SupporterController@student')->name('supporter_students');
         Route::any('/sanad/{id}', 'SupporterController@sanad')->name('supporter_sanads');
+        Route::any('/search_sanad', 'SupporterController@AllAJAXStudentForSupporter')->name('search_sanad_in_support_system');
         Route::post('/changeLevel', 'SupporterController@changeLevelAjax')->name('change_level_ajax');
         Route::any('/l1', 'SupporterController@levelOneStudents')->name('student_level_1');
         Route::any('/l2', 'SupporterController@levelTwoStudents')->name('student_level_2');
@@ -342,6 +343,8 @@ Route::group(['middleware' => ['auth', 'message', 'changeCharactersAllToBePersia
     Route::group(['prefix' => '/sanads', 'middleware' => 'limit-access'], function () {
         Route::any('/', 'SanadController@index')->name('sanads');
         Route::any('/searchIndex', 'SanadController@indexWithSearch')->name('searchIndex');
+        Route::any('/searchStudent', 'SanadController@AllAJAXStudent')->name('searchStudentForSanad');
+        Route::any('/searchSupporter', 'SanadController@AllAJAXSupporter')->name('searchSupporterForSanad');
         Route::any('/editAllSanad', 'SanadController@editAllSupporter')->name('editAllSupporter');
 
         Route::any('/create', 'SanadController@create')->name('sanad_create');
@@ -351,5 +354,15 @@ Route::group(['middleware' => ['auth', 'message', 'changeCharactersAllToBePersia
     // Route::group(['middleware' => 'check-ip'], function () {
     //     Route::any('/graphql-playground', 'SanadController@index2')->name('sanads2');
     // });
+
+    Route::group(['prefix' => '/logMergeStudents', 'middleware' => 'limit-access'], function () {
+        Route::any('/', 'LogMergedStudentsController@index')->name('logMergeStudents');
+        Route::any('/searchIndexMergedStudent', 'LogMergedStudentsController@indexOfAjax')->name('search_index_Student');
+        Route::any('/searchSupporter', 'LogMergedStudentsController@AllAJAXSupporter')->name('searchSupporterForMergeStudent');
+        Route::any('/searchMainStudent', 'LogMergedStudentsController@AllAJAXMainStudent')->name('searchMainStudentForMergeStudent');
+        Route::any('/searchMergedStudent', 'LogMergedStudentsController@AllAJAXMergedStudent')->name('searchMergedStudentForMergeStudent');
+        
+       
+    });
    
 });

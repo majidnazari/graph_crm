@@ -700,7 +700,7 @@ function isEmpty (obj) {
 
     return JSON.stringify(obj) === JSON.stringify({})
 }
-function theSearch () {
+function theSearch () { 
     $('#loading').css('display', 'inline')
     table.ajax.reload()
     return false
@@ -731,7 +731,7 @@ $(function () {
     })
     $('select.select2').select2()
 
-    table = $('#example2').DataTable({
+    table = $('#example2').DataTable({ 
         paging: true,
         lengthChange: false,
         searching: false,
@@ -773,6 +773,12 @@ $(function () {
                 data['name'] = $('#name').val()
                 data['phone'] = $('#phone').val()
                 data['level'] = $('#level').val();
+                data['concours_year'] = $('#concours_year').val();
+                data['nationality_code'] = $('#nationality_code').val();
+                data['tag_id'] = $('#tag_id').val();
+                data['from_date'] = $('#from_date').val();
+                data['to_date'] = $('#to_date').val();
+                
                 return JSON.stringify(data)
             },
             complete: function (response) {
@@ -793,6 +799,7 @@ $(function () {
                         if (!isNaN(studentId)) {
                             for (var index in students) {
                                 if (students[index].id == studentId) {
+                                    //console.log("the created at is:" , students[index].pcreated_at)
                                     showMorePanel(index, this)
                                     break
                                 }

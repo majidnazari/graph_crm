@@ -71,7 +71,7 @@
                                     </select>
                                 </div>
                             </div>
-                            <div class="col">
+                            <!-- <div class="col">
                                 <div class="form-group">
                                     <label for="second_auxilary">فرعی ۲</label>
                                     <select class="form-control" id="second_auxilary" name="second_auxilary">
@@ -100,7 +100,7 @@
                                         @endif
                                     </select>
                                 </div>
-                            </div>
+                            </div> -->
                         </div>
                         <div class="row">
                             <div class="col">
@@ -109,7 +109,7 @@
                                     ویرایش
                                 </button>
                                 @else
-                                <button class="btn btn-primary">
+                                <button class="btn btn-primary" onclick="return checkNotNull()">
                                     ذخیره
                                 </button>
                                 @endif
@@ -131,7 +131,7 @@
 <script src="/plugins/select2/js/select2.min.js"></script>
 <script type="text/javascript">
     console.log($('#select2-main-results').children(":first"));
-    function removeItem(first, second_option, third_option, forth_option) {
+    function removeItem(first, second_option, third_option, forth_option) { 
         $(first).on('change', function() {
             var x = $(this).val();
             $(second_option).each(function() {
@@ -154,8 +154,8 @@
     }
     removeItem('#main', '#auxilary option', '#second_auxilary option', '#third_auxilary option');
     removeItem('#auxilary', '#main option', '#second_auxilary option', '#third_auxilary option');
-    removeItem('#second_auxilary', '#main option', '#auxilary option', '#third_auxilary option');
-    removeItem('#third_auxilary', '#main option', '#auxilary option', '#second_auxilary option');
+    // removeItem('#second_auxilary', '#main option', '#auxilary option', '#third_auxilary option');
+    // removeItem('#third_auxilary', '#main option', '#auxilary option', '#second_auxilary option');
 
 </script>
 <script type="text/javascript">
@@ -187,8 +187,19 @@
     }
     select2_load_remote_data_with_ajax('#main');
     select2_load_remote_data_with_ajax('#auxilary');
-    select2_load_remote_data_with_ajax('#second_auxilary');
-    select2_load_remote_data_with_ajax('#third_auxilary');
+    // select2_load_remote_data_with_ajax('#second_auxilary');
+    // select2_load_remote_data_with_ajax('#third_auxilary');
 
+function checkNotNull(){
+    if($("#main").val()==0){
+        alert("دانش آموز اصلی نمی تواند خالی باشد.");
+        return false;
+    }
+    if($("#auxilary").val()==0){
+        alert("دانش آموز فرعی نمی تواند خالی باشد.");
+        return false;
+    }
+    return true;
+}
 </script>
 @endsection
